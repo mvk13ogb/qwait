@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-2.dtd">
+  <head>
+    <title th:text="#{view.error.general.title}">Error page</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" href="../../../resources/css/foundation.css" th:href="@{/resources/css/foundation.css}"/>
+  </head>
+
+  <body>
+    <div class="row">
+      <div class="large-12 columns">
+        <h1 th:text="#{view.error.general.title}">Error page</h1>
+
+        <p th:text="${errorMessage}">The error message</p>
+      </div>
+    </div>
+  </body>
+</html>

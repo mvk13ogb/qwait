@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-2.dtd" ng-app="qwait">
+  <head>
+    <title th:text="#{view.home.title}">QWait</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" href="../../resources/css/foundation.css" th:href="@{/resources/css/foundation.css}"/>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+    <script type="text/javascript">
+      angular.module('qwait', []).controller('HomeCtrl', ['$scope', function ($scope) {
+        $scope.test = "Haha! AngularJS";
+      }]);
+    </script>
+  </head>
+  <body ng-controller="HomeCtrl">
+    <div class="row">
+      <div class="large-12 columns">
+        <h1 th:text="#{view.home.helloWorld}">Hello, World!</h1>
+        <input ng-model="test" type="text"/>
+
+        <p>{{test}}</p>
+      </div>
+    </div>
+  </body>
+</html>
