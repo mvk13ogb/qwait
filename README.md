@@ -1,5 +1,7 @@
 # QWait
 
+[![Build Status](https://travis-ci.org/mvk13ogb/qwait.png?branch=master)](https://travis-ci.org/mvk13ogb/qwait)
+
 This is QWait, the next generation queuing system for KTH CSC.
 
 # Running the application
