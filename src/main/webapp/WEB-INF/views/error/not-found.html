@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title th:text="#{view.error.general.title}">Error page</title>
+    <title>Not found</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -12,15 +12,7 @@
   <body>
     <div class="row">
       <div class="large-12 columns">
-        <h1 th:text="#{view.error.general.title}">Error page</h1>
-
-        <p th:text="${errorMessage}">The error message</p>
-
-        <ul>
-          <li th:each="stackElement : ${stackTrace}">
-            <pre th:text="${stackElement}"></pre>
-          </li>
-        </ul>
+        <h1>Not found</h1>
       </div>
     </div>
   </body>

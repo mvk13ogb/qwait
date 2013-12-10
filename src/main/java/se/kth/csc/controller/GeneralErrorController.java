@@ -19,7 +19,7 @@ class GeneralErrorController {
     /**
      * Display an error page, as defined in web.xml <code>custom-error</code> element.
      */
-    @RequestMapping("generalError")
+    @RequestMapping("error")
     public String generalError(HttpServletRequest request, HttpServletResponse response, Model model) {
         // Retrieve some useful information from the request
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");

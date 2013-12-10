@@ -18,7 +18,17 @@ class ExceptionHandlerAdvice {
     @ExceptionHandler(value = Exception.class)
     public ModelAndView exception(Exception exception, WebRequest request) {
         ModelAndView modelAndView = new ModelAndView("error/general");
-        modelAndView.addObject("errorMessage", Throwables.getRootCause(exception));
+        Throwable rootCause = Throwables.getRootCause(exception);
+        modelAndView.addObject("errorMessage", rootCause.getClass().getName() + (rootCause.getMessage() != null ? ": " + rootCause.getMessage() : ""));
+        modelAndView.addObject("stackTrace", rootCause.getStackTrace());
         return modelAndView;
+    }
+
+    /**
+     * Handle exceptions thrown by handlers.
+     */
+    @ExceptionHandler(value = NotFoundException.class)
+    public String notFound(Exception exception, WebRequest request) {
+        return "error/not-found";
     }
 }

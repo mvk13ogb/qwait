@@ -8,20 +8,15 @@
     <link rel="stylesheet" href="../../css/normalize.css" th:href="@{/css/normalize.css}"/>
     <link rel="stylesheet" href="../../css/foundation.css" th:href="@{/css/foundation.css}"/>
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
-    <script type="text/javascript">
-      angular.module('qwait', []).controller('HomeCtrl', ['$scope', function ($scope) {
-        $scope.test = "Haha! AngularJS";
-      }]);
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+    <script src="../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
   </head>
-  <body ng-controller="HomeCtrl">
+  <body>
     <div class="row">
       <div class="large-12 columns">
         <h1 th:text="#{view.home.helloWorld}">Hello, World!</h1>
-        <input ng-model="test" type="text"/>
 
-        <p>{{test}}</p>
+        <p>Here is the <a href="queue/list.html" th:href="@{/queue/list}">list of queues</a>.</p>
       </div>
     </div>
   </body>

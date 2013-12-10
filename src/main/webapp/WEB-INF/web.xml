@@ -4,6 +4,6 @@
 	version="3.0">
 	<!-- Map all errors to Spring MVC handler method. See GeneralErrorController.generalError() -->
 	<error-page>
-    	<location>/generalError</location>
+            <location>/error</location>
 	</error-page>
 </web-app>
