@@ -1,5 +1,7 @@
 package se.kth.csc.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,4 +34,13 @@ class ApplicationConfig {
         return ppc;
     }
 
+    /**
+     * Provider for Jackson serialization
+     */
+    @Bean(name = "objectMapper")
+    public ObjectMapper objectMapper() {
+        ObjectMapper result = new ObjectMapper();
+        result.registerModule(new JodaModule());
+        return result;
+    }
 }

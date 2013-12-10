@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
+  <head>
+    <title>Queues &mdash; QWait</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" href="../../../css/normalize.css" th:href="@{/css/normalize.css}"/>
+    <link rel="stylesheet" href="../../../css/foundation.css" th:href="@{/css/foundation.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.js"></script>
+    <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+      /* <![CDATA[ */
+      qwait.controller('QueueListCtrl', ['$scope', function ($scope) {
+        /*[- */
+        $scope.queues = [
+          {name: "Queue 1", id: 1, positions: []},
+          {name: "Queue 2", id: 2, positions: []}
+        ];
+        /* -]*/
+        /*[+
+         $scope.queues = JSON.parse([[${queuesJson}]]);
+         +]*/
+      }]);
+      /* ]]> */
+    </script>
+  </head>
+
+  <body>
+    <div class="row">
+      <div class="large-12 columns" ng-controller="QueueListCtrl">
+        <h1>Queues</h1>
+
+        <form action="show.html" method="GET" th:action="@{/queue/create}" th:method="'POST'">
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="queue-name" class="right inline">Add queue called</label>
+            </div>
+            <div class="small-8 columns">
+              <input id="queue-name" name="name" type="text" placeholder="queue name"/>
+            </div>
+            <div class="small-1 columns">
+              <button type="submit" class="button postfix">Add</button>
+            </div>
+          </div>
+        </form>
+        <div ng-hide="queues.length">
+          <p>There are currently no queues.</p>
+        </div>
+        <table ng-show="queues.length">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>People queueing</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="queue in queues">
+              <td>{{queue.name}}</td>
+              <td>{{queue.positions.length}}</td>
+              <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
