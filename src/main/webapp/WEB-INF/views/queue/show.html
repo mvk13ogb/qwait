@@ -53,7 +53,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="queuePosition in queue.positions">
+            <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
               <td>{{queuePosition.user.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>
