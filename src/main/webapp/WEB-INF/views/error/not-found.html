@@ -10,10 +10,28 @@
   </head>
 
   <body>
+    <nav class="top-bar" data-topbar="topbar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="../home.html" th:href="@{/}">QWait</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+      <section class="top-bar-section">
+        <ul class="left">
+          <li><a href="../home.html" th:href="@{/}">Home</a></li>
+          <li><a href="#">Queues</a></li>
+        </ul>
+      </section>
+    </nav>
     <div class="row">
       <div class="large-12 columns">
         <h1>Not found</h1>
       </div>
     </div>
+
+    <script src="../../../js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <script src="http://foundation.zurb.com/docs/assets/js/all.js"></script>
+    <script>$(document).foundation();</script>
   </body>
 </html>
