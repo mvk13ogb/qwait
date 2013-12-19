@@ -16,7 +16,6 @@
         <org.slf4j-version>1.7.5</org.slf4j-version>
         <ch.qos.logback-version>1.0.13</ch.qos.logback-version>
         <org.thymeleaf-version>2.1.1.RELEASE</org.thymeleaf-version>
-        <zurb-foundation-version>4.3.2</zurb-foundation-version>
     </properties>
     <repositories>
         <repository>
@@ -289,6 +288,11 @@
                 <version>2.1.1</version>
                 <configuration>
                     <warName>qwait</warName>
+                    <webResources>
+                        <resource>
+                            <directory>${project.build.directory}/webapp</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -326,8 +330,6 @@
                             <jrubyVersion>1.7.2</jrubyVersion>
                             <execArgs>
                                 ${project.build.directory}/rubygems/bin/scss
-                                -I
-                                ${project.build.directory}/rubygems-gem-maven-plugin/gems/zurb-foundation-${zurb-foundation-version}/scss/
                                 --cache-location
                                 ${project.build.directory}/scss-cache
                                 --update
@@ -341,12 +343,6 @@
                         <groupId>rubygems</groupId>
                         <artifactId>sass</artifactId>
                         <version>3.2.5</version>
-                        <type>gem</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>rubygems</groupId>
-                        <artifactId>zurb-foundation</artifactId>
-                        <version>${zurb-foundation-version}</version>
                         <type>gem</type>
                     </dependency>
                 </dependencies>
