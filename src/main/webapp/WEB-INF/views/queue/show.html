@@ -4,7 +4,6 @@
     <title>Queues &mdash; QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <!--favicon and apple-touch-icons added-->
     <link rel="shortcut icon" id="favicon" href="../../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
     <link rel="apple-touch-icon" sizes="144x144" href="../../../icons/apple-touch-icon-144x144.png"
           th:href="@{/icons/apple-touch-icon-144x144.png}"/>
@@ -14,8 +13,7 @@
           th:href="@{/icons/apple-touch-icon-72x72.png}"/>
     <link rel="apple-touch-icon" href="../../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
 
-    <link rel="stylesheet" href="../../../css/normalize.css" th:href="@{/css/normalize.css}"/>
-    <link rel="stylesheet" href="../../../css/foundation.css" th:href="@{/css/foundation.css}"/>
+    <link rel="stylesheet" href="../../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.js"></script>
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
@@ -25,7 +23,7 @@
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
 
         // Passing this as a string since it can become quite large
-        var queueStr = /*[[${queueJson}]]*/ '{name: "Queue 1", id: 1, positions: []}';
+        var queueStr = /*[[${queueJson}]]*/ '{"name": "Queue 1", "id": 1, "positions": []}';
         $scope.queue = JSON.parse(queueStr);
 
         // This URL construction happens here to prevent some CORS attacks
