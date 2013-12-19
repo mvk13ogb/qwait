@@ -1,8 +1,6 @@
-<project
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-        >
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.kth.csc</groupId>
     <artifactId>qwait</artifactId>
@@ -41,6 +39,12 @@
             <url>http://repo.spring.io/milestone</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rubygems-releases</id>
+            <url>http://rubygems-proxy.torquebox.org/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <!-- Spring -->
         <dependency>
@@ -254,9 +258,17 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.0</version>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.1.0.v20131115</version>
+                <configuration>
+                    <webApp>
+                        <resourceBases>
+                            <resourceBase>${basedir}/src/main/webapp</resourceBase>
+                            <resourceBase>${project.build.directory}/webapp</resourceBase>
+                        </resourceBases>
+                    </webApp>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -276,6 +288,11 @@
                 <version>2.1.1</version>
                 <configuration>
                     <warName>qwait</warName>
+                    <webResources>
+                        <resource>
+                            <directory>${project.build.directory}/webapp</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -298,6 +315,37 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>de.saumya.mojo</groupId>
+                <artifactId>gem-maven-plugin</artifactId>
+                <version>1.0.0-rc4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <jrubyVersion>1.7.2</jrubyVersion>
+                            <execArgs>
+                                ${project.build.directory}/rubygems/bin/scss
+                                --cache-location
+                                ${project.build.directory}/scss-cache
+                                --update
+                                ${basedir}/src/main/scss:${project.build.directory}/webapp/css
+                            </execArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>rubygems</groupId>
+                        <artifactId>sass</artifactId>
+                        <version>3.2.5</version>
+                        <type>gem</type>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
