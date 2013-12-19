@@ -2,19 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
     <title>Queues &mdash; QWait</title>
-
-      <!--favicon and apple-touch-icons added-->
-      <link rel="shortcut icon" id="favicon" href="../../../icons/favicon.ico" th:href="@{/icons/favicon.ico}" />
-      <link rel="apple-touch-icon" sizes="144x144" href="../../../icons/apple-touch-icon-144x144.png" th:href="@{/icons/apple-touch-icon-144x144.png}"/>
-      <link rel="apple-touch-icon" sizes="114x114" href="../../../icons/apple-touch-icon-114x114.png" th:href="@{/icons/apple-touch-icon-114x114.png}"/>
-      <link rel="apple-touch-icon" sizes="72x72" href="../../../icons/apple-touch-icon-72x72.png" th:href="@{/icons/apple-touch-icon-72x72.png}"/>
-      <link rel="apple-touch-icon" href="../../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
-
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!--favicon and apple-touch-icons added-->
+    <link rel="shortcut icon" id="favicon" href="../../../icons/favicon.ico" th:href="@{/icons/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="../../../icons/apple-touch-icon-144x144.png" th:href="@{/icons/apple-touch-icon-144x144.png}"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../../../icons/apple-touch-icon-114x114.png" th:href="@{/icons/apple-touch-icon-114x114.png}"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../../../icons/apple-touch-icon-72x72.png" th:href="@{/icons/apple-touch-icon-72x72.png}"/>
+    <link rel="apple-touch-icon" href="../../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" href="../../../css/normalize.css" th:href="@{/css/normalize.css}"/>
     <link rel="stylesheet" href="../../../css/foundation.css" th:href="@{/css/foundation.css}"/>
-    <link rel="stylesheet" href="../../../css/style.css" th:href="@{/css/style.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.js"></script>
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
@@ -36,12 +34,21 @@
   </head>
 
   <body>
-  <nav id="navbar">
-      <ul id="navul">
-          <li><a class="navitem" href="http://www.kth.se/" th:href="@{http://www.kth.se/}"><img src="../../../icons/apple-touch-icon-72x72.png" th:src="@{/icons/apple-touch-icon-72x72.png}" alt="Logo"/></a></li>
-          <li><a class="navitem" href="../qwait" th:href="@{/../qwait}">Home</a></li>
-          <li><a class="navitem" href="/" th:href="@{/queue/list}">Queue</a></li>
+  <nav class="top-bar" data-topbar="topbar">
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="home.html" th:href="@{/}">QWait</a>
+        </h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#" th:href="@{#}"><span>Menu</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+      <ul class="left">
+        <li><a href="../qwait" th:href="@{/../qwait}">Home</a></li>
+        <li class="active"><a href="list.html" th:href="@{/queue/list}">Queue</a></li>
       </ul>
+    </section>
   </nav>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueListCtrl">
@@ -81,5 +88,9 @@
         </table>
       </div>
     </div>
+  <!--Needed for the menubutton to work when screen is rezised-->
+  <script src="../../../js/vendor/jquery.js" th:src="@{/js/vendor/jquery.js}"></script>
+  <script src="http://foundation.zurb.com/docs/assets/js/all.js"></script>
+  <script>$(document).foundation();</script>
   </body>
 </html>
