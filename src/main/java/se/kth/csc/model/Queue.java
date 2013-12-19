@@ -1,5 +1,6 @@
 package se.kth.csc.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Sets;
 
 import javax.persistence.*;
@@ -16,11 +17,11 @@ public class Queue {
     @Column(name = "name", unique = true)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
     public int getId() {
@@ -35,6 +36,7 @@ public class Queue {
         this.name = name;
     }
 
+    @JsonView(Queue.class)
     public User getOwner() {
         return owner;
     }
@@ -43,6 +45,7 @@ public class Queue {
         this.owner = owner;
     }
 
+    @JsonView(Queue.class)
     public Set<QueuePosition> getPositions() {
         return positions;
     }

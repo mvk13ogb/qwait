@@ -23,6 +23,11 @@ class GeneralErrorController {
     public String generalError(HttpServletRequest request, HttpServletResponse response, Model model) {
         // Retrieve some useful information from the request
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+
+        if (statusCode == 404) {
+            return "error/not-found";
+        }
+
         Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
 
         String exceptionMessage = getExceptionMessage(throwable, statusCode);
