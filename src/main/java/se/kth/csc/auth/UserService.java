@@ -1,6 +1,7 @@
 package se.kth.csc.auth;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.xml.XmlEscapers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.controller.HomeController;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
@@ -28,6 +30,7 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
         this.accountStore = accountStore;
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
         Account account = accountStore.fetchAccountWithPrincipalName(token.getName());
@@ -37,6 +40,8 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
             account.setPrincipalName(token.getName());
             account.setName(token.getName());
             accountStore.storeAccount(account);
+
+            log.info("Created user called \"{}\" with id {}", account.getName(), account.getId());
         }
 
         return createUser(account);
