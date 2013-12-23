@@ -19,7 +19,7 @@ public class Queue {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "owner_id")
-    private User owner;
+    private Account owner;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
@@ -37,11 +37,11 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public User getOwner() {
+    public Account getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(Account owner) {
         this.owner = owner;
     }
 

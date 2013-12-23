@@ -47,6 +47,9 @@
           <li><a href="../home.html" th:href="@{/}">Home</a></li>
           <li class="active"><a href="list.html" th:href="@{/queue/list}">Queues</a></li>
         </ul>
+        <ul class="right">
+          <li><a href="#">Logged in as <strong th:text="${#authentication.name}"></strong></a></li>
+        </ul>
       </section>
     </nav>
     <div class="row">

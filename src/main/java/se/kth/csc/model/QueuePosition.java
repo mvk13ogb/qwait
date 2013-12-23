@@ -23,14 +23,14 @@ public class QueuePosition {
     private DateTime startTime;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public int getId() {
         return id;
     }
 
-    @JsonView({QueuePosition.class, User.class})
+    @JsonView({QueuePosition.class, Account.class})
     public Queue getQueue() {
         return queue;
     }
@@ -48,11 +48,11 @@ public class QueuePosition {
     }
 
     @JsonView({QueuePosition.class, Queue.class})
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

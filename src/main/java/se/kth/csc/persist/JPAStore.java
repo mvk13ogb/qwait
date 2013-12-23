@@ -1,12 +1,11 @@
 package se.kth.csc.persist;
 
 import org.springframework.stereotype.Repository;
-import se.kth.csc.model.Queue;
-import se.kth.csc.model.QueuePosition;
-import se.kth.csc.model.User;
-import se.kth.csc.model.User_;
+import org.springframework.transaction.annotation.Transactional;
+import se.kth.csc.model.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,7 +13,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
-public class JPAStore implements QueuePositionStore, QueueStore, UserStore {
+public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -42,18 +41,32 @@ public class JPAStore implements QueuePositionStore, QueueStore, UserStore {
     }
 
     @Override
-    public User fetchUserWithId(int id) {
-        return entityManager.find(User.class, id);
+    public Account fetchAccountWithId(int id) {
+        return entityManager.find(Account.class, id);
     }
 
     @Override
-    public User fetchNewestUser() {
+    public Account fetchAccountWithPrincipalName(String principalName) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> q = cb.createQuery(User.class);
+        CriteriaQuery<Account> q = cb.createQuery(Account.class);
 
-        Root<User> user = q.from(User.class);
+        Root<Account> account = q.from(Account.class);
 
-        List<User> candidates = entityManager.createQuery(q.select(user).orderBy(cb.desc(user.get(User_.id))))
+        try {
+            return entityManager.createQuery(q.select(account).where(cb.equal(account.get(Account_.principalName), principalName))).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Account fetchNewestAccount() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Account> q = cb.createQuery(Account.class);
+
+        Root<Account> account = q.from(Account.class);
+
+        List<Account> candidates = entityManager.createQuery(q.select(account).orderBy(cb.desc(account.get(Account_.id))))
                 .setMaxResults(1).getResultList();
 
         if (candidates.isEmpty()) {
@@ -64,8 +77,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, UserStore {
     }
 
     @Override
-    public void storeUser(User user) {
-        entityManager.persist(user);
+    public void storeAccount(Account account) {
+        entityManager.persist(account);
     }
 
     @Override

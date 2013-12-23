@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,35 +15,46 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.model.User;
 import se.kth.csc.payload.QueueCreationInfo;
+import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
-import se.kth.csc.persist.UserStore;
 
-import javax.inject.Inject;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/queue")
 public class QueueController {
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+    private final ObjectMapper objectMapper;
+    private final QueueStore queueStore;
+    private final AccountStore accountStore;
+    private final QueuePositionStore queuePositionStore;
 
-    @Inject
-    private ObjectMapper objectMapper;
+    protected QueueController() {
+        // Needed for injection
+        objectMapper = null;
+        queueStore = null;
+        accountStore = null;
+        queuePositionStore = null;
+    }
 
-    @Inject
-    private QueueStore queueStore;
+    @Autowired
+    public QueueController(
+            ObjectMapper objectMapper,
+            QueueStore queueStore,
+            AccountStore accountStore,
+            QueuePositionStore queuePositionStore) {
+        this.objectMapper = objectMapper;
+        this.queueStore = queueStore;
+        this.accountStore = accountStore;
+        this.queuePositionStore = queuePositionStore;
+    }
 
-    @Inject
-    private UserStore userStore;
-
-    @Inject
-    private QueuePositionStore queuePositionStore;
-
-    @Transactional
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list() throws JsonProcessingException {
         // Get all available queues
@@ -52,25 +65,16 @@ public class QueueController {
         return new ModelAndView("queue/list", ImmutableMap.of("queues", queues, "queuesJson", queuesJson));
     }
 
-    private User getCurrentUser() {
-
-        // TODO: add login support and use the currently logged in user instead
-        User user = userStore.fetchNewestUser();
-        if (user == null) {
-            user = new User();
-            user.setName("Test User");
-            user.setEmail("test@kth.se");
-            userStore.storeUser(user);
-        }
-        return user;
+    private Account getCurrentAccount(Principal principal) {
+        return accountStore.fetchAccountWithPrincipalName(principal.getName());
     }
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo) {
+    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, Principal principal) {
         Queue queue = new Queue();
         queue.setName(queueCreationInfo.getName());
-        queue.setOwner(getCurrentUser());
+        queue.setOwner(getCurrentAccount(principal));
 
         queueStore.storeQueue(queue);
 
@@ -106,7 +110,7 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/create", method = RequestMethod.POST)
-    public String createPosition(@PathVariable("id") int id) throws NotFoundException {
+    public String createPosition(@PathVariable("id") int id, Principal principal) throws NotFoundException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
@@ -115,7 +119,7 @@ public class QueueController {
 
         QueuePosition queuePosition = new QueuePosition();
         queuePosition.setQueue(queue);
-        queuePosition.setUser(getCurrentUser());
+        queuePosition.setAccount(getCurrentAccount(principal));
         queuePosition.setStartTime(DateTime.now());
         queuePositionStore.storeQueuePosition(queuePosition);
 

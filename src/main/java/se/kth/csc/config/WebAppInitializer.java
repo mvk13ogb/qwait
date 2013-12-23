@@ -1,5 +1,6 @@
 package se.kth.csc.config;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -9,6 +10,7 @@ import javax.servlet.ServletRegistration;
 /**
  * Initializes the actual web application by configuring the servlet environment.
  */
+@Order(2)
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
@@ -18,7 +20,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{ApplicationConfig.class, DataSourceConfig.class, JpaConfig.class};
+        return new Class<?>[]{ApplicationConfig.class, DataSourceConfig.class, JpaConfig.class, SecurityConfig.class};
     }
 
     @Override

@@ -7,18 +7,21 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "account")
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false)
     private int id;
 
+    @Column(name = "principal_name", unique = true)
+    private String principalName;
+
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "admin")
+    private boolean admin;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
@@ -30,6 +33,14 @@ public class User {
         return id;
     }
 
+    public String getPrincipalName() {
+        return principalName;
+    }
+
+    public void setPrincipalName(String principalName) {
+        this.principalName = principalName;
+    }
+
     public String getName() {
         return name;
     }
@@ -38,15 +49,15 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public boolean isAdmin() {
+        return admin;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
-    @JsonView(User.class)
+    @JsonView(Account.class)
     public Set<QueuePosition> getPositions() {
         return positions;
     }
@@ -55,7 +66,7 @@ public class User {
         this.positions = Sets.newHashSet(positions);
     }
 
-    @JsonView(User.class)
+    @JsonView(Account.class)
     public Set<Queue> getQueues() {
         return queues;
     }

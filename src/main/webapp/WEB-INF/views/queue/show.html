@@ -51,6 +51,9 @@
           <li><a href="../home.html" th:href="@{/}">Home</a></li>
           <li class="active"><a href="list.html" th:href="@{/queue/list}">Queues</a></li>
         </ul>
+        <ul class="right">
+          <li><a href="#">Logged in as <strong th:text="${#authentication.name}"></strong></a></li>
+        </ul>
       </section>
     </nav>
     <div class="row">
@@ -75,7 +78,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
-              <td>{{queuePosition.user.name}}</td>
+              <td>{{queuePosition.account.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>
                 <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
