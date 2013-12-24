@@ -1,6 +1,8 @@
 package se.kth.csc.controller;
 
 import com.google.common.base.Throwables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import java.text.MessageFormat;
  */
 @Controller
 class GeneralErrorController {
+    private static final Logger log = LoggerFactory.getLogger(GeneralErrorController.class);
 
     /**
      * Display an error page, as defined in web.xml <code>custom-error</code> element.
@@ -41,6 +44,8 @@ class GeneralErrorController {
                 statusCode, requestUri, exceptionMessage);
 
         model.addAttribute("errorMessage", message);
+
+        log.error("An exception was thrown while handling {}", request.getRequestURI(), throwable);
         return "error/general";
     }
 

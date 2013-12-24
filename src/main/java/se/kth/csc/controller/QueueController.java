@@ -125,8 +125,6 @@ public class QueueController {
 
         queue.getPositions().add(queuePosition);
 
-        log.info("Saved queue position with id {}", queuePosition.getId());
-
         return "redirect:/queue/" + queue.getId();
     }
 

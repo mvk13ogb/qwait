@@ -1,6 +1,8 @@
 package se.kth.csc.config;
 
 import org.hibernate.cfg.Environment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackageClasses = Application.class)
 class JpaConfig implements TransactionManagementConfigurer {
+    private static final Logger log = LoggerFactory.getLogger(JpaConfig.class);
 
     /**
      * Creates a new entity manager factory bean using the provided settings.
@@ -46,11 +49,14 @@ class JpaConfig implements TransactionManagementConfigurer {
         jpaProperties.put(Environment.HBM2DDL_AUTO, hbm2ddlAuto);
         entityManagerFactoryBean.setJpaProperties(jpaProperties);
 
+        log.info("Creating entity manager factory bean with automatic \"{}\" schema management and the {} SQL dialect",
+                hbm2ddlAuto, dialect);
         return entityManagerFactoryBean;
     }
 
     @Bean
     public PlatformTransactionManager annotationDrivenTransactionManager() {
+        log.info("Creating JPA transaction manager");
         return new JpaTransactionManager();
     }
 }

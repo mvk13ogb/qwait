@@ -1,6 +1,8 @@
 package se.kth.csc.config;
 
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 @Configuration
 @ImportResource("classpath:spring-security-context.xml")
 public class SecurityConfig {
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
     public ServiceProperties serviceProperties(@Value("${security.cas.service}") String service) {
@@ -24,6 +27,7 @@ public class SecurityConfig {
         serviceProperties.setService(service);
         serviceProperties.setSendRenew(false);
 
+        log.info("Creating CAS service properties with service \"{}\" and no renewal requirement", service);
         return serviceProperties;
     }
 
@@ -35,6 +39,7 @@ public class SecurityConfig {
         casAuthenticationFilter.setAuthenticationManager(authenticationManager);
         casAuthenticationFilter.setFilterProcessesUrl("/authenticate");
 
+        log.info("Creating CAS authentication filter with process URL \"/authenticate\"");
         return casAuthenticationFilter;
     }
 
@@ -47,6 +52,7 @@ public class SecurityConfig {
         casAuthenticationEntryPoint.setLoginUrl(loginUrl);
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties);
 
+        log.info("Creating CAS authentication entry point with login url {}", loginUrl);
         return casAuthenticationEntryPoint;
     }
 
@@ -64,6 +70,8 @@ public class SecurityConfig {
         casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(ticketValidator));
         casAuthenticationProvider.setKey(authProviderKey);
 
+        log.info("Creating CAS authentication provider using {} as the ticket validator and a secret provider key",
+                ticketValidator);
         return casAuthenticationProvider;
     }
 }

@@ -1,5 +1,7 @@
 package se.kth.csc.persist;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.model.*;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Repository
 public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
+    private static final Logger log = LoggerFactory.getLogger(JPAStore.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -33,11 +36,13 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public void storeQueue(Queue queue) {
         entityManager.persist(queue);
+        log.info("Created a new queue with id {}", queue.getId());
     }
 
     @Override
     public void removeQueue(Queue queue) {
         entityManager.remove(queue);
+        log.info("Removed queue with id {}", queue.getId());
     }
 
     @Override
@@ -79,6 +84,7 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public void storeAccount(Account account) {
         entityManager.persist(account);
+        log.info("Created a new account with id {}", account.getId());
     }
 
     @Override
@@ -89,10 +95,12 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public void storeQueuePosition(QueuePosition queuePosition) {
         entityManager.persist(queuePosition);
+        log.info("Created a new queue position with id {}", queuePosition.getId());
     }
 
     @Override
     public void removeQueuePosition(QueuePosition queuePosition) {
         entityManager.remove(queuePosition);
+        log.info("Removed a queue position with id {}", queuePosition.getId());
     }
 }

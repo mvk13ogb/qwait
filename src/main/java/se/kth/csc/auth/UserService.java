@@ -1,7 +1,6 @@
 package se.kth.csc.auth;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.xml.XmlEscapers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.controller.HomeController;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 
 @Service
 public class UserService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private static final GrantedAuthority USER_AUTHORITY = new SimpleGrantedAuthority("user");
     private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("admin");
     private final AccountStore accountStore;

@@ -1,5 +1,7 @@
 package se.kth.csc.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,7 @@ import static org.springframework.context.annotation.ComponentScan.Filter;
 @Configuration
 @ComponentScan(basePackageClasses = Application.class, includeFilters = @Filter(Controller.class))
 class WebMvcConfig extends WebMvcConfigurationSupport {
+    private static final Logger log = LoggerFactory.getLogger(WebMvcConfig.class);
 
     /**
      * Resource path for where to store localized messages for Thymeleaf.
@@ -69,6 +72,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         // Cache messages for a while, but make sure that they can be edited at run-time
         messageSource.setCacheSeconds(5);
 
+        log.info("Creating message source reading from {} that caches for 5 seconds", MESSAGE_SOURCE);
         return messageSource;
     }
 
@@ -90,6 +94,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         // TODO: change this when going into production
         templateResolver.setCacheable(false);
 
+        log.info("Creating Thymeleaf template resolver in HTML5 mode");
         return templateResolver;
     }
 
@@ -105,6 +110,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         // Add support for security stuff
         templateEngine.addDialect(new SpringSecurityDialect());
 
+        log.info("Creating Thymeleaf template engine with security support");
         return templateEngine;
     }
 
@@ -119,6 +125,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         // Override platform encoding
         thymeleafViewResolver.setCharacterEncoding("UTF-8");
 
+        log.info("Creating Thymeleaf view resolver");
         return thymeleafViewResolver;
     }
 
@@ -129,6 +136,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         // Use our message source when validating beans
         validator.setValidationMessageSource(messageSource());
 
+        log.info("Setting up validation factory using a custom message source");
         return validator;
     }
 
