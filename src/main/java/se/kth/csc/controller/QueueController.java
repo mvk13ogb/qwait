@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/queue")
 public class QueueController {
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger log = LoggerFactory.getLogger(QueueController.class);
     private final ObjectMapper objectMapper;
     private final QueueStore queueStore;
     private final AccountStore accountStore;

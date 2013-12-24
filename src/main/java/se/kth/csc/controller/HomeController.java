@@ -1,5 +1,7 @@
 package se.kth.csc.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import java.security.Principal;
  */
 @Controller
 public class HomeController {
+    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
     private final AccountStore accountStore;
 
     protected HomeController() {
@@ -46,6 +49,8 @@ public class HomeController {
         // Log out user to reload auth roles
         SecurityContextHolder.clearContext();
 
+        log.info("User {} is now an admin and was logged out", account.getName());
+
         return "redirect:/";
     }
 
@@ -58,6 +63,8 @@ public class HomeController {
 
         // Log out user to reload auth roles
         SecurityContextHolder.clearContext();
+
+        log.info("User {} is now not an admin and was logged out", account.getName());
 
         return "redirect:/";
     }
