@@ -9,11 +9,9 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import se.kth.csc.auth.UserService;
 
 @Configuration
 @ImportResource("classpath:spring-security-context.xml")
@@ -35,6 +33,7 @@ public class SecurityConfig {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
 
         casAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        casAuthenticationFilter.setFilterProcessesUrl("/authenticate");
 
         return casAuthenticationFilter;
     }
