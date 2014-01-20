@@ -19,13 +19,18 @@
       <section class="top-bar-section">
         <ul class="left">
           <li><a href="../home.html" th:href="@{/}">Home</a></li>
-          <li><a href="#">Queues</a></li>
+          <li><a href="../queue/list.html" th:href="@{/queue/list}">Queues</a></li>
+        </ul>
+        <ul class="right">
+          <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
         </ul>
       </section>
     </nav>
     <div class="row">
       <div class="large-12 columns">
-        <h1>Not found</h1>
+        <h1>That's not how you queue.</h1>
+        <p>You must have gotten lost, because you somehow managed to find something that doesn't exist.</p>
+        <a href="../home.html" th:href="@{/}">Go back home</a>
       </div>
     </div>
 

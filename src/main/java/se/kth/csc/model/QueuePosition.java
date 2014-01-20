@@ -1,7 +1,5 @@
 package se.kth.csc.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -16,7 +14,7 @@ public class QueuePosition {
     @Column(name = "id", updatable = false)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "queue_id")
     private Queue queue;
 
@@ -24,15 +22,15 @@ public class QueuePosition {
     @Column(name = "start_time")
     private DateTime startTime;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public int getId() {
         return id;
     }
 
-    @JsonView(User.class)
+    @JsonView({QueuePosition.class, Account.class})
     public Queue getQueue() {
         return queue;
     }
@@ -49,12 +47,12 @@ public class QueuePosition {
         this.startTime = startTime;
     }
 
-    @JsonView(Queue.class)
-    public User getUser() {
-        return user;
+    @JsonView({QueuePosition.class, Queue.class})
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

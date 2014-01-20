@@ -2,6 +2,8 @@ package se.kth.csc.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,6 +22,7 @@ import static org.springframework.context.annotation.ComponentScan.Filter;
 @Configuration
 @ComponentScan(basePackageClasses = Application.class, excludeFilters = @Filter(Controller.class))
 class ApplicationConfig {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
 
     /**
      * The provider for placeholders that lets us use {@link org.springframework.beans.factory.annotation.Value}
@@ -31,6 +34,8 @@ class ApplicationConfig {
 
         // Load properties from "settings.properties"
         ppc.setLocation(new ClassPathResource("/settings.properties"));
+
+        log.info("Creating placeholder configurer based on \"settings.properties\" file");
         return ppc;
     }
 
@@ -41,6 +46,8 @@ class ApplicationConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper result = new ObjectMapper();
         result.registerModule(new JodaModule());
+
+        log.info("Creating object mapper with Joda support");
         return result;
     }
 }

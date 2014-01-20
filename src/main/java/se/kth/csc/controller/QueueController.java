@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,70 +15,75 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.model.User;
 import se.kth.csc.payload.QueueCreationInfo;
+import se.kth.csc.persist.AccountStore;
+import se.kth.csc.persist.QueuePositionStore;
+import se.kth.csc.persist.QueueStore;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/queue")
 public class QueueController {
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger log = LoggerFactory.getLogger(QueueController.class);
+    private final ObjectMapper objectMapper;
+    private final QueueStore queueStore;
+    private final AccountStore accountStore;
+    private final QueuePositionStore queuePositionStore;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    protected QueueController() {
+        // Needed for injection
+        objectMapper = null;
+        queueStore = null;
+        accountStore = null;
+        queuePositionStore = null;
+    }
 
-    @Inject
-    private ObjectMapper objectMapper;
+    @Autowired
+    public QueueController(
+            ObjectMapper objectMapper,
+            QueueStore queueStore,
+            AccountStore accountStore,
+            QueuePositionStore queuePositionStore) {
+        this.objectMapper = objectMapper;
+        this.queueStore = queueStore;
+        this.accountStore = accountStore;
+        this.queuePositionStore = queuePositionStore;
+    }
 
-    @Transactional
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list() throws JsonProcessingException {
         // Get all available queues
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> query = cb.createQuery(Queue.class);
-        List<Queue> queues = entityManager.createQuery(query.select(query.from(Queue.class))).getResultList();
+        List<Queue> queues = queueStore.fetchAllQueues();
 
         String queuesJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queues);
 
         return new ModelAndView("queue/list", ImmutableMap.of("queues", queues, "queuesJson", queuesJson));
     }
 
-    private User getCurrentUser() {
-
-        // TODO: add login support and use the currently logged in user instead
-        User user = entityManager.find(User.class, 1);
-        if (user == null) {
-            user = new User();
-            user.setName("Test User");
-            user.setEmail("test@kth.se");
-            entityManager.persist(user);
-        }
-        return user;
+    private Account getCurrentAccount(Principal principal) {
+        return accountStore.fetchAccountWithPrincipalName(principal.getName());
     }
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo) {
+    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, Principal principal) {
         Queue queue = new Queue();
         queue.setName(queueCreationInfo.getName());
-        queue.setOwner(getCurrentUser());
+        queue.setOwner(getCurrentAccount(principal));
 
-        entityManager.persist(queue);
+        queueStore.storeQueue(queue);
 
         return "redirect:/queue/" + queue.getId();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ModelAndView show(@PathVariable("id") int id) throws NotFoundException, JsonProcessingException {
-        Queue queue = entityManager.find(Queue.class, id);
+        Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
             throw new NotFoundException();
@@ -90,21 +97,21 @@ public class QueueController {
     @Transactional
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
     public String remove(@PathVariable("id") int id) throws NotFoundException {
-        Queue queue = entityManager.find(Queue.class, id);
+        Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
             throw new NotFoundException();
         }
 
-        entityManager.remove(queue);
+        queueStore.removeQueue(queue);
 
         return "redirect:/queue/list";
     }
 
     @Transactional
     @RequestMapping(value = "/{id}/position/create", method = RequestMethod.POST)
-    public String createPosition(@PathVariable("id") int id) throws NotFoundException {
-        Queue queue = entityManager.find(Queue.class, id);
+    public String createPosition(@PathVariable("id") int id, Principal principal) throws NotFoundException {
+        Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
             throw new NotFoundException();
@@ -112,11 +119,11 @@ public class QueueController {
 
         QueuePosition queuePosition = new QueuePosition();
         queuePosition.setQueue(queue);
-        queuePosition.setUser(getCurrentUser());
+        queuePosition.setAccount(getCurrentAccount(principal));
         queuePosition.setStartTime(DateTime.now());
-        entityManager.persist(queuePosition);
+        queuePositionStore.storeQueuePosition(queuePosition);
+
         queue.getPositions().add(queuePosition);
-        log.info("Saved queue position with id {}", queuePosition.getId());
 
         return "redirect:/queue/" + queue.getId();
     }
@@ -124,13 +131,15 @@ public class QueueController {
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
     public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId) throws NotFoundException {
-        QueuePosition queuePosition = entityManager.find(QueuePosition.class, positionId);
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+        Queue queue = queueStore.fetchQueueWithId(id);
 
-        if (queuePosition == null) {
+        if (queuePosition == null || queue == null) {
             throw new NotFoundException();
         }
 
-        entityManager.remove(queuePosition);
+        queue.getPositions().remove(queuePosition);
+        queuePositionStore.removeQueuePosition(queuePosition);
 
         return "redirect:/queue/" + id;
     }

@@ -1,5 +1,7 @@
 package se.kth.csc.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,8 @@ import javax.sql.DataSource;
 @Configuration
 @Profile("default")
 class SettingsDataSourceConfig implements DataSourceConfig {
+    private static final Logger log = LoggerFactory.getLogger(SettingsDataSourceConfig.class);
+
     @Value("${dataSource.driverClassName}")
     private String driver;
     @Value("${dataSource.url}")
@@ -33,6 +37,7 @@ class SettingsDataSourceConfig implements DataSourceConfig {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
+        log.info("Creating data source with JDBC driver {}, connecting to {} as user {}", driver, url, username);
         return dataSource;
     }
 }
