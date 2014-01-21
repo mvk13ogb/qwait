@@ -24,6 +24,7 @@ import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
 import java.security.Principal;
+import java.security.acl.NotOwnerException;
 import java.util.List;
 
 @Controller
@@ -71,14 +72,19 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, Principal principal) {
-        Queue queue = new Queue();
-        queue.setName(queueCreationInfo.getName());
-        queue.setOwner(getCurrentAccount(principal));
+    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, Principal principal)
+        throws NotOwnerException {
+        if (accountStore.fetchAccountWithPrincipalName(principal.getName()).isSuperAdmin()) {
+            Queue queue = new Queue();
+            queue.setName(queueCreationInfo.getName());
+            queue.setOwner(getCurrentAccount(principal));
 
-        queueStore.storeQueue(queue);
+            queueStore.storeQueue(queue);
 
-        return "redirect:/queue/" + queue.getId();
+            return "redirect:/queue/" + queue.getId();
+        } else {
+            throw new NotOwnerException();
+        }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -96,16 +102,20 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
-    public String remove(@PathVariable("id") int id) throws NotFoundException {
-        Queue queue = queueStore.fetchQueueWithId(id);
+    public String remove(@PathVariable("id") int id, Principal principal) throws Exception {
+        if (accountStore.fetchAccountWithPrincipalName(principal.getName()).isSuperAdmin()) {
+            Queue queue = queueStore.fetchQueueWithId(id);
 
-        if (queue == null) {
-            throw new NotFoundException();
+            if (queue == null) {
+                throw new NotFoundException();
+            }
+
+            queueStore.removeQueue(queue);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new NotOwnerException();
         }
-
-        queueStore.removeQueue(queue);
-
-        return "redirect:/queue/list";
     }
 
     @Transactional

@@ -44,6 +44,7 @@ public class HomeController {
     public String makeMeAdmin(Principal principal) {
         // Make user into an admin
         Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+        account.setSuperAdmin(false);
         account.setAdmin(true);
 
         // Log out user to reload auth roles
@@ -55,16 +56,33 @@ public class HomeController {
     }
 
     @Transactional
+    @RequestMapping(value = "/make-me-super-admin", method = RequestMethod.POST)
+    public String makeMeSuperAdmin(Principal principal) {
+        // Make user into a superadmin
+        Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+        account.setSuperAdmin(true);
+        account.setAdmin(true);
+
+        // Log out user to reload auth roles
+        SecurityContextHolder.clearContext();
+
+        log.info("User {} is now a superadmin (and admin), and was logged out", account.getName());
+
+        return "redirect:/";
+    }
+
+    @Transactional
     @RequestMapping(value = "/make-me-not-admin", method = RequestMethod.POST)
     public String makeMeNotAdmin(Principal principal) {
         // Make user into a non-admin
         Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+        account.setSuperAdmin(false);
         account.setAdmin(false);
 
         // Log out user to reload auth roles
         SecurityContextHolder.clearContext();
 
-        log.info("User {} is now not an admin and was logged out", account.getName());
+        log.info("User {} is now not an admin nor superadmin and was logged out", account.getName());
 
         return "redirect:/";
     }

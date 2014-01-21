@@ -19,7 +19,9 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueListCtrl', ['$scope', function ($scope) {
+      qwait.controller('QueueListCtrl', ['$scope', '$sce', function ($scope, $sce) {
+        var queueBaseUrl = /*[[@{/queue/}]]*/ '';
+
         /*[- */
         $scope.queues = [
           {name: "Queue 1", id: 1, positions: []},
@@ -29,6 +31,11 @@
         /*[+
          $scope.queues = JSON.parse([[${queuesJson}]]);
          +]*/
+
+        for (var i = 0; i < $scope.queues.length; i++) {
+          var q = $scope.queues[i];
+          q.removeUrl = queueBaseUrl + $scope.queues[i].id + '/remove';
+        }
       }]);
       /* ]]> */
     </script>
@@ -56,19 +63,22 @@
       <div class="large-12 columns" ng-controller="QueueListCtrl">
         <h1>Queues</h1>
 
-        <form action="show.html" method="GET" th:action="@{/queue/create}" th:method="'POST'">
-          <div class="row">
-            <div class="small-3 columns">
-              <label for="queue-name" class="right inline">Add queue called</label>
+        <div sec:authorize="hasRole('super_admin')">
+          <form action="show.html" method="GET" th:action="@{/queue/create}" th:method="'POST'">
+            <div class="row">
+              <div class="small-3 columns">
+                <label for="queue-name" class="right inline">Add queue called</label>
+              </div>
+              <div class="small-8 columns">
+                <input id="queue-name" name="name" type="text" placeholder="queue name"/>
+              </div>
+              <div class="small-1 columns">
+                <button type="submit" class="button postfix">Add</button>
+              </div>
             </div>
-            <div class="small-8 columns">
-              <input id="queue-name" name="name" type="text" placeholder="queue name"/>
-            </div>
-            <div class="small-1 columns">
-              <button type="submit" class="button postfix">Add</button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
+
         <div ng-hide="queues.length">
           <p>There are currently no queues.</p>
         </div>
@@ -78,6 +88,9 @@
               <th>Name</th>
               <th>People queueing</th>
               <th>&nbsp;</th>
+              <div sec:authorize="hasRole('super_admin')">
+                <th>&nbsp;</th>
+              </div>
             </tr>
           </thead>
           <tbody>
@@ -85,6 +98,11 @@
               <td>{{queue.name}}</td>
               <td>{{queue.positions.length}}</td>
               <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
+              <div sec:authorize="hasRole('super_admin')">
+                <td><form action="list.html" method="GET" th:action="{{queue.removeUrl}}" th:method="'POST'">
+                  <a href="#" onclick="parentNode.submit()">Remove</a>
+                </form></td>
+              </div>
             </tr>
           </tbody>
         </table>
