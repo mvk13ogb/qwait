@@ -68,12 +68,22 @@
         <div ng-hide="queue.positions.length">
           <p>There is currently no-one queueing</p>
         </div>
+
+        <div ng-hide="(queue.positions | filter: 'u1bmx14m'.length"> <!-- TODO: Replace hard coded filter with account name-->
+          <p>You are currently not in this queue.</p>
+        </div>
+
+        <div ng-show="(queue.positions | filter: 'u1bmx14m').length"> <!-- TODO: Replace hard coded filter with account name-->
+          <p ng-repeat="queuePosition in queue.positions | filter:'u1bmx14m'">Your current comment is: {{queuePosition.queueComment}}</p>
+        </div>
+
         <table ng-show="queue.positions.length">
           <thead>
             <tr>
               <th>User name</th>
               <th>Started queueing at</th>
               <th>Time in queue</th>
+              <th>Comment</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -82,6 +92,7 @@
               <td>{{queuePosition.account.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
+              <td>{{queuePosition.queueComment}}</td>
               <td>
                 <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
                   <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>

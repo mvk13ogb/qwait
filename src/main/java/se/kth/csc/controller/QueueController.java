@@ -133,6 +133,7 @@ public class QueueController {
         queuePosition.setQueue(queue);
         queuePosition.setAccount(getCurrentAccount(principal));
         queuePosition.setStartTime(DateTime.now());
+        queuePosition.setQueueComment("TEST");
         queuePositionStore.storeQueuePosition(queuePosition);
 
         queue.getPositions().add(queuePosition);
