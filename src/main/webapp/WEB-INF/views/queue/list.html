@@ -34,7 +34,7 @@
 
         for (var i = 0; i < $scope.queues.length; i++) {
           var q = $scope.queues[i];
-          q.removeUrl = queueBaseUrl + $scope.queues[i].id + '/remove';
+          q.removeUrl = queueBaseUrl + q.id + '/remove';
         }
       }]);
       /* ]]> */
@@ -64,7 +64,7 @@
         <h1>Queues</h1>
 
         <div sec:authorize="hasRole('super_admin')">
-          <form action="show.html" method="GET" th:action="@{/queue/create}" th:method="'POST'">
+          <form th:action="@{/queue/create}" th:method="POST">
             <div class="row">
               <div class="small-3 columns">
                 <label for="queue-name" class="right inline">Add queue called</label>
@@ -99,9 +99,11 @@
               <td>{{queue.positions.length}}</td>
               <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
               <div sec:authorize="hasRole('super_admin')">
-                <td><form action="list.html" method="GET" th:action="{{queue.removeUrl}}" th:method="'POST'">
-                  <a href="#" onclick="parentNode.submit()">Remove</a>
-                </form></td>
+                <td>
+                  <form th:action="'{{queue.removeUrl}}'" th:method="POST">
+                    <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                  </form>
+                </td>
               </div>
             </tr>
           </tbody>
