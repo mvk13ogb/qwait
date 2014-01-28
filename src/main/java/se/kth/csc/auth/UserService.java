@@ -21,6 +21,7 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private static final GrantedAuthority USER_AUTHORITY = new SimpleGrantedAuthority("user");
     private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("admin");
+    private static final GrantedAuthority SUPER_ADMIN_AUTHORITY = new SimpleGrantedAuthority("super_admin");
     private final AccountStore accountStore;
 
     @Autowired
@@ -46,7 +47,13 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
     }
 
     private UserDetails createUser(Account account) {
-        return new User(account.getPrincipalName(), "",
-                account.isAdmin() ? ImmutableSet.of(USER_AUTHORITY, ADMIN_AUTHORITY) : ImmutableSet.of(USER_AUTHORITY));
+        if (account.isSuperAdmin()) {
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY, ADMIN_AUTHORITY,
+                    SUPER_ADMIN_AUTHORITY));
+        } else if (account.isAdmin()) {
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY, ADMIN_AUTHORITY));
+        } else { // Regular user
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY));
+        }
     }
 }

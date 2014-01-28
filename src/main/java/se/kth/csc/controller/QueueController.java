@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,8 +22,11 @@ import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.security.acl.NotOwnerException;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/queue")
@@ -71,14 +73,20 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, Principal principal) {
-        Queue queue = new Queue();
-        queue.setName(queueCreationInfo.getName());
-        queue.setOwner(getCurrentAccount(principal));
+    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, HttpServletRequest request,
+        Principal principal)
+        throws NotOwnerException {
+        if (request.isUserInRole("super_admin")) {
+            Queue queue = new Queue();
+            queue.setName(queueCreationInfo.getName());
+            queue.setOwner(getCurrentAccount(principal));
 
-        queueStore.storeQueue(queue);
+            queueStore.storeQueue(queue);
 
-        return "redirect:/queue/" + queue.getId();
+            return "redirect:/queue/list";
+        } else {
+            throw new NotOwnerException();
+        }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -96,16 +104,20 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
-    public String remove(@PathVariable("id") int id) throws NotFoundException {
-        Queue queue = queueStore.fetchQueueWithId(id);
+    public String remove(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+        if (request.isUserInRole("super_admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
 
-        if (queue == null) {
-            throw new NotFoundException();
+            if (queue == null) {
+                throw new NotFoundException();
+            }
+
+            queueStore.removeQueue(queue);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new NotOwnerException();
         }
-
-        queueStore.removeQueue(queue);
-
-        return "redirect:/queue/list";
     }
 
     @Transactional
@@ -125,7 +137,7 @@ public class QueueController {
 
         queue.getPositions().add(queuePosition);
 
-        return "redirect:/queue/" + queue.getId();
+        return "redirect:/queue/" + id;
     }
 
     @Transactional
