@@ -26,8 +26,7 @@ public class QueuePosition {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Type(type = "string") // TODO: Is this type correct?
-    @Column(name = "queue_comment")
+    @Column(name = "comment")
     private String comment;
 
     public int getId() {
@@ -51,14 +50,6 @@ public class QueuePosition {
         this.startTime = startTime;
     }
 
-    public String getQueueComment() {
-        return comment;
-    }
-
-    public void setQueueComment(String comment) {
-        this.comment = comment;
-    }
-
     @JsonView({QueuePosition.class, Queue.class})
     public Account getAccount() {
         return account;
@@ -67,4 +58,8 @@ public class QueuePosition {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    public String getComment() { return comment; }
+
+    public void setComment(String comment) { this.comment = comment; }
 }

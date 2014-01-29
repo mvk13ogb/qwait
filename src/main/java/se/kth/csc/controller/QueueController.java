@@ -133,7 +133,6 @@ public class QueueController {
         queuePosition.setQueue(queue);
         queuePosition.setAccount(getCurrentAccount(principal));
         queuePosition.setStartTime(DateTime.now());
-        queuePosition.setQueueComment("TEST");
         queuePositionStore.storeQueuePosition(queuePosition);
 
         queue.getPositions().add(queuePosition);
@@ -153,6 +152,22 @@ public class QueueController {
 
         queue.getPositions().remove(queuePosition);
         queuePositionStore.removeQueuePosition(queuePosition);
+
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
+    public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
+            throws NotFoundException {
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+        Queue queue = queueStore.fetchQueueWithId(id);
+
+        if (queuePosition == null || queue == null) {
+            throw new NotFoundException();
+        }
+
+        queuePosition.setComment(comment);
 
         return "redirect:/queue/" + id;
     }

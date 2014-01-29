@@ -32,6 +32,7 @@
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
           position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
+          position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
       }]);
       /* ]]> */
@@ -62,19 +63,29 @@
 
         <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
 
+        <!--TODO Hard coded name-->
+        <div ng-repeat="p in queue.positions | filter: 'u1hhzpnk'">
+          <form th:action="'{{p.commentUrl}}'" th:method="POST">
+            <div class="row">
+              <div class="small-2 columns">
+                <label for="queue-comment" class="right inline">Add comment</label>
+              </div>
+              <div class="large-9 columns">
+                <!--<textarea id="queue-comment" placeholder="No comment"></textarea>-->
+                <input id="queue-comment" value="{{p.comment}}" name="comment" type="text" placeholder="No comment"/>
+              </div>
+              <div class="small-1 columns">
+                <button type="submit" class="button postfix">Add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
         <form th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
         <div ng-hide="queue.positions.length">
           <p>There is currently no-one queueing</p>
-        </div>
-
-        <div ng-hide="(queue.positions | filter: 'u1bmx14m'.length"> <!-- TODO: Replace hard coded filter with account name-->
-          <p>You are currently not in this queue.</p>
-        </div>
-
-        <div ng-show="(queue.positions | filter: 'u1bmx14m').length"> <!-- TODO: Replace hard coded filter with account name-->
-          <p ng-repeat="queuePosition in queue.positions | filter:'u1bmx14m'">Your current comment is: {{queuePosition.queueComment}}</p>
         </div>
 
         <table ng-show="queue.positions.length">
@@ -92,7 +103,7 @@
               <td>{{queuePosition.account.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
-              <td>{{queuePosition.queueComment}}</td>
+              <td>{{queuePosition.comment || '(No comment)'}}</td>
               <td>
                 <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
                   <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
