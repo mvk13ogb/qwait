@@ -26,12 +26,17 @@
         var queueStr = /*[[${queueJson}]]*/ '{"name": "Queue 1", "id": 1, "positions": []}';
         $scope.queue = JSON.parse(queueStr);
 
+        // Extract logged in user name via JSON
+        var nameStr = /*[[${userNameJson}]]*/;
+        $scope.userName = JSON.parse(nameStr);
+
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
           position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
+          position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
       }]);
       /* ]]> */
@@ -62,18 +67,36 @@
 
         <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
 
+        <div ng-repeat="p in queue.positions | filter: userName">
+          <form th:action="'{{p.commentUrl}}'" th:method="POST">
+            <div class="row">
+              <div class="small-2 columns">
+                <label for="queue-comment" class="right inline">Add comment</label>
+              </div>
+              <div class="large-9 columns">
+                <input id="queue-comment" value="{{p.comment}}" name="comment" type="text" placeholder="No comment"/>
+              </div>
+              <div class="small-1 columns">
+                <button type="submit" class="button postfix">Add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
         <form th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
         <div ng-hide="queue.positions.length">
           <p>There is currently no-one queueing</p>
         </div>
+
         <table ng-show="queue.positions.length">
           <thead>
             <tr>
               <th>User name</th>
               <th>Started queueing at</th>
               <th>Time in queue</th>
+              <th>Comment</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -82,6 +105,7 @@
               <td>{{queuePosition.account.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
+              <td>{{queuePosition.comment || '(No comment)'}}</td>
               <td>
                 <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
                   <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>

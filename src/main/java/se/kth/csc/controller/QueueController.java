@@ -90,7 +90,7 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ModelAndView show(@PathVariable("id") int id) throws NotFoundException, JsonProcessingException {
+    public ModelAndView show(@PathVariable("id") int id, Principal principal) throws NotFoundException, JsonProcessingException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
@@ -98,8 +98,9 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
+        String userNameJson = objectMapper.writeValueAsString(principal.getName());
 
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, "userNameJson", userNameJson));
     }
 
     @Transactional
@@ -152,6 +153,22 @@ public class QueueController {
 
         queue.getPositions().remove(queuePosition);
         queuePositionStore.removeQueuePosition(queuePosition);
+
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
+    public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
+            throws NotFoundException {
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+        Queue queue = queueStore.fetchQueueWithId(id);
+
+        if (queuePosition == null || queue == null) {
+            throw new NotFoundException();
+        }
+
+        queuePosition.setComment(comment);
 
         return "redirect:/queue/" + id;
     }
