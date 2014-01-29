@@ -90,7 +90,7 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ModelAndView show(@PathVariable("id") int id) throws NotFoundException, JsonProcessingException {
+    public ModelAndView show(@PathVariable("id") int id, Principal principal) throws NotFoundException, JsonProcessingException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
@@ -98,8 +98,9 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
+        String userNameJson = objectMapper.writeValueAsString(principal.getName());
 
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, "userNameJson", userNameJson));
     }
 
     @Transactional
