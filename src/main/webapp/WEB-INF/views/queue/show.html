@@ -74,7 +74,9 @@
               <th>User name</th>
               <th>Started queueing at</th>
               <th>Time in queue</th>
-              <th>&nbsp;</th>
+              <div sec:authorize="hasRole('admin')">
+                <th>&nbsp;</th>
+              </div>
             </tr>
           </thead>
           <tbody>
@@ -82,11 +84,13 @@
               <td>{{queuePosition.account.name}}</td>
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
-              <td>
-                <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                  <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                </form>
-              </td>
+              <div sec:authorize="hasRole('admin')">
+                <td>
+                  <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+                    <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                  </form>
+                </td>
+              </div>
             </tr>
           </tbody>
         </table>
