@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
@@ -85,6 +86,25 @@ public class HomeController {
         log.info("User {} is now not an admin nor superadmin and was logged out", account.getName());
 
         return "redirect:/";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/log-me-out", method = RequestMethod.POST)
+    public String logOut(Principal principal, HttpServletRequest request) {
+
+        // Make user into a non-admin
+
+        Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+        //account.setAdmin(false);
+        //account.setSuperAdmin(false);
+
+        // Log out user to reload auth roles
+        SecurityContextHolder.clearContext();
+
+        log.info("User {} was logged out", account.getName());
+
+        String redirectUrl = request.getScheme() + "://login.kth.se/logout";
+        return "redirect:" + redirectUrl;
     }
 }
 

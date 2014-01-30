@@ -23,6 +23,8 @@
         </ul>
         <ul class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
+          <li onclick="logoutform.submit();"><a>Log Out</a></li>
+          <form id="logoutform" method="POST" th:action="@{/log-me-out}"></form>
         </ul>
       </section>
     </nav>
