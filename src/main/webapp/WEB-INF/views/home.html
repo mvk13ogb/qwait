@@ -16,7 +16,7 @@
 
     <link rel="stylesheet" href="../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+    <script src="../../js-vendor/angular.js" th:srsc="@{/js-vendor/angular.js}"></script>
     <script src="../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
   </head>
   <body>
@@ -51,8 +51,8 @@
     </div>
 
     <script src="../../js/jquery.js" th:src="@{/js/jquery.js}"></script>
-    <script src="../../js/foundation.js" th:src="@{/js/foundation.js}"></script>
-    <script src="../../js/foundation.topbar.js" th:src="@{/js/foundation.topbar.js}"></script>
+    <script src="../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
+    <script src="../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
