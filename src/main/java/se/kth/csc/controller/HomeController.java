@@ -92,11 +92,7 @@ public class HomeController {
     @RequestMapping(value = "/log-me-out", method = RequestMethod.POST)
     public String logOut(Principal principal, HttpServletRequest request) {
 
-        // Make user into a non-admin
-
         Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-        //account.setAdmin(false);
-        //account.setSuperAdmin(false);
 
         // Log out user to reload auth roles
         SecurityContextHolder.clearContext();
