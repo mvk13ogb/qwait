@@ -142,18 +142,22 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
-    public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId) throws NotFoundException {
-        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
-        Queue queue = queueStore.fetchQueueWithId(id);
+    public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId, HttpServletRequest request) throws Exception {
+        if (request.isUserInRole("admin")) {
+            QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+            Queue queue = queueStore.fetchQueueWithId(id);
 
-        if (queuePosition == null || queue == null) {
-            throw new NotFoundException();
+            if (queuePosition == null || queue == null) {
+                throw new NotFoundException();
+            }
+
+            queue.getPositions().remove(queuePosition);
+            queuePositionStore.removeQueuePosition(queuePosition);
+
+            return "redirect:/queue/" + id;
+        } else {
+            throw new NotOwnerException();
         }
-
-        queue.getPositions().remove(queuePosition);
-        queuePositionStore.removeQueuePosition(queuePosition);
-
-        return "redirect:/queue/" + id;
     }
 
     @Transactional

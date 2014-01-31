@@ -39,6 +39,14 @@ public class HomeController {
         return "home";
     }
 
+    /**
+     * The help page of the web application
+     */
+    @RequestMapping(value = "/help", method = RequestMethod.GET)
+    public String help(){
+        return "help";
+    }
+
     @Transactional
     @RequestMapping(value = "/make-me-admin", method = RequestMethod.POST)
     public String makeMeAdmin(Principal principal) {

@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="../../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.js"></script>
+    <script src="../../js-vendor/angular.js" th:src="@{/js-vendor/angular.js}"></script>
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
@@ -51,6 +51,7 @@
         <ul class="left">
           <li><a href="../home.html" th:href="@{/}">Home</a></li>
           <li class="active"><a href="list.html" th:href="@{/queue/list}">Queues</a></li>
+          <li><a href="../help.html" th:href="@{/help}">Help</a></li>
         </ul>
         <ul class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
@@ -93,7 +94,9 @@
               <th>Started queueing at</th>
               <th>Time in queue</th>
               <th>Comment</th>
-              <th>&nbsp;</th>
+              <div sec:authorize="hasRole('admin')">
+                <th>&nbsp;</th>
+              </div>
             </tr>
           </thead>
           <tbody>
@@ -102,20 +105,24 @@
               <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
               <td>{{queuePosition.comment || '(No comment)'}}</td>
-              <td>
-                <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                  <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                </form>
-              </td>
+
+              <div sec:authorize="hasRole('admin')">
+                <td>
+                  <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+                    <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                  </form>
+                </td>
+              </div>
+
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <script src="../../../js/jquery.js" th:src="@{/js/jquery.js}"></script>
-    <script src="../../../js/foundation.js" th:src="@{/js/foundation.js}"></script>
-    <script src="../../../js/foundation.topbar.js" th:src="@{/js/foundation.topbar.js}"></script>
+    <script src="../../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
+    <script src="../../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
+    <script src="../../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
