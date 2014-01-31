@@ -98,9 +98,8 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-        String userNameJson = objectMapper.writeValueAsString(principal.getName());
 
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, "userNameJson", userNameJson));
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
     }
 
     @Transactional
