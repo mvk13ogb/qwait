@@ -24,6 +24,7 @@ import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.NotActiveException;
 import java.security.Principal;
 import java.util.List;
 
@@ -133,11 +134,15 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/create", method = RequestMethod.POST)
-    public String createPosition(@PathVariable("id") int id, Principal principal) throws NotFoundException {
+    public String createPosition(@PathVariable("id") int id, Principal principal) throws Exception {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
             throw new NotFoundException();
+        }
+
+        if (!queue.isActive()) {
+            throw new NotActiveException("Tried to join queue which is not active!");
         }
 
         QueuePosition queuePosition = new QueuePosition();
