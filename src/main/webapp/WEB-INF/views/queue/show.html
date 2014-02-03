@@ -88,6 +88,7 @@
         <form th:attr="ng-show='queue.active'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
+        
         <div ng-hide="queue.positions.length">
           <p>There is currently no-one queueing</p>
         </div>
