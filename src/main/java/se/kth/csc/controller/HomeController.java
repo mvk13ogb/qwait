@@ -87,20 +87,4 @@ public class HomeController {
 
         return "redirect:/";
     }
-
-    @Transactional
-    @RequestMapping(value = "/log-me-out", method = RequestMethod.POST)
-    public String logOut(Principal principal, HttpServletRequest request) {
-
-        Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-
-        // Log out user to reload auth roles
-        SecurityContextHolder.clearContext();
-
-        log.info("User {} was logged out", account.getName());
-
-        String redirectUrl = request.getScheme() + "://login.kth.se/logout";
-        return "redirect:" + redirectUrl;
-    }
 }
-
