@@ -57,9 +57,18 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView list() throws JsonProcessingException {
+    public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
         // Get all available queues
         List<Queue> queues = queueStore.fetchAllQueues();
+        if (!request.isUserInRole("admin")) {
+            List<Queue> userQueue = new ArrayList<Queue>();
+            for (Queue q :queues) {
+                if (q.isActive()) {
+                    userQueue.add(q);
+                }
+            }
+        queues = userQueue;
+        }
 
         String queuesJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queues);
 
@@ -80,7 +89,7 @@ public class QueueController {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
             queue.setOwner(getCurrentAccount(principal));
-
+            queue.setActive(true);
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";
@@ -159,7 +168,6 @@ public class QueueController {
             if (queue == null) {
                 throw new NotFoundException();
             }
-
             queue.getPositions().remove(queuePosition);
             queuePositionStore.removeQueuePosition(queuePosition);
 
@@ -183,5 +191,22 @@ public class QueueController {
         queuePosition.setComment(comment);
 
         return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/close", method = {RequestMethod.POST})
+    public String closeQueue(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setActive(false);
+            for (QueuePosition pos : queue.getPositions ()) {
+                queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
+            }
+            queue.getPositions().clear();
+
+           return "redirect:/queue/list";
+        } else {
+            throw new NotOwnerException();
+        }
     }
 }

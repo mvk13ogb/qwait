@@ -24,6 +24,12 @@ public class Queue {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
+    private boolean active;
+
+    public boolean isActive () { return active; }
+
+    public void setActive (boolean active) { this.active = active; }
+
     public int getId() {
         return id;
     }

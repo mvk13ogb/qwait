@@ -35,6 +35,7 @@
         for (var i = 0; i < $scope.queues.length; i++) {
           var q = $scope.queues[i];
           q.removeUrl = queueBaseUrl + q.id + '/remove';
+          q.closeUrl = queueBaseUrl + q.id + '/close';
         }
       }]);
       /* ]]> */
@@ -89,6 +90,10 @@
             <tr>
               <th>Name</th>
               <th>People queueing</th>
+              <div sec:authorize="hasRole('admin')">
+                <th>Active</th>
+                <th>&nbsp;</th>
+              </div>
               <th>&nbsp;</th>
               <div sec:authorize="hasRole('super_admin')">
                 <th>&nbsp;</th>
@@ -99,7 +104,15 @@
             <tr ng-repeat="queue in queues">
               <td>{{queue.name}}</td>
               <td>{{queue.positions.length}}</td>
+              <div sec:authorize="hasRole('admin')"><td>{{queue.active}}</td></div>
               <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
+              <div sec:authorize="hasRole('admin')">
+                <td>
+                  <form th:action="'{{queue.closeUrl}}'" th:method="POST">
+                    <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
+                  </form>
+                </td>
+              </div>
               <div sec:authorize="hasRole('super_admin')">
                 <td>
                   <form th:action="'{{queue.removeUrl}}'" th:method="POST">
@@ -107,6 +120,7 @@
                   </form>
                 </td>
               </div>
+
             </tr>
           </tbody>
         </table>
