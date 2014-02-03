@@ -85,7 +85,7 @@
           </form>
         </div>
 
-        <form th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+        <form th:attr="ng-if='queue.active'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
         <div ng-hide="queue.positions.length">
