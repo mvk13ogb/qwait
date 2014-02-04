@@ -36,6 +36,7 @@
           var q = $scope.queues[i];
           q.removeUrl = queueBaseUrl + q.id + '/remove';
           q.closeUrl = queueBaseUrl + q.id + '/close';
+          q.openUrl = queueBaseUrl + q.id + '/open';
         }
       }]);
       /* ]]> */
@@ -108,8 +109,11 @@
               <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
               <div sec:authorize="hasRole('admin')">
                 <td>
-                  <form th:action="'{{queue.closeUrl}}'" th:method="POST">
+                  <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
                     <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
+                  </form>
+                  <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
+                    <button type="submit" class="button tiny" style="margin-bottom: 0">Open</button>
                   </form>
                 </td>
               </div>
