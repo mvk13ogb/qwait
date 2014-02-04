@@ -24,7 +24,6 @@ import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.NotActiveException;
 import java.security.Principal;
 import java.util.List;
 
