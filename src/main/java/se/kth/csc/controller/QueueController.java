@@ -214,4 +214,17 @@ public class QueueController {
             throw new NotOwnerException();
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/open", method = {RequestMethod.POST})
+    public String openQueue(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setActive(true);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new NotOwnerException();
+        }
+    }
 }
