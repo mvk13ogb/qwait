@@ -144,12 +144,19 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
-    public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId, HttpServletRequest request) throws Exception {
-        if (request.isUserInRole(Role.ADMIN.getAuthority())) {
-            QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+    public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId,
+                                 HttpServletRequest request, Principal principal) throws Exception {
+        Account account = getCurrentAccount(principal);
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+
+        if (queuePosition == null) {
+            throw new NotFoundException();
+        }
+
+        if (request.isUserInRole(Role.ADMIN.getAuthority()) || queuePosition.getAccount().equals(account)) {
             Queue queue = queueStore.fetchQueueWithId(id);
 
-            if (queuePosition == null || queue == null) {
+            if (queue == null) {
                 throw new NotFoundException();
             }
 
