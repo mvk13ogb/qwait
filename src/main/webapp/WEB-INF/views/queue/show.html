@@ -109,8 +109,8 @@
               <td>{{queuePosition.startTime|queuetime}}</td>
               <td>{{queuePosition.comment || '(No comment)'}}</td>
 
-              <td ng-show="queuePosition.removeUrl">
-                <form th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+              <td>
+                <form ng-show="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
                   <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
                 </form>
               </td>
