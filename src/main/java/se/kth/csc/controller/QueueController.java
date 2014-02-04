@@ -142,7 +142,7 @@ public class QueueController {
         }
 
         if (!queue.isActive()) {
-            throw new NotActiveException("Tried to join queue which is not active!");
+            throw new Exception("Tried to join queue which is not active!");
         }
 
         QueuePosition queuePosition = new QueuePosition();
