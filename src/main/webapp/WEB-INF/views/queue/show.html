@@ -22,7 +22,7 @@
       qwait.controller('QueueCtrl', ['$scope', '$sce', function ($scope, $sce) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
         var principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
-        var adminView = /*[[${#authorization.expression("hasRole('super_admin')")}]]*/ true;
+        var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
 
         // Passing this as a string since it can become quite large
         var queueStr = /*[[${queueJson}]]*/ '{"name": "Queue 1", "id": 1, "positions": []}';
