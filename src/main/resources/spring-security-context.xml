@@ -13,6 +13,8 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
         <security:intercept-url pattern="/js/**" access="permitAll"/>
         <security:intercept-url pattern="/icons/**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+        <security:logout invalidate-session="true" logout-url="/logout"
+                         logout-success-url="${security.cas.logoutUrl}"/>
     </security:http>
 
     <security:authentication-manager alias="authenticationManager">
