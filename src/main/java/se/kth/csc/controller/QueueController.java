@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
@@ -24,9 +25,7 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.security.acl.NotOwnerException;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/queue")
@@ -73,10 +72,11 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo, HttpServletRequest request,
-        Principal principal)
-        throws NotOwnerException {
-        if (request.isUserInRole("super_admin")) {
+    public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo,
+                         HttpServletRequest request,
+                         Principal principal)
+            throws ForbiddenException {
+        if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
             queue.setOwner(getCurrentAccount(principal));
@@ -85,12 +85,13 @@ public class QueueController {
 
             return "redirect:/queue/list";
         } else {
-            throw new NotOwnerException();
+            throw new ForbiddenException();
         }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ModelAndView show(@PathVariable("id") int id, Principal principal) throws NotFoundException, JsonProcessingException {
+    public ModelAndView show(@PathVariable("id") int id, Principal principal)
+            throws NotFoundException, JsonProcessingException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
@@ -104,8 +105,9 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
-    public String remove(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
-        if (request.isUserInRole("super_admin")) {
+    public String remove(@PathVariable("id") int id, HttpServletRequest request)
+            throws NotFoundException, ForbiddenException {
+        if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = queueStore.fetchQueueWithId(id);
 
             if (queue == null) {
@@ -116,7 +118,7 @@ public class QueueController {
 
             return "redirect:/queue/list";
         } else {
-            throw new NotOwnerException();
+            throw new ForbiddenException();
         }
     }
 
@@ -143,7 +145,7 @@ public class QueueController {
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
     public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId, HttpServletRequest request) throws Exception {
-        if (request.isUserInRole("admin")) {
+        if (request.isUserInRole(Role.ADMIN.getAuthority())) {
             QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
             Queue queue = queueStore.fetchQueueWithId(id);
 
@@ -156,7 +158,7 @@ public class QueueController {
 
             return "redirect:/queue/" + id;
         } else {
-            throw new NotOwnerException();
+            throw new ForbiddenException();
         }
     }
 

@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +17,6 @@ import se.kth.csc.persist.AccountStore;
 @Service
 public class UserService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private static final GrantedAuthority USER_AUTHORITY = new SimpleGrantedAuthority("user");
-    private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("admin");
-    private static final GrantedAuthority SUPER_ADMIN_AUTHORITY = new SimpleGrantedAuthority("super_admin");
     private final AccountStore accountStore;
 
     @Autowired
@@ -48,12 +43,11 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
 
     private UserDetails createUser(Account account) {
         if (account.isSuperAdmin()) {
-            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY, ADMIN_AUTHORITY,
-                    SUPER_ADMIN_AUTHORITY));
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER, Role.ADMIN, Role.SUPER_ADMIN));
         } else if (account.isAdmin()) {
-            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY, ADMIN_AUTHORITY));
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER, Role.ADMIN));
         } else { // Regular user
-            return new User(account.getPrincipalName(), "", ImmutableSet.of(USER_AUTHORITY));
+            return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER));
         }
     }
 }
