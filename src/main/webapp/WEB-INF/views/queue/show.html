@@ -19,7 +19,7 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueCtrl', ['$scope', '$sce', function ($scope, $sce) {
+      qwait.controller('QueueCtrl', ['$scope', '$sce', 'inQueueFunc', function ($scope, $sce, inQueueFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
         var principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
@@ -30,6 +30,9 @@
 
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
+
+        // Inject check if name is in position array
+        $scope.inQueue = inQueueFunc.inQueue
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];

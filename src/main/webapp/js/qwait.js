@@ -22,3 +22,18 @@ qwait.filter('queuetime', function() {
         return p < 86400 ? h + 'h ' + m + 'm' : 'Over a day';
     }
 });
+
+qwait.factory('inQueueFunc', function() {
+    return {
+        inQueue: function(name, positions) {
+            for(var i=0; i<positions.length; i++) {
+                var pos = positions[i];
+
+                if(pos.account.principalName == name)
+                    return true;
+            }
+
+            return false;
+        }
+    }
+});
