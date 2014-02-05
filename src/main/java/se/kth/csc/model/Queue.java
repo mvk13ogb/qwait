@@ -24,6 +24,7 @@ public class Queue {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
+    @Column(name = "active")
     private boolean active;
 
     public boolean isActive () { return active; }

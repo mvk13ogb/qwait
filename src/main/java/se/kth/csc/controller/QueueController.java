@@ -58,16 +58,11 @@ public class QueueController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
-        // Get all available queues
-        List<Queue> queues = queueStore.fetchAllQueues();
-        if (!request.isUserInRole("admin")) {
-            List<Queue> userQueue = new ArrayList<Queue>();
-            for (Queue q :queues) {
-                if (q.isActive()) {
-                    userQueue.add(q);
-                }
-            }
-        queues = userQueue;
+        List<Queue> queues;
+        if (request.isUserInRole("admin")) {
+            queues = queueStore.fetchAllQueues();
+        } else {
+            queues = queueStore.fetchAllActiveQueues();
         }
 
         String queuesJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queues);
