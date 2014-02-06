@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
+    <head>
+        <title th:text="#{view.home.title}">QWait</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+        <link rel="shortcut icon" id="favicon" href="../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
+
+        <link rel="apple-touch-icon" sizes="144x144" href="../../icons/apple-touch-icon-144x144.png"
+              th:href="@{/icons/apple-touch-icon-144x144.png}"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="../../icons/apple-touch-icon-114x114.png"
+              th:href="@{/icons/apple-touch-icon-114x114.png}"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="../../icons/apple-touch-icon-72x72.png"
+              th:href="@{/icons/apple-touch-icon-72x72.png}"/>
+        <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
+
+        <link rel="stylesheet" href="../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
+
+        <script src="../../js-vendor/angular.js" th:srsc="@{/js-vendor/angular.js}"></script>
+        <script src="../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
+    </head>
+
+    <body>
+    <nav class="top-bar" data-topbar="topbar">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="home.html" th:href="@{/}">QWait</a></h1>
+            </li>
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+        <section class="top-bar-section">
+            <ul class="left">
+                <li class="active"><a href="home.html" th:href="@{/}">Home</a></li>
+                <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
+                <!--SUPERADMIN DEBUG -->
+                <li><a href="superadmin/superadmin.html" th:href="@{/superadmin/superadmin}">SuperAdmin</a></li>
+                <!--END SUPERADMIN DEBUG -->
+            </ul>
+            <ul class="right">
+                <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
+            </ul>
+        </section>
+    </nav>
+
+    <h1>SuperAdmin Settings</h1>
+    <form th:action="@{superadmin/makeadmin}">
+        <input id="username" name="adminname" type="text" placeholder="User to be made admin"/>
+    </form>
+
+    <script src="../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
+    <script src="../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
+    <script src="../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
+    <script>$(document).foundation();</script>
+    </body>
+</html>
