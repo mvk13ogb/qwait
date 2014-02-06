@@ -194,7 +194,8 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/close", method = {RequestMethod.POST})
-    public String closeQueue(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+    public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
         if (request.isUserInRole("admin")) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(false);
@@ -205,20 +206,21 @@ public class QueueController {
 
            return "redirect:/queue/list";
         } else {
-            throw new NotOwnerException();
+            throw new ForbiddenException();
         }
     }
 
     @Transactional
     @RequestMapping(value = "/{id}/open", method = {RequestMethod.POST})
-    public String openQueue(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+    public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
         if (request.isUserInRole("admin")) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(true);
 
             return "redirect:/queue/list";
         } else {
-            throw new NotOwnerException();
+            throw new ForbiddenException();
         }
     }
 }
