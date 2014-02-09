@@ -27,9 +27,16 @@ public class Queue {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "locked")
+    private boolean locked;
+
     public boolean isActive () { return active; }
 
     public void setActive (boolean active) { this.active = active; }
+
+    public boolean isLocked () {return locked; }
+
+    public void setLocked (boolean locked) { this.locked = locked; }
 
     public int getId() {
         return id;

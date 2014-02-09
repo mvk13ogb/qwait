@@ -85,6 +85,7 @@ public class QueueController {
             queue.setName(queueCreationInfo.getName());
             queue.setOwner(getCurrentAccount(principal));
             queue.setActive(true);
+            queue.setLocked(false);
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";
@@ -135,7 +136,7 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        if (!queue.isActive()) {
+        if (!queue.isActive() || queue.isLocked()) {
             throw new ForbiddenException();
         } else {
             // Check if user already in queue. If so, throw exception.
@@ -230,4 +231,33 @@ public class QueueController {
             throw new ForbiddenException();
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/lock", method = {RequestMethod.POST})
+    public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setLocked(true);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/unlock", method = {RequestMethod.POST})
+    public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setLocked(false);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
 }
