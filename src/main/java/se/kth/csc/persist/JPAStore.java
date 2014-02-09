@@ -37,7 +37,7 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
         Root<Queue> queueRoot = q.from(Queue.class);
-        q.select(queueRoot).where(cb.equal(queueRoot.get(Queue_.active), true));
+        q.select(queueRoot).where(queueRoot.get(Queue_.active));
         return entityManager.createQuery(q).getResultList();
     }
 
