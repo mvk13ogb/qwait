@@ -143,6 +143,7 @@ public class QueueController {
                 if (queuePos.getAccount().getPrincipalName().equals(principal.getName())) {
                     throw new ForbiddenException();
                 }
+            }
         }
 
         QueuePosition queuePosition = new QueuePosition();
