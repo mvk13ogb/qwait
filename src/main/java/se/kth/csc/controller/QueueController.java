@@ -136,7 +136,14 @@ public class QueueController {
         }
 
         if (!queue.isActive()) {
-            throw new NotFoundException();
+            throw new ForbiddenException();
+        } else {
+            // Check if user already in queue. If so, throw exception.
+            for (QueuePosition queuePos : queue.getPositions()) {
+                if (queuePos.getAccount().getPrincipalName().equals(principal.getName())) {
+                    throw new ForbiddenException();
+                }
+            }
         }
 
         QueuePosition queuePosition = new QueuePosition();

@@ -19,9 +19,9 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueCtrl', ['$scope', '$sce', function ($scope, $sce) {
+      qwait.controller('QueueCtrl', ['$scope', '$sce', 'inQueueFunc', function ($scope, $sce, inQueueFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
-        var principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
+        $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
 
         // Passing this as a string since it can become quite large
@@ -31,9 +31,12 @@
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
 
+        // Inject check if name is in position array
+        $scope.inQueue = inQueueFunc.inQueue
+
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
-          if (adminView || position.account.principalName === principalName) {
+          if (adminView || position.account.principalName === $scope.principalName) {
             position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
@@ -85,9 +88,10 @@
           </form>
         </div>
 
-        <form th:attr="ng-show='queue.active'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+        <form th:attr="ng-hide='!queue.active || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
+        
         <div ng-hide="queue.positions.length">
           <p>There is currently no-one queueing</p>
         </div>
