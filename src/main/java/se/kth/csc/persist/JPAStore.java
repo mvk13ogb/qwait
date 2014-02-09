@@ -3,7 +3,6 @@ package se.kth.csc.persist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.model.*;
 
 import javax.persistence.EntityManager;
@@ -31,6 +30,15 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
         return entityManager.createQuery(q.select(q.from(Queue.class))).getResultList();
+    }
+
+    @Override
+    public List<Queue> fetchAllActiveQueues() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        Root<Queue> queueRoot = q.from(Queue.class);
+        q.select(queueRoot).where(queueRoot.get(Queue_.active));
+        return entityManager.createQuery(q).getResultList();
     }
 
     @Override

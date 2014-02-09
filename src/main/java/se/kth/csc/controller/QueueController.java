@@ -57,9 +57,13 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView list() throws JsonProcessingException {
-        // Get all available queues
-        List<Queue> queues = queueStore.fetchAllQueues();
+    public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
+        List<Queue> queues;
+        if (request.isUserInRole("admin")) {
+            queues = queueStore.fetchAllQueues();
+        } else {
+            queues = queueStore.fetchAllActiveQueues();
+        }
 
         String queuesJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queues);
 
@@ -80,7 +84,7 @@ public class QueueController {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
             queue.setOwner(getCurrentAccount(principal));
-
+            queue.setActive(true);
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";
@@ -124,10 +128,14 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/create", method = RequestMethod.POST)
-    public String createPosition(@PathVariable("id") int id, Principal principal) throws NotFoundException {
+    public String createPosition(@PathVariable("id") int id, Principal principal) throws Exception {
         Queue queue = queueStore.fetchQueueWithId(id);
 
         if (queue == null) {
+            throw new NotFoundException();
+        }
+
+        if (!queue.isActive()) {
             throw new NotFoundException();
         }
 
@@ -159,7 +167,6 @@ public class QueueController {
             if (queue == null) {
                 throw new NotFoundException();
             }
-
             queue.getPositions().remove(queuePosition);
             queuePositionStore.removeQueuePosition(queuePosition);
 
@@ -183,5 +190,37 @@ public class QueueController {
         queuePosition.setComment(comment);
 
         return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/close", method = {RequestMethod.POST})
+    public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setActive(false);
+            for (QueuePosition pos : queue.getPositions ()) {
+                queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
+            }
+            queue.getPositions().clear();
+
+           return "redirect:/queue/list";
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/open", method = {RequestMethod.POST})
+    public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
+        if (request.isUserInRole("admin")) {
+            Queue queue = queueStore.fetchQueueWithId(id);
+            queue.setActive(true);
+
+            return "redirect:/queue/list";
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }

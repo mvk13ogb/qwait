@@ -10,6 +10,8 @@ public interface QueueStore {
 
     public List<Queue> fetchAllQueues();
 
+    public List<Queue> fetchAllActiveQueues();
+
     public void storeQueue(Queue queue);
 
     public void removeQueue(Queue queue);
