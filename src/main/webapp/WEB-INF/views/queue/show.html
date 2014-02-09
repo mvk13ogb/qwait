@@ -50,6 +50,7 @@
         <ul class="left">
           <li><a href="../home.html" th:href="@{/}">Home</a></li>
           <li class="active"><a href="list.html" th:href="@{/queue/list}">Queues</a></li>
+          <li sec:authorize="hasRole('super_admin')"><a href="superadmin/superadmin.html" th:href="@{/superadmin/superadmin}">SuperAdmin</a></li>
         </ul>
         <ul class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
