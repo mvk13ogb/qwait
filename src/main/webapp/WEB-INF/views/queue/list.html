@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="qwait" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
   <head>
-    <title>Queues &mdash; QWait</title>
+    <title>Queue List &mdash; QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <link rel="shortcut icon" id="favicon" href="../../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
@@ -65,7 +65,7 @@
     </nav>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueListCtrl">
-        <h1>Queues</h1>
+        <h1>Queue List</h1>
 
         <div sec:authorize="hasRole('super_admin')">
           <form th:action="@{/queue/create}" th:method="POST">

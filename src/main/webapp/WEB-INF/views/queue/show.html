@@ -68,7 +68,7 @@
     </nav>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
-        <h1>Queue <q>{{queue.name}}</q></h1>
+        <h1>{{queue.name}}</h1>
 
         <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
 
@@ -76,13 +76,13 @@
           <form th:action="'{{p.commentUrl}}'" th:method="POST">
             <div class="row">
               <div class="small-2 columns">
-                <label for="queue-comment" class="right inline">Add comment</label>
+                <label for="queue-comment" class="right inline">Comment</label>
               </div>
               <div class="large-9 columns">
                 <input id="queue-comment" value="{{p.comment}}" name="comment" type="text" placeholder="No comment"/>
               </div>
               <div class="small-1 columns">
-                <button type="submit" class="button postfix">Add</button>
+                <button type="submit" class="button postfix">Save</button>
               </div>
             </div>
           </form>
@@ -100,7 +100,6 @@
           <thead>
             <tr>
               <th>User name</th>
-              <th>Started queueing at</th>
               <th>Time in queue</th>
               <th>Comment</th>
               <th>&nbsp;</th>
@@ -109,7 +108,6 @@
           <tbody>
             <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
               <td>{{queuePosition.account.name}}</td>
-              <td>{{queuePosition.startTime|timestamp|date:'medium'}}</td>
               <td>{{queuePosition.startTime|queuetime}}</td>
               <td>{{queuePosition.comment || '(No comment)'}}</td>
 
