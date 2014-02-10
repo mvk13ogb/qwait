@@ -37,3 +37,18 @@ qwait.factory('inQueueFunc', function() {
         }
     }
 });
+
+qwait.factory('getQueuePosFunc', function() {
+    return {
+        getQueuePos: function(name, positions) {
+            for(var i=0; i<positions.length; i++) {
+                var pos = positions[i];
+
+                if(pos.account.principalName == name)
+                    return pos;
+            }
+
+            return null;
+        }
+    }
+});

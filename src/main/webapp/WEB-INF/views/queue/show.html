@@ -19,7 +19,8 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueCtrl', ['$scope', '$sce', 'inQueueFunc', function ($scope, $sce, inQueueFunc) {
+      qwait.controller('QueueCtrl', ['$scope', '$sce', 'inQueueFunc', 'getQueuePosFunc',
+          function ($scope, $sce, inQueueFunc, getQueuePosFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
         $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
@@ -33,6 +34,9 @@
 
         // Inject check if name is in position array
         $scope.inQueue = inQueueFunc.inQueue
+
+        // Inject function to fetch queue pos for user
+        $scope.getQueuePos = getQueuePosFunc.getQueuePos
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
@@ -72,7 +76,8 @@
 
         <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
 
-        <div th:attr="ng-repeat='p in queue.positions | filter: ' + ${#authentication.name}">
+        <div th:attr="ng-init='p = getQueuePos(principalName, queue.positions)'"/>
+        <div th:attr="ng-if='p != null'">
           <form th:action="'{{p.commentUrl}}'" th:method="POST">
             <div class="row">
               <div class="small-2 columns">
