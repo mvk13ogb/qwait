@@ -36,8 +36,11 @@
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
-          if (adminView || position.account.principalName === $scope.principalName) {
+          if (adminView) {
             position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
+          }
+          if (position.account.principalName === $scope.principalName) {
+            $scope.queue.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
@@ -70,8 +73,6 @@
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1>{{queue.name}}</h1>
 
-        <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
-
         <div th:attr="ng-repeat='p in queue.positions | filter: ' + ${#authentication.name}">
           <form th:action="'{{p.commentUrl}}'" th:method="POST">
             <div class="row">
@@ -90,6 +91,10 @@
 
         <form th:attr="ng-hide='!queue.active || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
+        </form>
+
+        <form th:attr="ng-hide='!queue.active || !inQueue(principalName, queue.positions)'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+          <button type="submit">Leave queue</button>
         </form>
         
         <div ng-hide="queue.positions.length">
