@@ -88,7 +88,8 @@
           </form>
         </div>
 
-        <form th:attr="ng-hide='!queue.active || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+        <form th:attr="ng-hide='!queue.active || queue.locked || inQueue(principalName, queue.positions)'"
+              th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>
         
