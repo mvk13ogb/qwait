@@ -98,7 +98,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="queue in queues">
+            <tr ng-repeat="queue in queues | orderBy:['-positions.length','name']">
               <td>{{queue.name}}</td>
               <td>{{queue.positions.length}}</td>
               <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
