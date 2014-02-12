@@ -89,41 +89,49 @@
           </form>
         </div>
 
-        <form th:attr="ng-hide='!queue.active || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
-          <button type="submit">Queue me</button>
-        </form>
+        <div class="row">
+          <div class="small-3 small-centered columns text-center">
+            <form th:attr="ng-hide='!queue.active || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+              <button type="submit">Queue me</button>
+            </form>
 
-        <form th:attr="ng-hide='!queue.active || !inQueue(principalName, queue.positions)'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
-          <button type="submit">Leave queue</button>
-        </form>
-        
-        <div ng-hide="queue.positions.length">
-          <p>There is currently no-one queueing</p>
+            <form th:attr="ng-hide='!queue.active || !inQueue(principalName, queue.positions)'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+              <button type="submit">Leave queue</button>
+            </form>
+          </div>
         </div>
 
-        <table ng-show="queue.positions.length">
-          <thead>
-            <tr>
-              <th>User name</th>
-              <th>Time in queue</th>
-              <th>Comment</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
-              <td>{{queuePosition.account.name}}</td>
-              <td>{{queuePosition.startTime|queuetime}}</td>
-              <td>{{queuePosition.comment || '(No comment)'}}</td>
+        <div class="row">
+          <div class="small-8 small-centered columns">
+            <div ng-hide="queue.positions.length">
+              <p>There is currently no-one queueing</p>
+            </div>
 
-              <td>
-                <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                  <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <table ng-show="queue.positions.length">
+              <thead>
+                <tr>
+                  <th>User name</th>
+                  <th>Time in queue</th>
+                  <th>Comment</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
+                  <td>{{queuePosition.account.name}}</td>
+                  <td>{{queuePosition.startTime|queuetime}}</td>
+                  <td>{{queuePosition.comment || '(No comment)'}}</td>
+
+                  <td>
+                    <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+                      <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
