@@ -29,7 +29,7 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Queue> queues = Sets.newHashSet();
 
     public int getId() {
