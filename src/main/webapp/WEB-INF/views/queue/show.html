@@ -128,13 +128,13 @@
               <tbody>
               <!-- Filters on anything on the rows, even the name of the buttons and stuff atm. -->
                 <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false">
-                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.account.name}}</b></td>
+                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.account.name}}</strong></td>
                   <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.account.name}}</td>
 
-                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.startTime|queuetime}}</b></td>
+                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.startTime|queuetime}}</strong></td>
                   <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
 
-                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.comment || '(No comment)'}}</b></td>
+                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.comment || '(No comment)'}}</strong></td>
                   <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
 
                   <td>
