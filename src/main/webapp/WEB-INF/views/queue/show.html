@@ -40,7 +40,7 @@
             position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           if (position.account.principalName === $scope.principalName) {
-            $scope.queue.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
+            position.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
@@ -118,9 +118,14 @@
               </thead>
               <tbody>
                 <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
-                  <td>{{queuePosition.account.name}}</td>
-                  <td>{{queuePosition.startTime|queuetime}}</td>
-                  <td>{{queuePosition.comment || '(No comment)'}}</td>
+                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.account.name}}</b></td>
+                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.account.name}}</td>
+
+                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.startTime|queuetime}}</b></td>
+                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
+
+                  <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.comment || '(No comment)'}}</b></td>
+                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
 
                   <td>
                     <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
