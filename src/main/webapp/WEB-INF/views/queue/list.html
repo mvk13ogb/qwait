@@ -82,54 +82,55 @@
             </div>
           </form>
         </div>
-
-        <div class="row">
-          <div class="small-3 columns">
-            <label for="queue-search" class="right inline">Search for queue</label>
-          </div>
-          <div class="small-9 columns">
-            <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Search"/>
-          </div>
-        </div>
-
         <div class="row">
           <div class="small-8 small-centered columns">
             <div ng-hide="queues.length">
               <p>There are currently no queues.</p>
             </div>
-            <table ng-show="queues.length">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th><img th:src="@{/icons/queue-man.png}"
-                           src="../../../icons/queue-man.png" height="17" width="17"/></th>
-                  <th sec:authorize="hasRole('admin')">Active</th>
-                  <th sec:authorize="hasRole('admin')">&nbsp;</th>
-                  <th sec:authorize="hasRole('super_admin')">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Filter only by name -->
-                <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
-                  <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">{{queue.name}}</a></td>
-                  <td>{{queue.positions.length}}</td>
-                  <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
-                  <td sec:authorize="hasRole('admin')">
-                    <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
-                      <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
-                    </form>
-                    <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
-                      <button type="submit" class="button tiny" style="margin-bottom: 0">Open</button>
-                    </form>
-                  </td>
-                  <td sec:authorize="hasRole('super_admin')">
-                    <form th:action="'{{queue.removeUrl}}'" th:method="POST">
-                      <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                    </form>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div ng-show="queues.length">
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="queue-search" class="right inline">Search for queue</label>
+                </div>
+                <div class="small-9 columns">
+                  <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Search"/>
+                </div>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th><img th:src="@{/icons/queue-man.png}"
+                             src="../../../icons/queue-man.png" height="17" width="17"/></th>
+                    <th sec:authorize="hasRole('admin')">Active</th>
+                    <th sec:authorize="hasRole('admin')">&nbsp;</th>
+                    <th sec:authorize="hasRole('super_admin')">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Filter only by name -->
+                  <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
+                    <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">{{queue.name}}</a></td>
+                    <td>{{queue.positions.length}}</td>
+                    <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
+                    <td sec:authorize="hasRole('admin')">
+                      <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
+                        <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
+                      </form>
+                      <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
+                        <button type="submit" class="button tiny" style="margin-bottom: 0">Open</button>
+                      </form>
+                    </td>
+                    <td sec:authorize="hasRole('super_admin')">
+                      <form th:action="'{{queue.removeUrl}}'" th:method="POST">
+                        <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

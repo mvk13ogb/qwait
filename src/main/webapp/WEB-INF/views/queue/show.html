@@ -102,53 +102,54 @@
         </div>
 
         <div class="row">
-          <div class="small-3 columns">
-            <label for="search" class="right inline">Search for anything</label>
-          </div>
-          <div class="small-9 columns">
-            <input ng-model="search" id="search" name="search" type="text" placeholder="Search"/>
-          </div>
-        </div>
-
-        <div class="row">
           <div class="small-8 small-centered columns">
             <div ng-hide="queue.positions.length">
               <p>There is currently no-one queueing</p>
             </div>
+            <div ng-show="queue.positions.length">
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="search" class="right inline">Search for anything</label>
+                </div>
+                <div class="small-9 columns">
+                  <input ng-model="search" id="search" name="search" type="text" placeholder="Search"/>
+                </div>
+              </div>
 
-            <table ng-show="queue.positions.length">
-              <thead>
-                <tr>
-                  <th>Pos</th>
-                  <th>User name</th>
-                  <th>Time in queue</th>
-                  <th>Comment</th>
-                  <th>&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-              <!-- Filters on anything on the rows, even the name of the buttons and stuff atm. -->
-                <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false">
-                  <td ng-if="queue.removeOwnUrl"><strong>{{$index+1}}</strong></td>
-                  <td ng-if="!queue.removeOwnUrl">{{$index+1}}</td>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>User name</th>
+                    <th>Time in queue</th>
+                    <th>Comment</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <!-- Filters on anything on the rows, even the name of the buttons and stuff atm. -->
+                  <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false">
+                    <td ng-if="queue.removeOwnUrl"><strong>{{$index+1}}</strong></td>
+                    <td ng-if="!queue.removeOwnUrl">{{$index+1}}</td>
 
-                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.account.name}}</strong></td>
-                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.account.name}}</td>
+                    <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.account.name}}</strong></td>
+                    <td ng-if="!queue.removeOwnUrl">{{queuePosition.account.name}}</td>
 
-                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.startTime|queuetime}}</strong></td>
-                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
+                    <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.startTime|queuetime}}</strong></td>
+                    <td ng-if="!queue.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
 
-                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.comment || '(No comment)'}}</strong></td>
-                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
+                    <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.comment || '(No comment)'}}</strong></td>
+                    <td ng-if="!queue.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
 
-                  <td>
-                    <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                      <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                    </form>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td>
+                      <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+                        <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
