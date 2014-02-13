@@ -21,25 +21,26 @@
 <nav class="top-bar" data-topbar="topbar">
     <ul class="title-area">
         <li class="name">
-            <h1><a href="home.html" th:href="@{/}">QWait</a></h1>
+            <h1><a href="home.html" th:href="@{/home}">QWait</a></h1>
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
     <section class="top-bar-section">
         <ul class="left">
-            <li><a href="home.html" th:href="@{/}">Home</a></li>
             <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
             <li class="active"><a href="help.html" th:href="@{/help}">Help</a></li>
+            <li><a href="debug.html" th:href="@{/debug}">Debug</a></li>
         </ul>
         <ul class="right">
             <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
+            <li><a th:href="@{/logout}">Log Out</a></li>
         </ul>
     </section>
 </nav>
 <div class="row">
     <div class="large-12 columns">
-        <h1>Hello, World!</h1>
-        TODO
+        <h1>How to use:</h1>
+        Press buttons until desired result is achieved.
     </div>
 </div>
 

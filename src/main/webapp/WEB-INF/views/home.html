@@ -23,15 +23,15 @@
     <nav class="top-bar" data-topbar="topbar">
       <ul class="title-area">
         <li class="name">
-          <h1><a href="home.html" th:href="@{/}">QWait</a></h1>
+          <h1><a href="home.html" th:href="@{/home}">QWait</a></h1>
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
       </ul>
       <section class="top-bar-section">
         <ul class="left">
-          <li class="active"><a href="home.html" th:href="@{/}">Home</a></li>
           <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
           <li><a href="help.html" th:href="@{/help}">Help</a></li>
+          <li><a href="debug.html" th:href="@{/debug}">Debug</a></li>
         </ul>
         <ul class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
@@ -41,14 +41,18 @@
     </nav>
     <div class="row">
       <div class="large-12 columns">
-        <h1>Hello, World!</h1>
-        <p>Current user roles:</p>
-        <ul>
-          <li th:each="auth : ${#authentication.authorities}" th:text="${auth.authority}">User</li>
-        </ul>
-        <form method="POST" action="home.html" th:action="@{/make-me-admin}"><button type="submit">(DEBUG) Make me into an admin</button></form>
-        <form method="POST" action="home.html" th:action="@{/make-me-super-admin}"><button type="submit">(DEBUG) Make me into a superadmin</button></form>
-        <form method="POST" action="home.html" th:action="@{/make-me-not-admin}"><button type="submit">(DEBUG) Make me into a non-admin</button></form>
+        <h1>Welcome to QWait!</h1>
+        <p>This project was created as part of the course "Software Engineering" by 
+          Adrian Blanco,
+          Casper Winsnes,
+          Christoffer Pettersson,
+          David Flemström,
+          Eric Schmidt,
+          Gustav Zander,
+          Hampus Liljekvist,
+          Jacob Sievers,
+          Michael Håkansson
+          and Robin Engström</p>
       </div>
     </div>
 
