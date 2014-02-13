@@ -132,6 +132,11 @@
             <artifactId>hsqldb</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.3-1100-jdbc41</version>
+        </dependency>
         <!-- Spring Data -->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -261,6 +266,22 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -351,6 +372,42 @@
                         <type>gem</type>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.4.7</version>
+                <configuration>
+                    <container>
+                        <containerId>jetty9x</containerId>
+                        <type>remote</type>
+                    </container>
+
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.hostname>qwait.csc.kth.se</cargo.hostname>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.remote.username>admin</cargo.remote.username>
+                            <cargo.remote.password>${env.CARGO_PASSWORD}</cargo.remote.password>
+                        </properties>
+                    </configuration>
+
+                    <deployer>
+                        <type>remote</type>
+                    </deployer>
+
+                    <deployables>
+                        <deployable>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>/</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.klieber</groupId>

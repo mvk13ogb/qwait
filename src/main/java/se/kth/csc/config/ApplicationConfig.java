@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import se.kth.csc.Application;
@@ -29,8 +30,8 @@ class ApplicationConfig {
      * annotations elsewhere in the application.
      */
     @Bean
-    public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
-        PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer(Environment environment) {
+        PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
 
         // Load properties from "settings.properties"
         ppc.setLocation(new ClassPathResource("/settings.properties"));
