@@ -17,9 +17,9 @@ public class Queue {
     @Column(name = "name", unique = true)
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinColumn(name = "owner_id")
-    private Account owner;
+    //@JoinColumn(name = "owner_id")
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    private Set<Account> owner = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
@@ -59,11 +59,11 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public Account getOwner() {
+    public Set<Account> getOwner() {
         return owner;
     }
 
-    public void setOwner(Account owner) {
+    public void setOwner(Set<Account> owner) {
         this.owner = owner;
     }
 

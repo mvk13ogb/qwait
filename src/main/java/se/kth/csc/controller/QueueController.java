@@ -3,6 +3,7 @@ package se.kth.csc.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,9 +84,13 @@ public class QueueController {
         if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
-            queue.setOwner(getCurrentAccount(principal));
+            Set<Account> ownerSet = Sets.newHashSet();
+            ownerSet.add(getCurrentAccount(principal));
+            queue.setOwner(ownerSet);
+
             queue.setActive(true);
             queue.setLocked(false);
+
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";
