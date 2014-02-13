@@ -3,6 +3,7 @@ package se.kth.csc.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,7 +17,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect;
+import org.thymeleaf.messageresolver.StandardMessageResolver;
 import org.thymeleaf.spring3.SpringTemplateEngine;
+import org.thymeleaf.spring3.messageresolver.SpringMessageResolver;
 import org.thymeleaf.spring3.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
@@ -100,12 +103,20 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Autowired
     @Bean
-    public SpringTemplateEngine templateEngine(TemplateResolver templateResolver) {
+    public SpringTemplateEngine templateEngine(
+            TemplateResolver templateResolver,
+            @Value("${product.name}") String productName,
+            @Value("${product.version}") String productVersion) {
         // Use default Thymeleaf Spring 3 template engine
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 
         // Use our configured template resolver
         templateEngine.setTemplateResolver(templateResolver);
+
+        StandardMessageResolver messageResolver = new StandardMessageResolver();
+        messageResolver.addDefaultMessage("product.name", productName);
+        messageResolver.addDefaultMessage("product.version", productVersion);
+        templateEngine.addMessageResolver(messageResolver);
 
         // Add support for security stuff
         templateEngine.addDialect(new SpringSecurityDialect());
