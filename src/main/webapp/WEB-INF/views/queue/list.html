@@ -105,17 +105,15 @@
                            src="../../../icons/queue-man.png" height="17" width="17"/></th>
                   <th sec:authorize="hasRole('admin')">Active</th>
                   <th sec:authorize="hasRole('admin')">&nbsp;</th>
-                  <th>&nbsp;</th>
                   <th sec:authorize="hasRole('super_admin')">&nbsp;</th>
                 </tr>
               </thead>
               <tbody>
                 <!-- Filter only by name -->
                 <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
-                  <td>{{queue.name}}</td>
+                  <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">{{queue.name}}</a></td>
                   <td>{{queue.positions.length}}</td>
                   <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
-                  <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">Show</a></td>
                   <td sec:authorize="hasRole('admin')">
                     <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
                       <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
