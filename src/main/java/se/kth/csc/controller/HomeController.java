@@ -33,9 +33,17 @@ public class HomeController {
     }
 
     /**
-     * The index page of the web application.
+     * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String welcome(){
+        return "welcome";
+    }
+
+    /**
+     * The home page of the web application.
+     */
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String index() {
         return "home";
     }
@@ -46,6 +54,14 @@ public class HomeController {
     @RequestMapping(value = "/help", method = RequestMethod.GET)
     public String help(){
         return "help";
+    }
+
+    /**
+     * The debug page of the web application
+     */
+    @RequestMapping(value = "/debug", method = RequestMethod.GET)
+    public String debug(){
+        return "debug";
     }
 
     @Transactional
@@ -61,7 +77,7 @@ public class HomeController {
 
         log.info("User {} is now an admin and was logged out", account.getName());
 
-        return "redirect:/";
+        return "redirect:/debug";
     }
 
     @Transactional
@@ -77,7 +93,7 @@ public class HomeController {
 
         log.info("User {} is now a superadmin (and admin), and was logged out", account.getName());
 
-        return "redirect:/";
+        return "redirect:/debug";
     }
 
     @Transactional
@@ -93,6 +109,6 @@ public class HomeController {
 
         log.info("User {} is now not an admin nor superadmin and was logged out", account.getName());
 
-        return "redirect:/";
+        return "redirect:/debug";
     }
 }
