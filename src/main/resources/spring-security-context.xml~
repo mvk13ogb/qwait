@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <security:http auto-config="true" disable-url-rewriting="true" use-expressions="true"
+                   entry-point-ref="casAuthenticationEntryPoint">
+        <security:custom-filter position="CAS_FILTER" ref="casAuthenticationFilter"/>
+		<security:intercept-url pattern="/welcome" access="permitAll"/>
+		<security:intercept-url pattern="/css/**" access="permitAll"/>
+        <security:intercept-url pattern="/js/**" access="permitAll"/>
+        <security:intercept-url pattern="/icons/**" access="permitAll"/>
+        <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+        <security:logout invalidate-session="true" logout-url="/logout"
+                         logout-success-url="${security.cas.logoutUrl}"/>
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="casAuthenticationProvider"/>
+    </security:authentication-manager>
+
+</beans>
