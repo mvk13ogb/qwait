@@ -102,6 +102,15 @@
         </div>
 
         <div class="row">
+          <div class="small-3 columns">
+            <label for="search" class="right inline">Search for anything</label>
+          </div>
+          <div class="small-9 columns">
+            <input ng-model="search" id="search" name="search" type="text" placeholder="Search"/>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="small-8 small-centered columns">
             <div ng-hide="queue.positions.length">
               <p>There is currently no-one queueing</p>
@@ -117,7 +126,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="queuePosition in queue.positions | orderBy:'id':false">
+              <!-- Filters on anything on the rows, even the name of the buttons and stuff atm. -->
+                <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false">
                   <td ng-if="queuePosition.removeOwnUrl"><b>{{queuePosition.account.name}}</b></td>
                   <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.account.name}}</td>
 
