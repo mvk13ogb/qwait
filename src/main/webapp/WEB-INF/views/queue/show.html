@@ -40,7 +40,7 @@
             position.removeUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           if (position.account.principalName === $scope.principalName) {
-            position.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
+            $scope.queue.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
@@ -119,6 +119,7 @@
             <table ng-show="queue.positions.length">
               <thead>
                 <tr>
+                  <th>Pos</th>
                   <th>User name</th>
                   <th>Time in queue</th>
                   <th>Comment</th>
@@ -128,14 +129,17 @@
               <tbody>
               <!-- Filters on anything on the rows, even the name of the buttons and stuff atm. -->
                 <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false">
-                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.account.name}}</strong></td>
-                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.account.name}}</td>
+                  <td ng-if="queue.removeOwnUrl"><strong>{{$index+1}}</strong></td>
+                  <td ng-if="!queue.removeOwnUrl">{{$index+1}}</td>
 
-                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.startTime|queuetime}}</strong></td>
-                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
+                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.account.name}}</strong></td>
+                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.account.name}}</td>
 
-                  <td ng-if="queuePosition.removeOwnUrl"><strong>{{queuePosition.comment || '(No comment)'}}</strong></td>
-                  <td ng-if="!queuePosition.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
+                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.startTime|queuetime}}</strong></td>
+                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.startTime|queuetime}}</td>
+
+                  <td ng-if="queue.removeOwnUrl"><strong>{{queuePosition.comment || '(No comment)'}}</strong></td>
+                  <td ng-if="!queue.removeOwnUrl">{{queuePosition.comment || '(No comment)'}}</td>
 
                   <td>
                     <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
