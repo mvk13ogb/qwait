@@ -37,3 +37,15 @@ qwait.factory('inQueueFunc', function() {
         }
     }
 });
+
+qwait.factory('Page', function() {
+   var title = 'QWait';
+   return {
+     title: function() { return title; },
+     setTitle: function(newTitle) { title = newTitle }
+   };
+});
+
+function titleCtrl($scope, Page) {
+    $scope.Page = Page;
+}
