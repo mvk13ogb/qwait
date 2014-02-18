@@ -29,7 +29,7 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners", cascade = CascadeType.ALL)
     private Set<Queue> queues = Sets.newHashSet();
 
     public int getId() {
@@ -55,6 +55,10 @@ public class Account {
     public boolean isAdmin() { return admin; }
 
     public boolean isSuperAdmin() { return superAdmin; }
+
+    public boolean isQueueOwner() {
+        return !this.queues.isEmpty();
+    }
 
     public void setAdmin(boolean admin) {
         this.admin = admin;

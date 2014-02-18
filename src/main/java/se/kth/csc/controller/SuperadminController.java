@@ -3,6 +3,7 @@ package se.kth.csc.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +24,27 @@ import java.security.Principal;
 public class SuperadminController {
     private static final Logger log = LoggerFactory.getLogger(SuperadminController.class);
     private final AccountStore accountStore;
+    private final ObjectMapper objectMapper;
 
     protected SuperadminController() {
         accountStore = null;
+        objectMapper = null;
     }
 
     @Autowired
     public SuperadminController(
-            AccountStore accountStore
+            AccountStore accountStore,
+            ObjectMapper objectMapper
     ) {
         this.accountStore = accountStore;
+        this.objectMapper = objectMapper;
     }
 
     @RequestMapping(value = "/superadmin", method = RequestMethod.GET)
-    public ModelAndView superadminsettings() {
-        return new ModelAndView();
+    public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
+        Account account = getCurrentAccount(principal);
+        String accountJson = objectMapper.writerWithView(Account.class).writeValueAsString(account);
+        return new ModelAndView("superadmin/superadmin", ImmutableMap.of("account", account, "accountJson", accountJson));
     }
     private Account getCurrentAccount(Principal principal) {
         return accountStore.fetchAccountWithPrincipalName(principal.getName());
@@ -55,6 +62,12 @@ public class SuperadminController {
         log.info(adminName + " made admin");
 
         SecurityContextHolder.clearContext();
+        return "redirect:/superadmin/superadmin";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/addqueueowner", method = RequestMethod.POST)
+    public String addQueueOwner() {
         return "redirect:/superadmin/superadmin";
     }
 
