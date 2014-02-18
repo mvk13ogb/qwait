@@ -80,16 +80,21 @@ public class QueueController {
         if (request.isUserInRole("super_admin")) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
-            Set<Account> ownerSet = Sets.newHashSet();
-            ownerSet.add(getCurrentAccount(principal));
-            queue.setOwner(ownerSet);
-
+            queue.addOwner(getCurrentAccount(principal));
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";
         } else {
             throw new NotOwnerException();
         }
+    }
+
+    @RequestMapping(value = "/{id}/addOwner", method = RequestMethod.POST)
+    public String addOwner(@PathVariable("id") int id, String newOwner) {
+        Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(newOwner);
+        queue.addOwner(account);
+        return "redirect:/queue/{id}";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -101,7 +106,6 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-
         return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
     }
 

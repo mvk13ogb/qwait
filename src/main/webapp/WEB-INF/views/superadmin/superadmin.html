@@ -18,64 +18,90 @@
 
   <script src="../../js-vendor/angular.js" th:srsc="@{/js-vendor/angular.js}"></script>
   <script src="../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
+  <script type="text/javascript" th:inline="javascript">
+    /* <![CDATA[ */
+    qwait.controller('SuperadminCtrl', ['$scope', function($scope) {
+        /*[- */
+        $scope.account = {name: "test", queues: []};
+        /* -]*/
+        /*[+
+         $scope.account = JSON.parse([[${accountJson}]]);
+         +]*/
+    }]);
+    /* ]]> */
+  </script>
 </head>
 
 <body>
-<div sec:authorize="hasRole('super_admin')">
-  <nav class="top-bar" data-topbar="topbar">
-    <ul class="title-area">
-      <li class="name">
-        <h1><a href="home.html" th:href="@{/}">QWait</a></h1>
-      </li>
-      <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+<nav class="top-bar" data-topbar="topbar">
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="home.html" th:href="@{/}">QWait</a></h1>
+    </li>
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+  <section class="top-bar-section">
+    <ul class="left">
+      <li class="active"><a href="home.html" th:href="@{/}">Home</a></li>
+      <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
+      <li sec:authorize="hasRole('queue_owner')"><a href="superadmin/superadmin.html" th:href="@{/superadmin/superadmin}">SuperAdmin</a></li>
     </ul>
-    <section class="top-bar-section">
-      <ul class="left">
-        <li class="active"><a href="home.html" th:href="@{/}">Home</a></li>
-        <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
-        <li sec:authorize="hasRole('super_admin')"><a href="superadmin/superadmin.html" th:href="@{/superadmin/superadmin}">SuperAdmin</a></li>
-      </ul>
-      <ul class="right">
-        <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
-      </ul>
-    </section>
-  </nav>
+    <ul class="right">
+      <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
+    </ul>
+  </section>
+</nav>
+<div class="row">
+<div class="large-12 columns" ng-controller="SuperadminCtrl">
+<div sec:authorize="hasRole('queue_owner')">
+  <div>
+    <h1>Queue Owner Settings</h1>
+    <form th:action="@{/superadmin/addqueueowner}" th:method="POST">
+      <select>
+        <option ng-repeat="queue in account.queues">{{queue.name}}</option>
+      </select>
+    </form>
 
-  <h1>SuperAdmin Settings</h1>
-  <form th:action="@{/superadmin/makeadmin}" th:method="POST">
-    <div class="row">
-      <div class="small-3 columns">
-        <label for="add-admin-name" class="right inline">Add admin with username</label>
+  </div>
+  <div sec:authorize="hasRole('super_admin')">
+    <h1>SuperAdmin Settings</h1>
+    <form  th:action="@{/superadmin/makeadmin}" th:method="POST">
+      <div class="row">
+        <div class="small-3 columns">
+          <label for="add-admin-name" class="right inline">Add admin with username</label>
+        </div>
+        <div class="small-8 columns">
+          <input id="add-admin-name" name="name" type="text" placeholder="username to make admin"/>
+        </div>
+        <div class="small-1 columns">
+          <button type="submit" class="button postfix">Add</button>
+        </div>
       </div>
-      <div class="small-8 columns">
-        <input id="add-admin-name" name="name" type="text" placeholder="username to make admin"/>
-      </div>
-      <div class="small-1 columns">
-        <button type="submit" class="button postfix">Add</button>
-      </div>
-    </div>
-  </form>
+    </form>
 
-  <form th:action="@{/superadmin/removeadmin}" th:method="POST">
-    <div class="row">
-      <div class="small-3 columns">
-        <label for="remove-admin-name" class="right inline">Remove admin with username</label>
+    <form th:action="@{/superadmin/removeadmin}" th:method="POST">
+      <div class="row">
+        <div class="small-3 columns">
+          <label for="remove-admin-name" class="right inline">Remove admin with username</label>
+        </div>
+        <div class="small-8 columns">
+          <input id="remove-admin-name" name="name" type="text" placeholder="Username to remove from admin"></input>
+        </div>
+        <div class="small-1 columns">
+          <button type="submit" class="button postfix">Remove</button>
+        </div>
       </div>
-      <div class="small-8 columns">
-        <input id="remove-admin-name" name="name" type="text" placeholder="Username to remove from admin"></input>
-      </div>
-      <div class="small-1 columns">
-        <button type="submit" class="button postfix">Remove</button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 
   <script src="../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
   <script src="../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
   <script src="../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
   <script>$(document).foundation();</script>
 </div>
-<div sec:authorize="!hasRole('super_admin')">
+</div>
+  </div>
+<div sec:authorize="!hasRole('queue_owner')">
   <nav class="top-bar" data-topbar="topbar">
     <ul class="title-area">
       <li class="name">

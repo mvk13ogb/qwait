@@ -60,9 +60,6 @@
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1>Queue <q>{{queue.name}}</q></h1>
-
-        <p>This queue is owned by {{queue.owner.name || 'nobody'}}</p>
-
         <form th:action="'{{queue.createPositionUrl}}'" th:method="POST">
           <button type="submit">Queue me</button>
         </form>

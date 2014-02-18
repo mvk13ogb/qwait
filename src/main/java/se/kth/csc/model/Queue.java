@@ -18,7 +18,7 @@ public class Queue {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    private Set<Account> owner = Sets.newHashSet();
+    private Set<Account> owners = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
@@ -36,12 +36,20 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public Set<Account> getOwner() {
-        return owner;
+    public Set<Account> getOwners() {
+        return owners;
     }
 
-    public void setOwner(Set<Account> owner) {
-        this.owner = owner;
+    public void setOwners(Set<Account> owners) {
+        this.owners = owners;
+    }
+
+    public void addOwner(Account owner) {
+        this.owners.add(owner);
+    }
+
+    public void removeOwner(Account owner) {
+        this.owners.remove(owner);
     }
 
     @JsonView(Queue.class)
