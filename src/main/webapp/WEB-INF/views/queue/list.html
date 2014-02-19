@@ -49,45 +49,37 @@
       <div class="large-12 columns" ng-controller="QueueListCtrl">
         <h1>Queue List</h1>
 
-        <div sec:authorize="hasRole('super_admin')">
-          <form th:action="@{/queue/create}" th:method="POST">
-            <div class="row">
-              <div class="small-3 columns">
-                <label for="queue-name" class="right inline">Add queue called</label>
-              </div>
-              <div class="small-8 columns">
-                <input id="queue-name" name="name" type="text" placeholder="queue name"/>
-              </div>
-              <div class="small-1 columns">
-                <button type="submit" class="button postfix">Add</button>
-              </div>
-            </div>
-          </form>
-        </div>
         <div class="row">
-          <div class="small-8 small-centered columns">
+          <div class="large-3 columns">
+            <form sec:authorize="hasRole('super_admin')" th:action="@{/queue/create}" th:method="POST">
+              <div class="row collapse">
+                <div class="small-10 columns">
+                  <input id="queue-name" name="name" type="text" placeholder="New queue name"/>
+                </div>
+                <div class="small-2 columns">
+                  <button type="submit" class="button postfix">Add</button>
+                </div>
+              </div>
+            </form>
+
+            <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Queue search terms"/>
+          </div>
+          <div class="large-9 columns">
             <div ng-hide="queues.length">
               <p>There are currently no queues.</p>
             </div>
-            <div ng-show="queues.length">
-              <div class="row">
-                <div class="small-3 columns">
-                  <label for="queue-search" class="right inline">Search for queue</label>
-                </div>
-                <div class="small-9 columns">
-                  <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Search"/>
-                </div>
-              </div>
-
-              <table>
+            <div ng-show="queues.length" class="row">
+              <table class="large-12 columns">
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th><img th:src="@{/icons/queue-man.png}"
-                             src="../../../icons/queue-man.png" height="17" width="17"/></th>
-                    <th sec:authorize="hasRole('admin')">Active</th>
-                    <th sec:authorize="hasRole('admin')">&nbsp;</th>
-                    <th sec:authorize="hasRole('super_admin')">&nbsp;</th>
+                    <th width="48">
+                      <img th:src="@{/icons/queue-man.png}"
+                             src="../../../icons/queue-man.png" height="17" width="17"/>
+                    </th>
+                    <th sec:authorize="hasRole('admin')" width="1">Active</th>
+                    <th sec:authorize="hasRole('admin')" width="1">&nbsp;</th>
+                    <th sec:authorize="hasRole('super_admin')" width="1">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
