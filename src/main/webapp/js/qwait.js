@@ -23,6 +23,22 @@ qwait.filter('queuetime', function() {
     }
 });
 
+qwait.filter('ownedBy', function() {
+    return function (positions, name) {
+        var result = [];
+
+        for (var i = 0; i < positions.length; i++) {
+            var position = positions[i];
+            if (position && position.account &&
+                position.account.principalName === name) {
+                result.push (position);
+            }
+        }
+
+        return result;
+    };
+});
+
 qwait.factory('inQueueFunc', function() {
     return {
         inQueue: function(name, positions) {

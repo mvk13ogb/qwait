@@ -1,3 +1,7 @@
 @import "normalize";
 @import "settings";
 @import "foundation";
+
+tr.active {
+  background-color: #eee;
+}
