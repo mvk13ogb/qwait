@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">>
   <body>
-    <nav th:fragment="topbar" class="top-bar" data-topbar="topbar">
+    <li th:fragment="menuentry (title, url)"
+        th:class="${#ctx.httpServletRequest.requestURI} == ${url} ? 'active' : ''">
+      <a th:href="${url}"
+         th:text="${title}">
+      </a>
+    </li>
+    <nav th:fragment="topbar" class="top-bar" data-topbar="topbar"
+         th:with="url = ${#ctx.httpServletRequest.requestURI}">
       <ul class="title-area">
         <li class="name">
           <h1><a th:href="@{/}">QWait</a></h1>
@@ -10,9 +17,9 @@
       </ul>
       <section class="top-bar-section">
         <ul class="left">
-          <li><a th:href="@{/}">Home</a></li>
-          <li><a th:href="@{/queue/list}">Queues</a></li>
-          <li><a th:href="@{/help}">Help</a></li>
+          <div th:replace="fragment/layout::menuentry ('Home', @{/})"></div>
+          <div th:replace="fragment/layout::menuentry ('Queues', @{/queue/list})"></div>
+          <div th:replace="fragment/layout::menuentry ('Help', @{/help})"></div>
         </ul>
         <ul class="right">
           <li><a>Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
