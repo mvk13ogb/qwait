@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
-    <title>QWait</title>
+    <title>Home &mdash; QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <link rel="shortcut icon" id="favicon" href="../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
@@ -12,7 +12,8 @@
           th:href="@{/icons/apple-touch-icon-114x114.png}"/>
     <link rel="apple-touch-icon" sizes="72x72" href="../../icons/apple-touch-icon-72x72.png"
           th:href="@{/icons/apple-touch-icon-72x72.png}"/>
-    <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
+    <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png"
+          th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" href="../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
 
@@ -23,7 +24,7 @@
     <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
       <div class="large-12 columns">
-        <h1>Hello, World!</h1>
+        <h1>Welcome to QWait</h1>
         <p>Current user roles:</p>
         <ul>
           <li th:each="auth : ${#authentication.authorities}" th:text="${auth.authority}">User</li>
