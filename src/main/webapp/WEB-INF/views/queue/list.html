@@ -52,17 +52,23 @@
         <div class="row">
           <div class="large-3 columns">
             <form sec:authorize="hasRole('super_admin')" th:action="@{/queue/create}" th:method="POST">
-              <div class="row collapse">
-                <div class="small-10 columns">
-                  <input id="queue-name" name="name" type="text" placeholder="New queue name"/>
+              <label>
+                Add a new queue
+                <div class="row collapse">
+                  <div class="small-10 columns">
+                    <input id="queue-name" name="name" type="text" placeholder="New queue name"/>
+                  </div>
+                  <div class="small-2 columns">
+                    <button type="submit" class="button postfix">Add</button>
+                  </div>
                 </div>
-                <div class="small-2 columns">
-                  <button type="submit" class="button postfix">Add</button>
-                </div>
-              </div>
+              </label>
             </form>
 
-            <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Queue search terms"/>
+            <label>
+              Filter queues
+              <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Queue search terms"/>
+            </label>
           </div>
           <div class="large-9 columns">
             <div ng-hide="queues.length">
@@ -75,7 +81,7 @@
                     <th>Name</th>
                     <th width="48">
                       <img th:src="@{/icons/queue-man.png}"
-                             src="../../../icons/queue-man.png" height="17" width="17"/>
+                           src="../../../icons/queue-man.png" height="17" width="17"/>
                     </th>
                     <th sec:authorize="hasRole('admin')" width="1">Active</th>
                     <th sec:authorize="hasRole('admin')" width="1">&nbsp;</th>
