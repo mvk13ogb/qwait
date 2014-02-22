@@ -1,3 +1,7 @@
+// Foundation by ZURB
+// foundation.zurb.com
+// Licensed under MIT Open Source
+
 @import "global";
 
 // @variables
@@ -131,6 +135,9 @@ $preloader-class: "preloader" !default;
         padding: 0;
         position: relative;
 
+        // Prevents images (and captions) from disappearing after first rotation on Chrome for Android
+        -webkit-transform: translateZ(0);
+
         img { display: block; max-width: 100%; }
 
         &>* {
@@ -175,7 +182,11 @@ $preloader-class: "preloader" !default;
         top: 10px;
         #{$default-float}: 10px;
         font-size: 12px;
-        span { font-weight: 700; padding: $orbit-slide-number-padding;}
+        span {
+          font-weight: 700;
+          padding: $orbit-slide-number-padding;
+          display: inline-block;
+        }
         color: $orbit-slide-number-font-color;
         background: $orbit-slide-number-bg;
         z-index: 10;
@@ -212,7 +223,7 @@ $preloader-class: "preloader" !default;
           border-top: none;
           border-bottom: none;
         }
-      
+
         // Pause button
         &.paused {
           & > span {
@@ -223,14 +234,14 @@ $preloader-class: "preloader" !default;
             border: inset 8px;
             border-right-style: solid;
             border-color: transparent transparent transparent #fff;
-            &.dark { 
+            &.dark {
               border-color: transparent transparent transparent #333;
             }
           }
         }
       }
-      
-      
+
+
 
       &:hover .orbit-timer > span { display: block; }
 
@@ -294,14 +305,15 @@ $preloader-class: "preloader" !default;
       top: 10px;
       float: none;
       text-align: center;
-      display: inline-block;
+      display: block;
 
       li {
-        display: block;
+        display: inline-block;
         width: $orbit-bullet-radius;
         height: $orbit-bullet-radius;
         background: $orbit-bullet-nav-color;
-        float: $default-float;
+        // float: $default-float;
+        float: none;
         margin-#{$opposite-direction}: 6px;
         @include radius(1000px);
 

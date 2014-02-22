@@ -2,4 +2,6 @@
 @import "settings";
 @import "foundation";
 
-// TODO: Customize stylesheet here
+tr.active {
+  background-color: #eee;
+}

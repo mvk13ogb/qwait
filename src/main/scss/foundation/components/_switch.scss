@@ -1,3 +1,7 @@
+// Foundation by ZURB
+// foundation.zurb.com
+// Licensed under MIT Open Source
+
 @import "global";
 
 //
@@ -8,6 +12,8 @@
 //
 // @variables
 //
+
+// NOTE: Switches have been deprecated in Foundation 5 and will be removed in the future.
 
 $include-html-form-classes: $include-html-classes !default;
 

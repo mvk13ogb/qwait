@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
-    <title>QWait</title>
+    <title>Home &mdash; QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <link rel="shortcut icon" id="favicon" href="../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
@@ -12,7 +12,8 @@
           th:href="@{/icons/apple-touch-icon-114x114.png}"/>
     <link rel="apple-touch-icon" sizes="72x72" href="../../icons/apple-touch-icon-72x72.png"
           th:href="@{/icons/apple-touch-icon-72x72.png}"/>
-    <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
+    <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png"
+          th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" href="../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
 
@@ -20,29 +21,11 @@
     <script src="../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
   </head>
   <body>
-    <nav class="top-bar" data-topbar="topbar">
-      <ul class="title-area">
-        <li class="name">
-          <h1><a href="home.html" th:href="@{/home}">QWait</a></h1>
-        </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-      </ul>
-      <section class="top-bar-section">
-        <ul class="left">
-          <li><a href="queue/list.html" th:href="@{/queue/list}">Queues</a></li>
-          <li><a href="help.html" th:href="@{/help}">Help</a></li>
-          <li><a href="debug.html" th:href="@{/debug}">Debug</a></li>
-        </ul>
-        <ul class="right">
-          <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
-          <li><a th:href="@{/logout}">Log Out</a></li>
-        </ul>
-      </section>
-    </nav>
+    <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
       <div class="large-12 columns">
-        <h1>Welcome to QWait!</h1>
-        <p>This project was created as part of the course "Software Engineering" by 
+        <h1>Welcome to QWait <small>version <span th:text="#{product.version}">something</span></small></h1>
+        <p>This project was created as part of the course "Software Engineering" by
           Adrian Blanco,
           Casper Winsnes,
           Christoffer Pettersson,
@@ -53,7 +36,6 @@
           Jacob Sievers,
           Michael Håkansson
           and Robin Engström</p>
-        <p>Running <span th:text="#{product.name}"></span> version <span th:text="#{product.version}"></span></p>
       </div>
     </div>
 
