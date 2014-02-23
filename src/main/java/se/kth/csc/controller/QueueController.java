@@ -32,6 +32,7 @@ public class QueueController {
     private final QueueStore queueStore;
     private final AccountStore accountStore;
     private final QueuePositionStore queuePositionStore;
+    private final int maxLen = 18; //max len for comment fields
 
     protected QueueController() {
         // Needed for injection
@@ -184,7 +185,25 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/position/{positionId}/location", method = {RequestMethod.POST})
+    public String updateLocation(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String location)
+            throws NotFoundException {
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+        Queue queue = queueStore.fetchQueueWithId(id);
+
+        if (queuePosition == null || queue == null) {
+            throw new NotFoundException();
+        }
+
+        int length = Math.min(location.length(), maxLen);
+
+        queuePosition.setLocation(location.substring(0, length));
+
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
     public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
             throws NotFoundException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
@@ -194,7 +213,9 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        queuePosition.setComment(comment);
+        int length = Math.min(comment.length(), maxLen);
+
+        queuePosition.setComment(comment.substring(0, length));
 
         return "redirect:/queue/" + id;
     }

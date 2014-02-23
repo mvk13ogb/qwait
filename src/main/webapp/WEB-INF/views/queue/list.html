@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" href="../../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" href="../../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="../../../../../../target/webapp/css/queue.css" th:href="@{/css/queue.css}"/>
 
     <script src="../../js-vendor/angular.js" th:src="@{/js-vendor/angular.js}"></script>
     <script src="../../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
@@ -47,13 +48,11 @@
 
   <body>
     <div th:replace="fragment/layout :: topbar"></div>
-    <div class="row">
-      <div class="large-12 columns" ng-controller="QueueListCtrl">
-        <h1>Queue List</h1>
-
-        <div class="row">
-          <div class="large-3 columns">
-            <form sec:authorize="hasRole('super_admin')" th:action="@{/queue/create}" th:method="POST">
+    <div class="row" style="margin-left:auto;margin-right:auto;">
+      <div class="large-12 columns table" ng-controller="QueueListCtrl">
+        <h1 id="header">Queue List</h1>
+          <div sec:authorize="hasRole('super_admin')" class="large-3 columns">
+            <form th:action="@{/queue/create}" th:method="POST">
               <label>
                 Add a new queue
                 <div class="row collapse">
@@ -66,18 +65,16 @@
                 </div>
               </label>
             </form>
-
-            <label>
-              Filter queues
-              <input ng-model="search.name" id="queue-search" name="search" type="text" placeholder="Queue search terms"/>
-            </label>
           </div>
-          <div class="large-9 columns">
+          <div class="large-9 large-centered columns">
             <div ng-hide="queues.length">
               <p>There are currently no queues.</p>
             </div>
             <div ng-show="queues.length" class="row">
-              <table class="large-12 columns">
+              <table class="large-12 columns" style="margin-top: 20px">
+                <label ng-show="queues.length">
+                  <input ng-model="search.name" id="search" name="search" type="text" maxlength="18" placeholder="Find queues"/>  
+                </label>
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -125,7 +122,7 @@
               </table>
             </div>
           </div>
-        </div>
+        
       </div>
     </div>
 
