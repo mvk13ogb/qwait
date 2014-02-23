@@ -57,11 +57,32 @@
   <div>
     <h1>Queue Owner Settings</h1>
     <form th:action="@{/superadmin/addqueueowner}" th:method="POST">
-      <select>
-        <option ng-repeat="queue in account.queues">{{queue.name}}</option>
+      <div class="row">
+        <div class="small-3 columns">
+          <label for="add-queue-owner" class="right inline">Add queue owner</label>
+        </div>
+      <select name="queueName">
+        <option ng-repeat="queue in account.queues" value="{{queue.id}}">{{queue.name}}</option>
       </select>
+      <br></br>
+      <input id="add-queue-owner" name="name" type="text" placeholder="Userid to add as queueowner"></input>
+        <button type="submit" class="button postfix">Add</button>
+      </div>
     </form>
 
+    <form th:action="@{/superadmin/removequeueowner}" th:method="POST">
+      <div class="row">
+        <div class="small-3 columns">
+          <label for="remove-queue-owner" class="right inline">Remove queue owner</label>
+        </div>
+        <select name="queueName">
+          <option ng-repeat="queue in account.queues" value="{{queue.id}}">{{queue.name}}</option>
+        </select>
+        <br></br>
+        <input id="remove-queue-owner" name="name" type="text" placeholder="Userid to remove from queueowner"></input>
+        <button type="submit" class="button postfix">Add</button>
+      </div>
+    </form>
   </div>
   <div sec:authorize="hasRole('super_admin')">
     <h1>SuperAdmin Settings</h1>
