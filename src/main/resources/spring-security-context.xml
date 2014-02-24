@@ -9,11 +9,13 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
     <security:http auto-config="true" disable-url-rewriting="true" use-expressions="true"
                    entry-point-ref="casAuthenticationEntryPoint">
         <security:custom-filter position="CAS_FILTER" ref="casAuthenticationFilter"/>
-		<security:intercept-url pattern="/" access="permitAll"/>
-		<security:intercept-url pattern="/css/**" access="permitAll"/>
+        <security:intercept-url pattern="/" access="permitAll"/>
+        <security:intercept-url pattern="/css/**" access="permitAll"/>
         <security:intercept-url pattern="/js/**" access="permitAll"/>
+        <security:intercept-url pattern="/js-vendor/**" access="permitAll"/>
         <security:intercept-url pattern="/icons/**" access="permitAll"/>
-	<security:intercept-url pattern="/images/**" access="permitAll"/>
+        <security:intercept-url pattern="/images/**" access="permitAll"/>
+        <security:intercept-url pattern="/queue/**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
         <security:logout invalidate-session="true" logout-url="/logout"
                          logout-success-url="${security.cas.logoutUrl}"/>
@@ -22,5 +24,4 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
     <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider ref="casAuthenticationProvider"/>
     </security:authentication-manager>
-
 </beans>

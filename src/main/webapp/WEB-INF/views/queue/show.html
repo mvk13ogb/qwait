@@ -24,7 +24,14 @@
       qwait.controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePosFunc',
           function ($scope, $sce, Page, getQueuePosFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
-        $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
+
+        // TODO fix this
+        if ([[${#authentication.principal != 'anonymousUser'}]]) {
+          $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
+        } else {
+          $scope.principalName = /*[[${#authentication.principal}]]*/ 'johndoe';
+        }
+
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
 
         // Passing this as a string since it can become quite large

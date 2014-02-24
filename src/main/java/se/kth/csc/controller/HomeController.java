@@ -111,4 +111,10 @@ public class HomeController {
 
         return "redirect:/debug";
     }
+
+    // Used to enforce authentication when logging in from welcome page
+    @RequestMapping(value = "/login", method = {RequestMethod.GET})
+    public String loginRedirect() {
+        return "redirect:/queue/list";
+    }
 }

@@ -259,5 +259,4 @@ public class QueueController {
             throw new ForbiddenException();
         }
     }
-
 }
