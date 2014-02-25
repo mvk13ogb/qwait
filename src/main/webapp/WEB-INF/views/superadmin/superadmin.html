@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
 <head>
-  <title th:text="#{view.home.title}">QWait</title>
+  <title>Super admin settings &mdash; QWait</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
   <link rel="shortcut icon" id="favicon" href="../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
@@ -56,34 +56,42 @@
 <div sec:authorize="hasRole('queue_owner')">
   <div>
     <h1>Queue Owner Settings</h1>
+
     <form th:action="@{/superadmin/addqueueowner}" th:method="POST">
-      <div class="row">
-        <div class="small-3 columns">
-          <label for="add-queue-owner" class="right inline">Add queue owner</label>
-        </div>
+    <div class="row">
       <select name="queueName">
         <option ng-repeat="queue in account.queues" value="{{queue.id}}">{{queue.name}}</option>
       </select>
-      <br></br>
-      <input id="add-queue-owner" name="name" type="text" placeholder="Userid to add as queueowner"></input>
+      <div class="small-3 columns">
+        <label for="add-queue-owner" class="right inline">Add queue owner with name</label>
+      </div>
+      <div class="small-8 columns">
+        <input id="add-queue-owner" name="name" type="text" placeholder="username to make queue owner"/>
+      </div>
+      <div class="small-1 columns">
         <button type="submit" class="button postfix">Add</button>
       </div>
-    </form>
+    </div>
+      </form>
 
     <form th:action="@{/superadmin/removequeueowner}" th:method="POST">
       <div class="row">
-        <div class="small-3 columns">
-          <label for="remove-queue-owner" class="right inline">Remove queue owner</label>
-        </div>
         <select name="queueName">
           <option ng-repeat="queue in account.queues" value="{{queue.id}}">{{queue.name}}</option>
         </select>
-        <br></br>
-        <input id="remove-queue-owner" name="name" type="text" placeholder="Userid to remove from queueowner"></input>
-        <button type="submit" class="button postfix">Add</button>
+        <div class="small-3 columns">
+          <label for="remove-queue-owner" class="right inline">Remove queue owner with name</label>
+        </div>
+        <div class="small-8 columns">
+          <input id="remove-queue-owner" name="name" type="text" placeholder="username to remove from queue owner"/>
+        </div>
+        <div class="small-1 columns">
+          <button type="submit" class="button postfix">Remove</button>
+        </div>
       </div>
     </form>
   </div>
+
   <div sec:authorize="hasRole('super_admin')">
     <h1>SuperAdmin Settings</h1>
     <form  th:action="@{/superadmin/makeadmin}" th:method="POST">
