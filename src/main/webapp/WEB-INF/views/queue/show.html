@@ -21,8 +21,8 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueCtrl', ['$scope', '$sce', 'inQueueFunc', 'Page', 'getQueuePosFunc',
-          function ($scope, $sce, inQueueFunc, Page, getQueuePosFunc) {
+      qwait.controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePosFunc',
+          function ($scope, $sce, Page, getQueuePosFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
         $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
@@ -40,9 +40,6 @@
 
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
-
-        // Inject check if name is in position array
-        $scope.inQueue = inQueueFunc.inQueue
 
         // Inject queue position of current user
         $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
@@ -90,11 +87,11 @@
               <input ng-model="search" id="search" name="search" type="text" placeholder="Search terms"/>
             </label>
 
-            <form th:attr="ng-hide='!queue.active || queue.locked || inQueue(principalName, queue.positions)'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+            <form th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Queue me</button>
             </form>
 
-            <form th:attr="ng-hide='!queue.active || queue.locked || !inQueue(principalName, queue.positions)'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+            <form th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Leave queue</button>
             </form>
           </div>

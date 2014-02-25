@@ -39,21 +39,6 @@ qwait.filter('ownedBy', function() {
     };
 });
 
-qwait.factory('inQueueFunc', function() {
-    return {
-        inQueue: function(name, positions) {
-            for(var i=0; i<positions.length; i++) {
-                var pos = positions[i];
-
-                if(pos.account.principalName == name)
-                    return true;
-            }
-
-            return false;
-        }
-    }
-});
-
 qwait.factory('getQueuePosFunc', function() {
     return {
         getQueuePos: function(name, positions) {
