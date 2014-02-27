@@ -56,10 +56,6 @@ public class Account {
 
     public boolean isSuperAdmin() { return superAdmin; }
 
-    public boolean isQueueOwner() {
-        return !this.queues.isEmpty();
-    }
-
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
@@ -82,5 +78,22 @@ public class Account {
 
     public void setQueues(Set<Queue> queues) {
         this.queues = Sets.newHashSet(queues);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        if (!principalName.equals(account.principalName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return principalName.hashCode();
     }
 }

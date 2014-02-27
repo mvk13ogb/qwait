@@ -3,7 +3,6 @@ package se.kth.csc.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import se.kth.csc.persist.QueueStore;
 import java.security.Principal;
 
 @Controller
-@RequestMapping (value="/superadmin")
+@RequestMapping(value="/superadmin")
 public class SuperadminController {
     private static final Logger log = LoggerFactory.getLogger(SuperadminController.class);
     private final AccountStore accountStore;
@@ -47,7 +46,7 @@ public class SuperadminController {
         this.queueStore = queueStore;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/settings")
     public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
         Account account = getCurrentAccount(principal);
 
@@ -59,7 +58,7 @@ public class SuperadminController {
             account.setQueues(Sets.newHashSet(queueStore.fetchAllQueues()));
         }
         String accountJson = objectMapper.writerWithView(Account.class).writeValueAsString(account);
-        return new ModelAndView("superadmin/superadmin", ImmutableMap.of("account", account, "accountJson", accountJson));
+        return new ModelAndView("superadmin/settings", ImmutableMap.of("account", account, "accountJson", accountJson));
     }
 
     private Account getCurrentAccount(Principal principal) {
@@ -72,51 +71,16 @@ public class SuperadminController {
         Account account = accountStore.fetchAccountWithPrincipalName(adminName);
         if(account == null) {
             log.info("Account " + adminName + " could not be found");
-            return "redirect:/superadmin/superadmin";
+            return "redirect:/superadmin/settings";
         }
         account.setAdmin(true);
         log.info(adminName + " made admin");
 
         SecurityContextHolder.clearContext();
-        return "redirect:/superadmin/superadmin";
+        return "redirect:/superadmin/settings";
     }
 
-    @Transactional
-    @RequestMapping(value = "/addqueueowner", method = RequestMethod.POST)
-    public String addQueueOwner(@RequestParam("name") String newQueueOwner,
-                                @RequestParam("queueName") String queueId) {
-        Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
-        if(account == null) {
-            log.info("Account " + newQueueOwner + " could not be found");
-            return "redirect:/superadmin/superadmin";
-        }
-        int id = Integer.parseInt(queueId);
-        Queue queue = queueStore.fetchQueueWithId(id);
-        queue.addOwner(account);
-        log.info("Queue with id " + id + " now has " + newQueueOwner
-                + " as a queue owner");
-        return "redirect:/superadmin/superadmin";
-    }
 
-    @Transactional
-    @RequestMapping(value = "/removequeueowner", method = RequestMethod.POST)
-    public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
-                                   @RequestParam("queueName") String queueId) {
-        Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
-        if(account == null) {
-            log.info("Account " + oldOwnerName + " could not be found");
-            return "redirect:/superadmin/superadmin";
-        }
-        int id = Integer.parseInt(queueId);
-        Queue queue = queueStore.fetchQueueWithId(id);
-        if(queue.getOwners().size() == 1) {
-            log.info("Cannot remove last owner of queue with id " + id);
-            return "redirect:/superadmin/superadmin";
-        }
-        queue.removeOwner(account);
-        log.info(oldOwnerName + " remove from ownerlist of queue with id " + id);
-        return "redirect:/superadmin/superadmin";
-    }
 
     @Transactional
     @RequestMapping(value="/removeadmin", method = RequestMethod.POST)
@@ -124,12 +88,12 @@ public class SuperadminController {
         Account account = accountStore.fetchAccountWithPrincipalName(adminName);
         if(account == null) {
             log.info("Account " + adminName + " could not be found");
-            return "redirect:/superadmin/superadmin";
+            return "redirect:/superadmin/settings";
         }
         account.setAdmin(false);
         log.info(adminName + " removed from admin");
 
         SecurityContextHolder.clearContext();
-        return "redirect:/superadmin/superadmin";
+        return "redirect:/superadmin/settings";
     }
 }

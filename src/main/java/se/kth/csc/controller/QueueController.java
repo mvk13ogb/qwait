@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
@@ -85,9 +82,7 @@ public class QueueController {
         if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
-            Set<Account> ownerSet = Sets.newHashSet();
-            ownerSet.add(getCurrentAccount(principal));
-            queue.setOwners(ownerSet);
+            queue.addOwner(getCurrentAccount(principal));
 
             queue.setActive(true);
             queue.setLocked(false);
@@ -118,7 +113,8 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
+                "account", getCurrentAccount(principal)));
     }
 
     @Transactional
@@ -272,5 +268,37 @@ public class QueueController {
         } else {
             throw new ForbiddenException();
         }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/add-queue-owner", method = RequestMethod.POST)
+    public String addQueueOwner(@RequestParam("name") String newQueueOwner,
+                                @PathVariable("id") int id)
+                                throws ForbiddenException{
+        Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
+        if(account == null) {
+            log.info("Account " + newQueueOwner + " could not be found");
+            return "redirect:/queue/" + id;
+        }
+        Queue queue = queueStore.fetchQueueWithId(id);
+        queue.addOwner(account);
+        log.info("Queue with id " + id + " now has " + newQueueOwner
+                + " as a queue owner");
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/remove-queue-owner", method = RequestMethod.POST)
+    public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
+                                   @PathVariable("id") int id) {
+        Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
+        if(account == null) {
+            log.info("Account " + oldOwnerName + " could not be found");
+            return "redirect:/queue/" + id;
+        }
+        Queue queue = queueStore.fetchQueueWithId(id);
+        queue.removeOwner(account);
+        log.info(oldOwnerName + " remove from ownerlist of queue with id " + id);
+        return "redirect:/queue/" + id;
     }
 }

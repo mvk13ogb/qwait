@@ -45,6 +45,9 @@
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
 
+        $scope.queue.addOwnerUrl = queueBaseUrl + $scope.queue.id + '/add-queue-owner';
+        $scope.queue.removeOwnerUrl = queueBaseUrl + $scope.queue.id + '/remove-queue-owner';
+
         // Inject queue position of current user
         $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
 
@@ -68,7 +71,23 @@
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1>{{queue.name}}</h1>
-
+        <span th:if="${queue.owners.contains(account) || account.isSuperAdmin()}">
+          <h3>Add/Remove Queue Owner To This Queue:</h3>
+          <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+            <label>
+              Add Queue Owner
+              <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
+              <button type="submit" class="button postfix">Add</button>
+            </label>
+          </form>
+          <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+            <label>
+              Remove Queue Owner
+              <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
+              <button type="submit" class="button postfix">Remove</button>
+            </label>
+          </form>
+        </span>
         <div class="row">
           <div class="large-3 columns">
             <div th:attr="ng-if='queuePos != null'">
