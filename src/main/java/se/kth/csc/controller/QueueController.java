@@ -169,7 +169,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/position/{positionId}/remove", method = RequestMethod.POST)
     public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId,
                                  HttpServletRequest request, Principal principal) throws Exception {
         Account account = getCurrentAccount(principal);
@@ -195,7 +195,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = RequestMethod.POST)
     public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
             throws NotFoundException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
@@ -211,7 +211,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/close", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/close", method = RequestMethod.POST)
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -271,10 +271,10 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/add-queue-owner", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/add-queue-owner", method = {RequestMethod.POST})
     public String addQueueOwner(@RequestParam("name") String newQueueOwner,
                                 @PathVariable("id") int id)
-                                throws ForbiddenException{
+                                throws ForbiddenException {
         Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
         if(account == null) {
             log.info("Account " + newQueueOwner + " could not be found");
@@ -288,7 +288,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/remove-queue-owner", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/remove-queue-owner", method = {RequestMethod.POST})
     public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
                                    @PathVariable("id") int id) {
         Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
