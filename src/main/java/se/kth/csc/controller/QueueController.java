@@ -86,7 +86,6 @@ public class QueueController {
 
             queue.setActive(true);
             queue.setLocked(false);
-
             queueStore.storeQueue(queue);
 
             return "redirect:/queue/list";

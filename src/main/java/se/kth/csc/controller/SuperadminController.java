@@ -47,6 +47,7 @@ public class SuperadminController {
     }
 
     @RequestMapping(value = "/settings")
+
     public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
         Account account = getCurrentAccount(principal);
 
@@ -79,7 +80,6 @@ public class SuperadminController {
         SecurityContextHolder.clearContext();
         return "redirect:/superadmin/settings";
     }
-
 
 
     @Transactional

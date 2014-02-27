@@ -56,6 +56,10 @@ public class Account {
 
     public boolean isSuperAdmin() { return superAdmin; }
 
+    public boolean isQueueOwner() {
+        return !this.queues.isEmpty();
+    }
+
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
