@@ -47,7 +47,7 @@ public class SuperadminController {
         this.queueStore = queueStore;
     }
 
-    @RequestMapping(value = "/superadmin", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
         Account account = getCurrentAccount(principal);
 

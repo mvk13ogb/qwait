@@ -27,6 +27,7 @@ import se.kth.csc.persist.QueueStore;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/queue")
@@ -86,7 +87,7 @@ public class QueueController {
             queue.setName(queueCreationInfo.getName());
             Set<Account> ownerSet = Sets.newHashSet();
             ownerSet.add(getCurrentAccount(principal));
-            queue.setOwner(ownerSet);
+            queue.setOwners(ownerSet);
 
             queue.setActive(true);
             queue.setLocked(false);
