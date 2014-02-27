@@ -24,7 +24,11 @@
       qwait.controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePosFunc',
           function ($scope, $sce, Page, getQueuePosFunc) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
-        $scope.principalName = /*[[${#authentication.principal.username}]]*/ 'johndoe';
+
+        // Users not logged in won't have a username
+        $scope.principalName = /*[[${#authentication.principal != 'anonymousUser'
+          ? #authentication.principal.username : 'anonymousUser'}]]*/ 'johndoe';
+
         var adminView = /*[[${#authorization.expression("hasRole('admin')")}]]*/ true;
 
         // Passing this as a string since it can become quite large
@@ -87,11 +91,11 @@
               <input ng-model="search" id="search" name="search" type="text" placeholder="Search terms"/>
             </label>
 
-            <form th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Queue me</button>
             </form>
 
-            <form th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Leave queue</button>
             </form>
           </div>

@@ -136,7 +136,8 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        if (!queue.isActive() || queue.isLocked()) {
+        // Users not logged in won't have a principal
+        if (!queue.isActive() || queue.isLocked() || principal == null) {
             throw new ForbiddenException();
         } else {
             // Check if user already in queue. If so, throw exception.
@@ -259,5 +260,4 @@ public class QueueController {
             throw new ForbiddenException();
         }
     }
-
 }
