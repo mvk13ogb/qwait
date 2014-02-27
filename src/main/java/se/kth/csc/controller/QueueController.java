@@ -213,7 +213,7 @@ public class QueueController {
             }
             queue.getPositions().clear();
 
-           return "redirect:/queue/list";
+           return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -227,7 +227,7 @@ public class QueueController {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(true);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -241,7 +241,7 @@ public class QueueController {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(true);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -255,7 +255,7 @@ public class QueueController {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(false);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }

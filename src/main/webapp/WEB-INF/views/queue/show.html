@@ -45,6 +45,12 @@
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
 
+        $scope.queue.lockQueueUrl = queueBaseUrl + $scope.queue.id + '/lock';
+        $scope.queue.unlockQueueUrl = queueBaseUrl + $scope.queue.id + '/unlock';
+        $scope.queue.openQueueUrl = queueBaseUrl + $scope.queue.id + '/open';
+        $scope.queue.closeQueueUrl = queueBaseUrl + $scope.queue.id + '/close';
+        $scope.queue.removeQueueUrl = queueBaseUrl + $scope.queue.id + '/remove';
+
         // Inject queue position of current user
         $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
 
@@ -98,6 +104,25 @@
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Leave queue</button>
             </form>
+
+            <a sec:authorize="hasRole('admin')" data-dropdown="drop" class="button dropdown expand" href="#">Edit queue</a>
+            <ul id="drop" class="f-dropdown content" data-dropdown-content="">
+                <form sec:authorize="hasRole('admin')" th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockQueueUrl}}'" th:method="POST">
+                <button class="button alert expand" type="submit">Lock queue</button>
+                </form>
+                <form sec:authorize="hasRole('super_admin')" th:attr="ng-hide='!queue.locked'" th:action="'{{queue.unlockQueueUrl}}'" th:method="POST">
+                  <button class="button success expand" type="submit">Unlock queue</button>
+                </form>
+                <form sec:authorize="hasRole('admin')" th:attr="ng-hide='!queue.active'" th:action="'{{queue.closeQueueUrl}}'" th:method="POST">
+                  <button class="button alert expand" type="submit">Close queue</button>
+                </form>
+                <form sec:authorize="hasRole('admin')" th:attr="ng-hide='queue.active'" th:action="'{{queue.openQueueUrl}}'" th:method="POST">
+                  <button class="button success expand" type="submit">Open queue</button>
+                </form>
+                <form sec:authorize="hasRole('super_admin')" th:action="'{{queue.removeQueueUrl}}'" th:method="POST">
+                  <button class="button alert expand" type="submit">Remove queue</button>
+                </form>
+            </ul>
           </div>
 
           <div class="large-9 columns">
@@ -142,6 +167,7 @@
     <script src="../../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
     <script src="../../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
     <script src="../../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
+    <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.dropdown.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
