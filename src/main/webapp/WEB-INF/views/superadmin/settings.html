@@ -18,23 +18,23 @@
 
   <body>
     <div th:replace="fragment/layout :: topbar"></div>
-      <h1>Admin settings</h1>
-      <div sec:authorize="hasRole('super_admin')">
-        <h3>Add/Remove admins</h3>
-        <form th:action="@{/superadmin/makeadmin}" th:method="POST">
-          <label>
-            Add Admin
-            <input id="add-admin" name="name" type="text" placeholder="Username to add"/>
-            <button type="submit" class="button postfix">Add</button>
-          </label>
-        </form>
-        <form th:action="@{/superadmin/removeadmin}" th:method="POST">
-          <label>
-            Remove Admin
-            <input id="remove-admin" name="name" type="text" placeholder="Username to remove"/>
-            <button type="submit" class="button postfix">Remove</button>
-          </label>
-        </form>
-      </div>
+    <h1>Admin settings</h1>
+    <div sec:authorize="hasRole('super_admin')">
+      <h3>Add/Remove admins</h3>
+      <form th:action="@{/superadmin/makeadmin}" th:method="POST">
+        <label>
+          Add Admin
+          <input id="add-admin" name="name" type="text" placeholder="Username to add"/>
+          <button type="submit" class="button postfix">Add</button>
+        </label>
+      </form>
+      <form th:action="@{/superadmin/removeadmin}" th:method="POST">
+        <label>
+          Remove Admin
+          <input id="remove-admin" name="name" type="text" placeholder="Username to remove"/>
+          <button type="submit" class="button postfix">Remove</button>
+        </label>
+      </form>
+    </div>
   </body>
 </html>
