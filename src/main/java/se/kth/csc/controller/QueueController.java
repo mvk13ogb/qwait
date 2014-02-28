@@ -92,14 +92,6 @@ public class QueueController {
         }
     }
 
-    @RequestMapping(value = "/{id}/addOwner", method = RequestMethod.POST)
-    public String addOwner(@PathVariable("id") int id, String newOwner) {
-        Queue queue = queueStore.fetchQueueWithId(id);
-        Account account = accountStore.fetchAccountWithPrincipalName(newOwner);
-        queue.addOwner(account);
-        return "redirect:/queue/{id}";
-    }
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ModelAndView show(@PathVariable("id") int id, Principal principal)
             throws NotFoundException, JsonProcessingException {
@@ -268,14 +260,14 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/add-queue-owner", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/add-owner", method = RequestMethod.POST)
     public String addQueueOwner(@RequestParam("name") String newQueueOwner,
                                 @PathVariable("id") int id)
-                                throws ForbiddenException {
+                                throws NotFoundException {
         Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
         if(account == null) {
             log.info("Account " + newQueueOwner + " could not be found");
-            return "redirect:/queue/" + id;
+            throw new NotFoundException("Could not find the account " + newQueueOwner);
         }
         Queue queue = queueStore.fetchQueueWithId(id);
         queue.addOwner(account);
@@ -285,13 +277,14 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/remove-queue-owner", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/remove-owner", method = RequestMethod.POST)
     public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
-                                   @PathVariable("id") int id) {
+                                   @PathVariable("id") int id)
+                                   throws NotFoundException{
         Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
         if(account == null) {
             log.info("Account " + oldOwnerName + " could not be found");
-            return "redirect:/queue/" + id;
+            throw new NotFoundException("Couldn't find the owner " + oldOwnerName);
         }
         Queue queue = queueStore.fetchQueueWithId(id);
         queue.removeOwner(account);
