@@ -48,17 +48,7 @@ public class SuperadminController {
     @RequestMapping(value = "/settings")
 
     public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
-        Account account = getCurrentAccount(principal);
-
-        //A superadmin should be able to add and remove people on EVERY queue
-        //but should not keep owner priviliges for every queue if demoted from superadmin.
-        //Might be changed into making every superadmin an actual queueowner.
-        if(account.isSuperAdmin()) {
-            account = new Account();
-            account.setQueues(Sets.newHashSet(queueStore.fetchAllQueues()));
-        }
-        String accountJson = objectMapper.writerWithView(Account.class).writeValueAsString(account);
-        return new ModelAndView("superadmin/settings", ImmutableMap.of("account", account, "accountJson", accountJson));
+        return new ModelAndView();
     }
 
     private Account getCurrentAccount(Principal principal) {
@@ -66,12 +56,12 @@ public class SuperadminController {
     }
 
     @Transactional
-    @RequestMapping(value="/makeadmin", method = RequestMethod.POST)
-    public String makeUserAdmin(@RequestParam("name") String adminName) {
+    @RequestMapping(value="/make-admin", method = RequestMethod.POST)
+    public String makeUserAdmin(@RequestParam("name") String adminName) throws NotFoundException {
         Account account = accountStore.fetchAccountWithPrincipalName(adminName);
         if(account == null) {
             log.info("Account " + adminName + " could not be found");
-            return "redirect:/superadmin/settings";
+            throw new NotFoundException("Could not find account " + adminName);
         }
         account.setAdmin(true);
         log.info(adminName + " made admin");
@@ -82,12 +72,12 @@ public class SuperadminController {
 
 
     @Transactional
-    @RequestMapping(value="/removeadmin", method = RequestMethod.POST)
-    public String removeUserAdmin(@RequestParam("name") String adminName) {
+    @RequestMapping(value="/remove-admin", method = RequestMethod.POST)
+    public String removeUserAdmin(@RequestParam("name") String adminName) throws NotFoundException {
         Account account = accountStore.fetchAccountWithPrincipalName(adminName);
         if(account == null) {
             log.info("Account " + adminName + " could not be found");
-            return "redirect:/superadmin/settings";
+            throw new NotFoundException("Could not find admin " + adminName);
         }
         account.setAdmin(false);
         log.info(adminName + " removed from admin");

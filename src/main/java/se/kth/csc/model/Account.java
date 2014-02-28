@@ -56,8 +56,11 @@ public class Account {
 
     public boolean isSuperAdmin() { return superAdmin; }
 
-    public boolean isQueueOwner() {
-        return !this.queues.isEmpty();
+    public boolean canEditQueue(Queue queue) {
+        if(isSuperAdmin()) {
+            return true;
+        }
+        return queues.contains(queue);
     }
 
     public void setAdmin(boolean admin) {
@@ -100,4 +103,5 @@ public class Account {
     public int hashCode() {
         return principalName.hashCode();
     }
+
 }
