@@ -228,7 +228,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/open", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/open", method = RequestMethod.POST)
     public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -242,7 +242,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/lock", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/lock", method = RequestMethod.POST)
     public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -256,7 +256,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/unlock", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/unlock", method = RequestMethod.POST)
     public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -270,7 +270,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/add-queue-owner", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/add-queue-owner", method = RequestMethod.POST)
     public String addQueueOwner(@RequestParam("name") String newQueueOwner,
                                 @PathVariable("id") int id)
                                 throws ForbiddenException {
@@ -287,7 +287,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/remove-queue-owner", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/remove-queue-owner", method = RequestMethod.POST)
     public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
                                    @PathVariable("id") int id) {
         Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
