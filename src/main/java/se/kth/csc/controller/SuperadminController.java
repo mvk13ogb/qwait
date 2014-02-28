@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.model.Account;
-import se.kth.csc.model.Queue;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueueStore;
 

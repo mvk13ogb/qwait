@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
