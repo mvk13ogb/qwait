@@ -110,6 +110,7 @@ public class QueueController {
         try{
             hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
         } catch (UnknownHostException e){
+            log.debug(e.getMessage());
         }
 
         return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, 
