@@ -5,3 +5,26 @@
 tr.active {
   background-color: #eee;
 }
+
+.search {
+  @include form-element;
+  background: url('../icons/magnifying-glass.png') no-repeat;
+  background-position: right center;
+  background-size: 25px 25px;
+}
+
+.no-bot-margin {
+	margin-bottom: 0px;
+}
+
+.comment-margin {
+	margin-top: 32px;
+}
+
+.add-queue-margin {
+	margin-top: 1.5em;
+}
+
+.button-bot-margin {
+	margin-bottom: 40px;
+}

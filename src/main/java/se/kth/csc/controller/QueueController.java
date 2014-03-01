@@ -23,6 +23,8 @@ import se.kth.csc.persist.QueueStore;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Controller
 @RequestMapping(value = "/queue")
@@ -32,7 +34,7 @@ public class QueueController {
     private final QueueStore queueStore;
     private final AccountStore accountStore;
     private final QueuePositionStore queuePositionStore;
-    private final int maxLen = 18; //max len for comment fields
+    private static final int MAX_LEN = 30; //max len for comment fields
 
     protected QueueController() {
         // Needed for injection
@@ -94,7 +96,7 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ModelAndView show(@PathVariable("id") int id, Principal principal)
+    public ModelAndView show(@PathVariable("id") int id, Principal principal, HttpServletRequest request)
             throws NotFoundException, JsonProcessingException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
@@ -103,8 +105,15 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
-                "account", getCurrentAccount(principal)));
+
+        String hostName = "";
+        try{
+            hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
+        } catch (UnknownHostException e){
+        }
+
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, 
+                "account", getCurrentAccount(principal), "hostName", hostName));
     }
 
     @Transactional
@@ -195,7 +204,7 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        int length = Math.min(location.length(), maxLen);
+        int length = Math.min(location.length(), MAX_LEN);
 
         queuePosition.setLocation(location.substring(0, length));
 
@@ -213,7 +222,7 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        int length = Math.min(comment.length(), maxLen);
+        int length = Math.min(comment.length(), MAX_LEN);
 
         queuePosition.setComment(comment.substring(0, length));
 

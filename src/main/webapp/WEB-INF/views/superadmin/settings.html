@@ -22,21 +22,26 @@
       <div class="large-12 columns">
         <h1>Admin settings</h1>
         <div sec:authorize="hasRole('super_admin')">
-          <h3>Add/Remove admins</h3>
+          <div class="row">
+          <div class="large-6 columns">
           <form th:action="@{/superadmin/make-admin}" th:method="POST">
             <label>
-              Add Admin
+              Add Admin:
               <input id="add-admin" name="name" type="text" placeholder="Username to add"/>
               <button type="submit" class="button postfix">Add</button>
             </label>
           </form>
+          </div>
+          <div class="large-6 columns">
           <form th:action="@{/superadmin/remove-admin}" th:method="POST">
             <label>
-              Remove Admin
+              Remove Admin:
               <input id="remove-admin" name="name" type="text" placeholder="Username to remove"/>
               <button type="submit" class="button postfix">Remove</button>
             </label>
           </form>
+          </div>
+        </div>
         </div>
       </div>
     </div>
