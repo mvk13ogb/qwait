@@ -51,6 +51,13 @@
         // Inject queue position of current user
         $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
 
+        var q = $scope.queue;
+        q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
+        q.unlockUrl = queueBaseUrl + $scope.queue.id + '/unlock';
+        q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
+        q.closeUrl = queueBaseUrl + $scope.queue.id + '/close';
+        q.removeUrl = queueBaseUrl + $scope.queue.id + '/remove';
+
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
           if (adminView) {
@@ -117,6 +124,31 @@
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand" type="submit">Leave queue</button>
             </form>
+
+            <a th:if="${account.canEditQueue(queue)}" data-dropdown="drop" class="button dropdown expand" href="#">Edit queue</a>
+            <ul id="drop" class="f-dropdown content medium" data-dropdown-content="">
+
+              <form th:attr="ng-show='queue.locked'" th:action="'{{queue.unlockUrl}}'" th:method="POST">
+                <button type="submit" class="button success expand">Unlock queue</button>
+              </form>
+
+              <form th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockUrl}}'" th:method="POST">
+                <button type="submit" class="button alert expand">Lock queue</button>
+              </form>
+
+              <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
+                <button type="submit" class="button alert expand">Close queue</button>
+              </form>
+
+              <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
+                <button type="submit" class="button success expand">Open queue</button>
+              </form>
+
+              <form th:action="'{{queue.removeUrl}}'" th:method="POST">
+                <button type="submit" class="button alert expand">Remove queue</button>
+              </form>
+            </ul>
+
           </div>
 
           <div class="large-9 columns">
@@ -161,6 +193,8 @@
     <script src="../../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
     <script src="../../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
     <script src="../../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
+    <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.dropdown.js}"></script>
+    <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.reveal.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
