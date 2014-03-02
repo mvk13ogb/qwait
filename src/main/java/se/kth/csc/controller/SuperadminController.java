@@ -2,8 +2,6 @@ package se.kth.csc.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueueStore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -46,8 +45,7 @@ public class SuperadminController {
     }
 
     @RequestMapping(value = "/settings")
-
-    public ModelAndView superadminsettings(Principal principal) throws JsonProcessingException {
+    public ModelAndView superAdminSettings(Principal principal) throws JsonProcessingException {
         return new ModelAndView();
     }
 
@@ -57,32 +55,44 @@ public class SuperadminController {
 
     @Transactional
     @RequestMapping(value="/make-admin", method = RequestMethod.POST)
-    public String makeUserAdmin(@RequestParam("name") String adminName) throws NotFoundException {
-        Account account = accountStore.fetchAccountWithPrincipalName(adminName);
-        if(account == null) {
-            log.info("Account " + adminName + " could not be found");
-            throw new NotFoundException("Could not find account " + adminName);
-        }
-        account.setAdmin(true);
-        log.info(adminName + " made admin");
+    public String makeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
+            throws NotFoundException, ForbiddenException {
+        if(request.isUserInRole("super_admin")) {
+            Account account = accountStore.fetchAccountWithPrincipalName(adminName);
+            if(account == null) {
+                log.info("Account " + adminName + " could not be found");
+                throw new NotFoundException("Could not find account " + adminName);
+            }
+            account.setAdmin(true);
+            log.info(adminName + " made admin");
 
-        SecurityContextHolder.clearContext();
-        return "redirect:/superadmin/settings";
+            SecurityContextHolder.clearContext();
+            return "redirect:/superadmin/settings";
+        }
+        else {
+            throw new ForbiddenException();
+        }
     }
 
 
     @Transactional
     @RequestMapping(value="/remove-admin", method = RequestMethod.POST)
-    public String removeUserAdmin(@RequestParam("name") String adminName) throws NotFoundException {
-        Account account = accountStore.fetchAccountWithPrincipalName(adminName);
-        if(account == null) {
-            log.info("Account " + adminName + " could not be found");
-            throw new NotFoundException("Could not find admin " + adminName);
-        }
-        account.setAdmin(false);
-        log.info(adminName + " removed from admin");
+    public String removeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
+            throws NotFoundException, ForbiddenException {
+        if(request.isUserInRole("super_admin")) {
+            Account account = accountStore.fetchAccountWithPrincipalName(adminName);
+            if(account == null) {
+                log.info("Account " + adminName + " could not be found");
+                throw new NotFoundException("Could not find admin " + adminName);
+            }
+            account.setAdmin(false);
+            log.info(adminName + " removed from admin");
 
-        SecurityContextHolder.clearContext();
-        return "redirect:/superadmin/settings";
+            SecurityContextHolder.clearContext();
+            return "redirect:/superadmin/settings";
+        }
+        else {
+            throw new ForbiddenException();
+        }
     }
 }

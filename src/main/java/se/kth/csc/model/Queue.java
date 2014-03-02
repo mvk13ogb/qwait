@@ -18,11 +18,11 @@ public class Queue {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinTable(name="account_queue",
-            joinColumns=
-            @JoinColumn(name="queue_id", referencedColumnName="id"),
-            inverseJoinColumns=
-            @JoinColumn(name="account_id", referencedColumnName="id"))
+    @JoinTable(name = "account_queue",
+            joinColumns =
+            @JoinColumn(name = "queue_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "account_id", referencedColumnName = "id"))
     private Set<Account> owners = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
