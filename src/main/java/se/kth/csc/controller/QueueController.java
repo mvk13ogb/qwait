@@ -203,7 +203,9 @@ public class QueueController {
     @RequestMapping(value = "/{id}/close", method = RequestMethod.POST)
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(false);
             for (QueuePosition pos : queue.getPositions ()) {
@@ -221,7 +223,9 @@ public class QueueController {
     @RequestMapping(value = "/{id}/open", method = RequestMethod.POST)
     public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(true);
 
@@ -235,7 +239,9 @@ public class QueueController {
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.POST)
     public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(true);
 
@@ -249,7 +255,9 @@ public class QueueController {
     @RequestMapping(value = "/{id}/unlock", method = RequestMethod.POST)
     public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(false);
 
