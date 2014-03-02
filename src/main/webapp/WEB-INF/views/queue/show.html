@@ -82,10 +82,10 @@
             <div th:attr="ng-if='queuePos != null'">
               <form th:action="'{{queuePos.locationUrl}}'" th:method="POST">
                 <label>
-                  Location:
+                  Location
                   <div class="row collapse">
                     <div class="small-9 columns">
-                      <input id="queue-location" value="{{queuePos.location || (hostName | getComputerName)}}" name="location" type="text" maxlength="30" placeholder="eg. Röd 12"/>
+                      <input id="queue-location" value="{{queuePos.location || (hostName | getComputerName)}}" name="location" type="text" maxlength="30" placeholder="eg. Red 5"/>
                     </div>
                     <div class="small-3 columns">
                       <button type="submit" class="button postfix">Save</button>
@@ -95,7 +95,7 @@
               </form>
               <form th:action="'{{queuePos.commentUrl}}'" th:method="POST">
                 <label>
-                  Comment:
+                  Comment
                   <div class="row collapse">
                     <div class="small-9 columns">
                       <input id="queue-comment" value="{{queuePos.comment}}" name="comment" type="text" maxlength="30" placeholder="eg. Lab 3"/>
@@ -115,6 +115,34 @@
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
                 <button class="button expand button-bot-margin" type="submit">Leave queue</button>
             </form>
+            <span th:if="${account.canEditQueue(queue)}">
+              <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+                <label>
+                  Add queue owner
+                  <div class="row collapse">
+                    <div class="small-9 columns">
+                      <input id="add-queue-owner" name="name" type="text" placeholder="User to add"/>
+                    </div>
+                    <div class="small-3 columns">
+                      <button type="submit" class="button postfix">Add</button>
+                    </div>
+                  </div>
+                </label>
+              </form>
+              <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+                <label>
+                  Remove queue owner
+                  <div class="row collapse">
+                    <div class="small-9 columns">
+                      <input id="remove-queue-owner" name="name" type="text" placeholder="User to remove"/>
+                    </div>
+                    <div class="small-3 columns">
+                      <button type="submit" class="button postfix button-bot-margin">Remove</button>
+                    </div>
+                  </div>
+                </label>
+              </form>
+            </span>
           </div>
           <div class="large-9 columns">
             <div ng-show="queue.positions.length" class="row">
@@ -158,38 +186,6 @@
             </div>
           </div>
         </div>
-        <div class="row">
-        <span th:if="${account.canEditQueue(queue)}">
-          <div class="large-3 columns">
-            <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
-              <label>
-                Add Queue Owner:
-                <div class="row collapse">
-                  <div class="small-9 columns">
-                    <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
-                  </div>
-                  <div class="small-3 columns">
-                    <button type="submit" class="button postfix">Add</button>
-                  </div>
-                </div>
-              </label>
-            </form>
-            <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
-              <label>
-                Remove Queue Owner:
-                <div class="row collapse">
-                  <div class="small-9 columns">
-                    <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
-                  </div>
-                  <div class="small-3 columns">
-                    <button type="submit" class="button postfix">Remove</button>
-                  </div>
-                </div>
-              </label>
-            </form>
-          </div>
-        </span>
-      </div>
       </div>
     </div>
     
