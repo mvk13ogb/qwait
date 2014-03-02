@@ -31,15 +31,6 @@
         /*[+
          $scope.queues = JSON.parse([[${queuesJson}]]);
          +]*/
-
-        for (var i = 0; i < $scope.queues.length; i++) {
-          var q = $scope.queues[i];
-          q.removeUrl = queueBaseUrl + q.id + '/remove';
-          q.closeUrl = queueBaseUrl + q.id + '/close';
-          q.openUrl = queueBaseUrl + q.id + '/open';
-          q.lockUrl = queueBaseUrl + q.id + '/lock';
-          q.unlockUrl = queueBaseUrl + q.id + '/unlock';
-        }
       }]);
       /* ]]> */
     </script>
@@ -87,9 +78,6 @@
                     </th>
                     <th sec:authorize="hasRole('admin')" width="1">Locked</th>
                     <th sec:authorize="hasRole('admin')" width="1">Active</th>
-                    <th sec:authorize="hasRole('admin')" width="1">&nbsp;</th>
-                    <th sec:authorize="hasRole('admin')" width="1">&nbsp;</th>
-                    <th sec:authorize="hasRole('super_admin')" width="1">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,27 +87,6 @@
                     <td>{{queue.positions.length}}</td>
                     <td sec:authorize="hasRole('admin')">{{queue.locked}}</td>
                     <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
-                    <td sec:authorize="hasRole('admin')">
-                      <form th:attr="ng-show='queue.locked'" th:action="'{{queue.unlockUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Unlock</button>
-                      </form>
-                      <form th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Lock</button>
-                      </form>
-                    </td>
-                    <td sec:authorize="hasRole('admin')">
-                      <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Close</button>
-                      </form>
-                      <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Open</button>
-                      </form>
-                    </td>
-                    <td sec:authorize="hasRole('super_admin')">
-                      <form th:action="'{{queue.removeUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
-                      </form>
-                    </td>
                   </tr>
                 </tbody>
               </table>
