@@ -82,9 +82,7 @@ public class QueueController {
         if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
-            Set<Account> ownerSet = Sets.newHashSet();
-            ownerSet.add(getCurrentAccount(principal));
-            queue.setOwners(ownerSet);
+            queue.addOwner(getCurrentAccount(principal));
 
             queue.setActive(true);
             queue.setLocked(false);
