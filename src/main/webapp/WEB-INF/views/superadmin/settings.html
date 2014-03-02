@@ -23,25 +23,35 @@
         <h1>Admin settings</h1>
         <div sec:authorize="hasRole('super_admin')">
           <div class="row">
-          <div class="large-6 columns">
-          <form th:action="@{/superadmin/make-admin}" th:method="POST">
-            <label>
-              Add Admin:
-              <input id="add-admin" name="name" type="text" placeholder="Username to add"/>
-              <button type="submit" class="button postfix">Add</button>
-            </label>
-          </form>
+            <div class="large-6 columns">
+            <form th:action="@{/superadmin/make-admin}" th:method="POST">
+              <label>
+                Add Admin:
+                <div class="row collapse">
+                  <div class="small-9 columns">
+                    <input id="add-admin" name="name" type="text" placeholder="Username to add"/>
+                  </div>
+                  <div class="small-3 columns">
+                    <button type="submit" class="button postfix">Add</button>
+                  </div>
+                </div>
+              </label>
+            </form>
+            <form th:action="@{/superadmin/remove-admin}" th:method="POST">
+              <label>
+                Remove Admin:
+                <div class="row collapse">
+                  <div class="small-9 columns">
+                    <input id="remove-admin" name="name" type="text" placeholder="Username to remove"/>
+                  </div>
+                  <div class="small-3 columns">
+                    <button type="submit" class="button postfix">Remove</button>
+                  </div>
+                </div>
+              </label>
+            </form>
+            </div>
           </div>
-          <div class="large-6 columns">
-          <form th:action="@{/superadmin/remove-admin}" th:method="POST">
-            <label>
-              Remove Admin:
-              <input id="remove-admin" name="name" type="text" placeholder="Username to remove"/>
-              <button type="submit" class="button postfix">Remove</button>
-            </label>
-          </form>
-          </div>
-        </div>
         </div>
       </div>
     </div>

@@ -73,28 +73,6 @@
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1 class="text-center">{{queue.name}}</h1>
-        <div class="row">
-          <span th:if="${account.canEditQueue(queue)}">
-            <div class="large-6 columns">
-            <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
-              <label>
-                Add Queue Owner:
-                <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
-                <button type="submit" class="button postfix">Add</button>
-              </label>
-            </form>
-            </div>
-            <div class="large-6 columns">
-            <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
-              <label>
-                Remove Queue Owner:
-                <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
-                <button type="submit" class="button postfix">Remove</button>
-              </label>
-            </form>
-            </div>
-          </span>
-        </div>
         <div ng-hide="queue.positions.length">
           <p class="text-center">There is currently no-one queueing</p>
         </div>
@@ -131,11 +109,11 @@
             </div>
                       
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
-                <button class="button expand" type="submit">Queue me</button>
+                <button class="button expand button-bot-margin" type="submit">Queue me</button>
             </form>
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
-                <button class="button expand" type="submit">Leave queue</button>
+                <button class="button expand button-bot-margin" type="submit">Leave queue</button>
             </form>
           </div>
           <div class="large-9 columns">
@@ -180,6 +158,38 @@
             </div>
           </div>
         </div>
+        <div class="row">
+        <span th:if="${account.canEditQueue(queue)}">
+          <div class="large-3 columns">
+            <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+              <label>
+                Add Queue Owner:
+                <div class="row collapse">
+                  <div class="small-9 columns">
+                    <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
+                  </div>
+                  <div class="small-3 columns">
+                    <button type="submit" class="button postfix">Add</button>
+                  </div>
+                </div>
+              </label>
+            </form>
+            <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+              <label>
+                Remove Queue Owner:
+                <div class="row collapse">
+                  <div class="small-9 columns">
+                    <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
+                  </div>
+                  <div class="small-3 columns">
+                    <button type="submit" class="button postfix">Remove</button>
+                  </div>
+                </div>
+              </label>
+            </form>
+          </div>
+        </span>
+      </div>
       </div>
     </div>
     
