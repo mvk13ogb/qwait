@@ -105,7 +105,6 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-
         String hostName = "";
         try{
             hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
