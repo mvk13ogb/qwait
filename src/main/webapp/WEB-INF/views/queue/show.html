@@ -78,23 +78,6 @@
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1>{{queue.name}}</h1>
-        <span th:if="${account.canEditQueue(queue)}">
-          <h3>Add/Remove Queue Owner To This Queue:</h3>
-          <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
-            <label>
-              Add Queue Owner
-              <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
-              <button type="submit" class="button postfix">Add</button>
-            </label>
-          </form>
-          <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
-            <label>
-              Remove Queue Owner
-              <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
-              <button type="submit" class="button postfix">Remove</button>
-            </label>
-          </form>
-        </span>
         <div class="row">
           <div class="large-3 columns">
             <div th:attr="ng-if='queuePos != null'">
@@ -147,6 +130,54 @@
               <form th:if="${account.isSuperAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
                 <button type="submit" class="button alert expand">Remove queue</button>
               </form>
+
+              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="addQueueOwnerModal">Add owner</a>
+              <div class="reveal-modal medium" id="addQueueOwnerModal" data-reveal="">
+                <h2>Add queue owner</h2>
+                <p>
+                  You are about to add a new owner to the queue {{queue.name}}.
+                  Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to add.
+                </p>
+
+                <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+                  <label>
+                    Add Queue Owner
+                    <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
+                    <button type="submit" class="button postfix">Add</button>
+                  </label>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="removeQueueOwnerModal">Remove owner</a>
+              <div class="reveal-modal medium" id="removeQueueOwnerModal" data-reveal="">
+                <h2>Remove queue owner</h2>
+                <p>
+                  You are about to remove a owner from the queue {{queue.name}}.
+                  Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to remove.
+                </p>
+
+                <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+                  <label>
+                    Remove Queue Owner
+                    <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
+                    <button type="submit" class="button postfix">Remove</button>
+                  </label>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="seeQueueOwnersModal">See queue owners</a>
+              <div class="reveal-modal" id="seeQueueOwnersModal" data-reveal="">
+                <h2>Queue owners of {{queue.name}}</h2>
+                <ul>
+                  <p ng-hide="queue.owners.length">No queue owners.</p>
+                  <li ng-repeat="owner in queue.owners">
+                    {{owner.principalName}}
+                  </li>
+                </ul>
+                <a class="close-reveal-modal">×</a>
+              </div>
             </ul>
 
           </div>
