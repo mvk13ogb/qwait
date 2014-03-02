@@ -49,8 +49,10 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueue(Queue queue) {
-        queue.getOwner().getQueues().remove(queue);
-        queue.setOwner(null);
+        for(Account a : queue.getOwners()) {
+           a.getQueues().remove(queue);
+        }
+        queue.setOwners(null);
         entityManager.remove(queue);
         log.info("Removed queue with id {}", queue.getId());
     }

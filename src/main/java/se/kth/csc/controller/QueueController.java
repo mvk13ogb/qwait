@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
@@ -83,7 +80,8 @@ public class QueueController {
         if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
-            queue.setOwner(getCurrentAccount(principal));
+            queue.addOwner(getCurrentAccount(principal));
+
             queue.setActive(true);
             queue.setLocked(false);
             queueStore.storeQueue(queue);
@@ -104,8 +102,8 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson));
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
+                "account", getCurrentAccount(principal)));
     }
 
     @Transactional
@@ -160,7 +158,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/remove", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/position/{positionId}/remove", method = RequestMethod.POST)
     public String deletePosition(@PathVariable("id") int id, @PathVariable("positionId") int positionId,
                                  HttpServletRequest request, Principal principal) throws Exception {
         Account account = getCurrentAccount(principal);
@@ -186,7 +184,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = RequestMethod.POST)
     public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
             throws NotFoundException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
@@ -202,7 +200,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/close", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/close", method = RequestMethod.POST)
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -220,7 +218,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/open", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/open", method = RequestMethod.POST)
     public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -234,7 +232,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/lock", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/lock", method = RequestMethod.POST)
     public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -248,7 +246,7 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/unlock", method = {RequestMethod.POST})
+    @RequestMapping(value = "/{id}/unlock", method = RequestMethod.POST)
     public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         if (request.isUserInRole("admin")) {
@@ -259,5 +257,39 @@ public class QueueController {
         } else {
             throw new ForbiddenException();
         }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/add-owner", method = RequestMethod.POST)
+    public String addQueueOwner(@RequestParam("name") String newQueueOwner,
+                                @PathVariable("id") int id)
+                                throws NotFoundException {
+        Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
+        if(account == null) {
+            log.info("Account " + newQueueOwner + " could not be found");
+            throw new NotFoundException("Could not find the account " + newQueueOwner);
+        }
+        Queue queue = queueStore.fetchQueueWithId(id);
+        queue.addOwner(account);
+        log.info("Queue with id " + id + " now has " + newQueueOwner
+                + " as a queue owner");
+
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/remove-owner", method = RequestMethod.POST)
+    public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
+                                   @PathVariable("id") int id)
+                                   throws NotFoundException{
+        Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
+        if(account == null) {
+            log.info("Account " + oldOwnerName + " could not be found");
+            throw new NotFoundException("Couldn't find the owner " + oldOwnerName);
+        }
+        Queue queue = queueStore.fetchQueueWithId(id);
+        queue.removeOwner(account);
+        log.info(oldOwnerName + " remove from ownerlist of queue with id " + id);
+        return "redirect:/queue/" + id;
     }
 }

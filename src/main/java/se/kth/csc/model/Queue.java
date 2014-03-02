@@ -17,9 +17,13 @@ public class Queue {
     @Column(name = "name", unique = true)
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinColumn(name = "owner_id")
-    private Account owner;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(name = "account_queue",
+            joinColumns =
+            @JoinColumn(name = "queue_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "account_id", referencedColumnName = "id"))
+    private Set<Account> owners = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
@@ -59,12 +63,20 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public Account getOwner() {
-        return owner;
+    public Set<Account> getOwners() {
+        return owners;
     }
 
-    public void setOwner(Account owner) {
-        this.owner = owner;
+    public void setOwners(Set<Account> owners) {
+        this.owners = owners;
+    }
+
+    public void addOwner(Account owner) {
+        this.owners.add(owner);
+    }
+
+    public void removeOwner(Account owner) {
+        this.owners.remove(owner);
     }
 
     @JsonView(Queue.class)
@@ -74,5 +86,22 @@ public class Queue {
 
     public void setPositions(Set<QueuePosition> positions) {
         this.positions = Sets.newHashSet(positions);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Queue queue = (Queue) o;
+
+        if (id != queue.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

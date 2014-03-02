@@ -29,7 +29,7 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners", cascade = CascadeType.ALL)
     private Set<Queue> queues = Sets.newHashSet();
 
     public int getId() {
@@ -56,6 +56,13 @@ public class Account {
 
     public boolean isSuperAdmin() { return superAdmin; }
 
+    public boolean canEditQueue(Queue queue) {
+        if(isSuperAdmin()) {
+            return true;
+        }
+        return queues.contains(queue);
+    }
+
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
@@ -79,4 +86,22 @@ public class Account {
     public void setQueues(Set<Queue> queues) {
         this.queues = Sets.newHashSet(queues);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        if (!principalName.equals(account.principalName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return principalName.hashCode();
+    }
+
 }
