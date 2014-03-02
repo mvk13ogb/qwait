@@ -206,7 +206,6 @@ public class QueueController {
         Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canEditQueue(queue)) {
-            Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(false);
             for (QueuePosition pos : queue.getPositions ()) {
                 queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
@@ -226,7 +225,6 @@ public class QueueController {
         Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canEditQueue(queue)) {
-            Queue queue = queueStore.fetchQueueWithId(id);
             queue.setActive(true);
 
             return "redirect:/queue/" + id;
@@ -242,7 +240,6 @@ public class QueueController {
         Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canEditQueue(queue)) {
-            Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(true);
 
             return "redirect:/queue/" + id;
@@ -258,7 +255,6 @@ public class QueueController {
         Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canEditQueue(queue)) {
-            Queue queue = queueStore.fetchQueueWithId(id);
             queue.setLocked(false);
 
             return "redirect:/queue/" + id;
