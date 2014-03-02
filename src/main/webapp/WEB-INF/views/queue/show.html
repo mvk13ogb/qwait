@@ -144,7 +144,7 @@
                 <button type="submit" class="button success expand">Open queue</button>
               </form>
 
-              <form th:action="'{{queue.removeUrl}}'" th:method="POST">
+              <form th:if="${account.isSuperAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
                 <button type="submit" class="button alert expand">Remove queue</button>
               </form>
             </ul>
