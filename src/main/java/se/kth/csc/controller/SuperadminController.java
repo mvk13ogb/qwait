@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueueStore;
@@ -57,7 +58,7 @@ public class SuperadminController {
     @RequestMapping(value="/make-admin", method = RequestMethod.POST)
     public String makeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if(request.isUserInRole("super_admin")) {
+        if(request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Account account = accountStore.fetchAccountWithPrincipalName(adminName);
             if(account == null) {
                 log.info("Account " + adminName + " could not be found");
@@ -79,7 +80,7 @@ public class SuperadminController {
     @RequestMapping(value="/remove-admin", method = RequestMethod.POST)
     public String removeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if(request.isUserInRole("super_admin")) {
+        if(request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
             Account account = accountStore.fetchAccountWithPrincipalName(adminName);
             if(account == null) {
                 log.info("Account " + adminName + " could not be found");
