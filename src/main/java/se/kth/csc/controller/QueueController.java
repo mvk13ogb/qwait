@@ -262,7 +262,7 @@ public class QueueController {
     @Transactional
     @RequestMapping(value = "/{id}/add-owner", method = RequestMethod.POST)
     public String addQueueOwner(@RequestParam("name") String newQueueOwner,
-                                @PathVariable("id") int id, HttpServletRequest request)
+                                @PathVariable("id") int id)
                                 throws NotFoundException, ForbiddenException {
         Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
         Queue queue = queueStore.fetchQueueWithId(id);
