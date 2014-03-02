@@ -29,12 +29,7 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="account_queue",
-            joinColumns=
-            @JoinColumn(name="account_id", referencedColumnName="id"),
-            inverseJoinColumns=
-            @JoinColumn(name="queue_id", referencedColumnName="id"))
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy="owners", cascade = CascadeType.ALL)
     private Set<Queue> queues = Sets.newHashSet();
 
     public int getId() {
