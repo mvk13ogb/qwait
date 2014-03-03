@@ -143,9 +143,9 @@
                 <button type="submit" class="button tiny success expand">Open queue</button>
               </form>
 
-              <form th:if="${account.isSuperAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
+              <form th:if="${account.isAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny alert expand">Remove queue</button>
-              </form>
+              </form>t
             </ul>
 
             <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
