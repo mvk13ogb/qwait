@@ -95,6 +95,21 @@ qwait.factory('getQueuePosFunc', function() {
     }
 });
 
+qwait.factory('getQueuePosNr', function() {
+    return {
+        getQueuePosNr: function(name, positions) {
+            for(var i=0; i<positions.length; i++) {
+                var pos = positions[i];
+
+                if(pos.account.principalName == name)
+                    return i+1;
+            }
+
+            return null;
+        }
+    }
+});
+
 qwait.factory('Page', function() {
    var title = 'QWait';
    return {
