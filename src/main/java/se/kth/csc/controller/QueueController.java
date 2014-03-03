@@ -203,15 +203,16 @@ public class QueueController {
     @RequestMapping(value = "/{id}/close", method = RequestMethod.POST)
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
-            Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             queue.setActive(false);
             for (QueuePosition pos : queue.getPositions ()) {
                 queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
             }
             queue.getPositions().clear();
 
-           return "redirect:/queue/list";
+           return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -221,11 +222,12 @@ public class QueueController {
     @RequestMapping(value = "/{id}/open", method = RequestMethod.POST)
     public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
-            Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             queue.setActive(true);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -235,11 +237,12 @@ public class QueueController {
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.POST)
     public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
-            Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             queue.setLocked(true);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -249,11 +252,12 @@ public class QueueController {
     @RequestMapping(value = "/{id}/unlock", method = RequestMethod.POST)
     public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
-        if (request.isUserInRole("admin")) {
-            Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
             queue.setLocked(false);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue/" + id;
         } else {
             throw new ForbiddenException();
         }
@@ -262,34 +266,44 @@ public class QueueController {
     @Transactional
     @RequestMapping(value = "/{id}/add-owner", method = RequestMethod.POST)
     public String addQueueOwner(@RequestParam("name") String newQueueOwner,
-                                @PathVariable("id") int id)
-                                throws NotFoundException {
-        Account account = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
-        if(account == null) {
-            log.info("Account " + newQueueOwner + " could not be found");
-            throw new NotFoundException("Could not find the account " + newQueueOwner);
-        }
+                                @PathVariable("id") int id, HttpServletRequest request)
+                                throws NotFoundException, ForbiddenException {
+        Account accountOfAdder = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Account accountToAdd = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
         Queue queue = queueStore.fetchQueueWithId(id);
-        queue.addOwner(account);
-        log.info("Queue with id " + id + " now has " + newQueueOwner
-                + " as a queue owner");
+        if(accountOfAdder.canEditQueue(queue)) {
+            if(accountToAdd == null) {
+                log.info("Account " + newQueueOwner + " could not be found");
+                throw new NotFoundException("Could not find the account " + newQueueOwner);
+            }
+            queue.addOwner(accountToAdd);
+            log.info("Queue with id " + id + " now has " + newQueueOwner
+                    + " as a queue owner");
 
-        return "redirect:/queue/" + id;
+            return "redirect:/queue/" + id;
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     @Transactional
     @RequestMapping(value = "/{id}/remove-owner", method = RequestMethod.POST)
     public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
-                                   @PathVariable("id") int id)
-                                   throws NotFoundException{
-        Account account = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
-        if(account == null) {
-            log.info("Account " + oldOwnerName + " could not be found");
-            throw new NotFoundException("Couldn't find the owner " + oldOwnerName);
-        }
+                                   @PathVariable("id") int id, HttpServletRequest request)
+                                   throws NotFoundException, ForbiddenException {
+        Account accountOfRemover = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Account accountToRemove = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
         Queue queue = queueStore.fetchQueueWithId(id);
-        queue.removeOwner(account);
-        log.info(oldOwnerName + " remove from ownerlist of queue with id " + id);
-        return "redirect:/queue/" + id;
+        if(accountOfRemover.canEditQueue(queue)) {
+            if(accountToRemove == null) {
+                log.info("Account " + oldOwnerName + " could not be found");
+                throw new NotFoundException("Couldn't find the owner " + oldOwnerName);
+            }
+            queue.removeOwner(accountToRemove);
+            log.info(oldOwnerName + " remove from ownerlist of queue with id " + id);
+            return "redirect:/queue/" + id;
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }
