@@ -65,6 +65,7 @@
                     </form>
                   </div>
                   <label ng-show="queues.length" class="large-4 columns pull-right">
+                    <div class="add-queue-margin show-for-large-up" sec:authorize="hasRole('admin')"></div> 
                     <input ng-model="search.name" class="search" name="search" type="text" placeholder="Find queues"/>
                   </label>
                 </div>
