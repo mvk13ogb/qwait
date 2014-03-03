@@ -108,30 +108,33 @@
               <button class="button expand" type="submit">Leave queue</button>
             </form>
 
-            <a th:if="${account.canEditQueue(queue)}" data-dropdown="drop" class="button dropdown expand" href="#">Edit queue</a>
-            <ul id="drop" class="f-dropdown content medium" data-dropdown-content="">
+            <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-queue-drop" class="button dropdown expand" href="#">Edit queue</a>
+            <ul id="edit-queue-drop" class="f-dropdown content medium" data-dropdown-content="">
 
               <form th:attr="ng-show='queue.locked'" th:action="'{{queue.unlockUrl}}'" th:method="POST">
-                <button type="submit" class="button success expand">Unlock queue</button>
+                <button type="submit" class="button tiny success expand">Unlock queue</button>
               </form>
 
               <form th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockUrl}}'" th:method="POST">
-                <button type="submit" class="button alert expand">Lock queue</button>
+                <button type="submit" class="button tiny alert expand">Lock queue</button>
               </form>
 
               <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
-                <button type="submit" class="button alert expand">Close queue</button>
+                <button type="submit" class="button tiny alert expand">Close queue</button>
               </form>
 
               <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
-                <button type="submit" class="button success expand">Open queue</button>
+                <button type="submit" class="button tiny success expand">Open queue</button>
               </form>
 
               <form th:if="${account.isSuperAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
-                <button type="submit" class="button alert expand">Remove queue</button>
+                <button type="submit" class="button tiny alert expand">Remove queue</button>
               </form>
+            </ul>
 
-              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="addQueueOwnerModal">Add owner</a>
+            <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
+            <ul id="edit-owners-drop" class="f-dropdown content medium" data-dropdown-content="">
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="addQueueOwnerModal">Add owner</a>
               <div class="reveal-modal medium" id="addQueueOwnerModal" data-reveal="">
                 <h2>Add queue owner</h2>
                 <p>
@@ -149,7 +152,7 @@
                 <a class="close-reveal-modal">×</a>
               </div>
 
-              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="removeQueueOwnerModal">Remove owner</a>
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="removeQueueOwnerModal">Remove owner</a>
               <div class="reveal-modal medium" id="removeQueueOwnerModal" data-reveal="">
                 <h2>Remove queue owner</h2>
                 <p>
@@ -167,7 +170,7 @@
                 <a class="close-reveal-modal">×</a>
               </div>
 
-              <a th:if="${account.canEditQueue(queue)}" class="button expand" href="#" data-reveal-id="seeQueueOwnersModal">See queue owners</a>
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="seeQueueOwnersModal">See queue owners</a>
               <div class="reveal-modal" id="seeQueueOwnersModal" data-reveal="">
                 <h2>Queue owners of {{queue.name}}</h2>
                 <ul>
