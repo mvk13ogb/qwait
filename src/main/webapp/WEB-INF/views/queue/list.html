@@ -50,7 +50,7 @@
               <table class="large-12 columns">
                 <div class="row">
                   <div class="large-4 columns">
-                    <form sec:authorize="hasRole('super_admin')" th:action="@{/queue/create}" th:method="POST">
+                    <form sec:authorize="hasRole('admin')" th:action="@{/queue/create}" th:method="POST">
                       <label>
                         Add a new queue
                         <div class="row collapse">
@@ -76,6 +76,7 @@
                       <img th:src="@{/icons/queue-man.png}"
                             src="../../../icons/queue-man.png" height="17" width="17"/>
                     </th>
+                    <!--TODO-->
                     <th sec:authorize="hasRole('admin')" width="1">Locked</th>
                     <th sec:authorize="hasRole('admin')" width="1">Active</th>
                   </tr>
@@ -85,6 +86,7 @@
                   <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
                     <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">{{queue.name}}</a></td>
                     <td>{{queue.positions.length}}</td>
+                    <!--TODO Change to moderator-->
                     <td sec:authorize="hasRole('admin')">{{queue.locked}}</td>
                     <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
                   </tr>

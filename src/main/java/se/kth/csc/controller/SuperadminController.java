@@ -58,7 +58,7 @@ public class SuperadminController {
     @RequestMapping(value="/make-admin", method = RequestMethod.POST)
     public String makeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if(request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
+        if(request.isUserInRole(Role.ADMIN.getAuthority())) {
             Account account = accountStore.fetchAccountWithPrincipalName(adminName);
             if(account == null) {
                 log.info("Account " + adminName + " could not be found");
@@ -75,12 +75,11 @@ public class SuperadminController {
         }
     }
 
-
     @Transactional
     @RequestMapping(value="/remove-admin", method = RequestMethod.POST)
     public String removeUserAdmin(@RequestParam("name") String adminName, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if(request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
+        if(request.isUserInRole(Role.ADMIN.getAuthority())) {
             Account account = accountStore.fetchAccountWithPrincipalName(adminName);
             if(account == null) {
                 log.info("Account " + adminName + " could not be found");
