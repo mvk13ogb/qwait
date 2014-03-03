@@ -53,6 +53,13 @@
         // Inject queue position of current user
         $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
 
+ var q = $scope.queue;
+        q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
+        q.unlockUrl = queueBaseUrl + $scope.queue.id + '/unlock';
+        q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
+        q.closeUrl = queueBaseUrl + $scope.queue.id + '/close';
+        q.removeUrl = queueBaseUrl + $scope.queue.id + '/remove';
+
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
           if (adminView) {
@@ -68,6 +75,7 @@
       /* ]]> */
     </script>
   </head>
+
   <body>
     <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
@@ -115,34 +123,82 @@
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">Leave queue</button>
             </form>
-            <span th:if="${account.canEditQueue(queue)}">
-              <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
-                <label>
-                  Add queue owner
-                  <div class="row collapse">
-                    <div class="small-9 columns">
-                      <input id="add-queue-owner" name="name" type="text" placeholder="User to add"/>
-                    </div>
-                    <div class="small-3 columns">
-                      <button type="submit" class="button postfix">Add</button>
-                    </div>
-                  </div>
-                </label>
+
+            <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-queue-drop" class="button dropdown expand" href="#">Edit queue</a>
+            <ul id="edit-queue-drop" class="f-dropdown content medium" data-dropdown-content="">
+
+              <form th:attr="ng-show='queue.locked'" th:action="'{{queue.unlockUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny success expand">Unlock queue</button>
               </form>
-              <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
-                <label>
-                  Remove queue owner
-                  <div class="row collapse">
-                    <div class="small-9 columns">
-                      <input id="remove-queue-owner" name="name" type="text" placeholder="User to remove"/>
-                    </div>
-                    <div class="small-3 columns">
-                      <button type="submit" class="button postfix button-bot-margin">Remove</button>
-                    </div>
-                  </div>
-                </label>
+
+              <form th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny alert expand">Lock queue</button>
               </form>
-            </span>
+
+              <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny alert expand">Close queue</button>
+              </form>
+
+              <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny success expand">Open queue</button>
+              </form>
+
+              <form th:if="${account.isSuperAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny alert expand">Remove queue</button>
+              </form>
+            </ul>
+
+            <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
+            <ul id="edit-owners-drop" class="f-dropdown content medium" data-dropdown-content="">
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="addQueueOwnerModal">Add owner</a>
+              <div class="reveal-modal medium" id="addQueueOwnerModal" data-reveal="">
+                <h2>Add queue owner</h2>
+                <p>
+                  You are about to add a new owner to the queue {{queue.name}}.
+                  Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to add.
+                </p>
+
+                <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+                  <label>
+                    Add Queue Owner
+                    <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
+                    <button type="submit" class="button postfix">Add</button>
+                  </label>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="removeQueueOwnerModal">Remove owner</a>
+              <div class="reveal-modal medium" id="removeQueueOwnerModal" data-reveal="">
+                <h2>Remove queue owner</h2>
+                <p>
+                  You are about to remove a owner from the queue {{queue.name}}.
+                  Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to remove.
+                </p>
+
+                <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+                  <label>
+                    Remove Queue Owner
+                    <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
+                    <button type="submit" class="button postfix">Remove</button>
+                  </label>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account.canEditQueue(queue)}" class="button tiny expand" href="#" data-reveal-id="seeQueueOwnersModal">See queue owners</a>
+              <div class="reveal-modal" id="seeQueueOwnersModal" data-reveal="">
+                <h2>Queue owners of {{queue.name}}</h2>
+                <ul>
+                  <p ng-hide="queue.owners.length">No queue owners.</p>
+                  <li ng-repeat="owner in queue.owners">
+                    {{owner.principalName}}
+                  </li>
+                </ul>
+                <a class="close-reveal-modal">×</a>
+              </div>
+            </ul>
+
           </div>
           <div class="large-9 columns">
             <div ng-show="queue.positions.length" class="row">
@@ -176,8 +232,8 @@
                     <td>{{queuePosition.comment || ''}}</td>
 
                     <td>
-                      <form class ="no-bot-margin" ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST">
-                        <button type="submit" class="button tiny no-bot-margin">Remove</button>
+                      <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
+                        <button type="submit" class="button alert tiny" style="margin-bottom: 0">Remove</button>
                       </form>
                     </td>
                   </tr>
@@ -192,6 +248,8 @@
     <script src="../../../js-vendor/jquery.js" th:src="@{/js-vendor/jquery.js}"></script>
     <script src="../../../js-vendor/foundation.js" th:src="@{/js-vendor/foundation.js}"></script>
     <script src="../../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
+    <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.dropdown.js}"></script>
+    <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.reveal.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
