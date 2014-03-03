@@ -21,10 +21,10 @@
     <div class="row">
       <div class="large-12 columns">
         <h1>Admin settings</h1>
-        <div sec:authorize="hasRole('super_admin')">
+        <div sec:authorize="hasRole('admin')">
           <div class="row">
             <div class="large-6 columns">
-            <form th:action="@{/superadmin/make-admin}" th:method="POST">
+            <form th:action="@{/admin/make-admin}" th:method="POST">
               <label>
                 Add admin
                 <div class="row collapse">
@@ -37,7 +37,7 @@
                 </div>
               </label>
             </form>
-            <form th:action="@{/superadmin/remove-admin}" th:method="POST">
+            <form th:action="@{/admin/remove-admin}" th:method="POST">
               <label>
                 Remove admin
                 <div class="row collapse">
