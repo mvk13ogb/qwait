@@ -291,10 +291,10 @@ public class QueueController {
     public String removeQueueOwner(@RequestParam("name") String oldOwnerName,
                                    @PathVariable("id") int id, HttpServletRequest request)
                                    throws NotFoundException, ForbiddenException {
-        Account accountOfAdder = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Account accountOfRemover = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
         Account accountToRemove = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
         Queue queue = queueStore.fetchQueueWithId(id);
-        if(accountOfAdder.canEditQueue(queue)) {
+        if(accountOfRemover.canEditQueue(queue)) {
             if(accountToRemove == null) {
                 log.info("Account " + oldOwnerName + " could not be found");
                 throw new NotFoundException("Couldn't find the owner " + oldOwnerName);
