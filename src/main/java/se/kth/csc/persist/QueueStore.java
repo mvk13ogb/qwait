@@ -5,7 +5,6 @@ import se.kth.csc.model.Account;
 
 import java.util.List;
 
-
 public interface QueueStore {
 
     public Queue fetchQueueWithId(int id);

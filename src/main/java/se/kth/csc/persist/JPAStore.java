@@ -46,7 +46,6 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     public List<Queue> fetchAllModeratedQueues(Account account) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        //Root<Queue> queueRoot = q.from(Queue.class);
         q.select(q.from(Queue.class));
         List<Queue> list = entityManager.createQuery(q).getResultList();
         List<Queue> tmpList = new LinkedList<Queue>();
