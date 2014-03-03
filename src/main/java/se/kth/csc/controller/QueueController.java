@@ -83,7 +83,7 @@ public class QueueController {
             throws ForbiddenException, BadNameException {
         if (request.isUserInRole(Role.ADMIN.getAuthority())) {
             String queueName = queueCreationInfo.getName();
-            if (queueName.length() > 0) {
+            if (queueName.trim().length() > 0) {
                 Queue queue = new Queue();
                 queue.setName(queueName);
                 queue.addOwner(getCurrentAccount(principal));
@@ -94,7 +94,7 @@ public class QueueController {
 
                 return "redirect:/queue/list";
             } else {
-                throw new BadNameException("Name length must be at least one character!");
+                throw new BadNameException();
             }
         } else {
             throw new ForbiddenException();
