@@ -80,17 +80,22 @@ public class QueueController {
     public String create(@ModelAttribute("queueCreationInfo") QueueCreationInfo queueCreationInfo,
                          HttpServletRequest request,
                          Principal principal)
-            throws ForbiddenException {
+            throws ForbiddenException, BadNameException {
         if (request.isUserInRole(Role.ADMIN.getAuthority())) {
-            Queue queue = new Queue();
-            queue.setName(queueCreationInfo.getName());
-            queue.addOwner(getCurrentAccount(principal));
+            String queueName = queueCreationInfo.getName();
+            if (queueName.length() > 0) {
+                Queue queue = new Queue();
+                queue.setName(queueName);
+                queue.addOwner(getCurrentAccount(principal));
 
-            queue.setActive(true);
-            queue.setLocked(false);
-            queueStore.storeQueue(queue);
+                queue.setActive(true);
+                queue.setLocked(false);
+                queueStore.storeQueue(queue);
 
-            return "redirect:/queue/list";
+                return "redirect:/queue/list";
+            } else {
+                throw new BadNameException("Name length must be at least one character!");
+            }
         } else {
             throw new ForbiddenException();
         }
