@@ -35,6 +35,8 @@
         var queueStr = /*[[${queueJson}]]*/ '{"name": "Queue 1", "id": 1, "positions": []}';
         $scope.queue = JSON.parse(queueStr);
 
+        $scope.hostName = /*[[${hostName}]]*/ '';
+
         var numPos = $scope.queue.positions.length;
         if (numPos > 0) {
           Page.setTitle('[' + numPos + '] ' + $scope.queue.name);
@@ -59,44 +61,44 @@
           if (position.account.principalName === $scope.principalName) {
             $scope.queue.removeOwnUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/remove';
           }
+          position.locationUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/location';
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
       }]);
       /* ]]> */
     </script>
   </head>
-
   <body>
     <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
-        <h1>{{queue.name}}</h1>
-        <span th:if="${account.canEditQueue(queue)}">
-          <h3>Add/Remove Queue Owner To This Queue:</h3>
-          <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
-            <label>
-              Add Queue Owner
-              <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
-              <button type="submit" class="button postfix">Add</button>
-            </label>
-          </form>
-          <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
-            <label>
-              Remove Queue Owner
-              <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
-              <button type="submit" class="button postfix">Remove</button>
-            </label>
-          </form>
-        </span>
+        <h1 class="text-center">{{queue.name}}</h1>
+        <div ng-hide="queue.positions.length">
+          <p class="text-center">There is currently no-one queueing</p>
+        </div>
         <div class="row">
           <div class="large-3 columns">
+          <div class="comment-margin show-for-large-up"></div>
             <div th:attr="ng-if='queuePos != null'">
-              <form th:action="'{{queuePos.commentUrl}}'" th:method="POST">
+              <form th:action="'{{queuePos.locationUrl}}'" th:method="POST">
                 <label>
-                  Queue comment
+                  Location
                   <div class="row collapse">
                     <div class="small-9 columns">
-                      <input id="queue-comment" value="{{queuePos.comment}}" name="comment" type="text" placeholder="No comment"/>
+                      <input id="queue-location" value="{{queuePos.location || (hostName | getComputerName)}}" name="location" type="text" maxlength="30" placeholder="eg. Red 5"/>
+                    </div>
+                    <div class="small-3 columns">
+                      <button type="submit" class="button postfix">Save</button>
+                    </div>
+                  </div>
+                </label>
+              </form>
+              <form th:action="'{{queuePos.commentUrl}}'" th:method="POST">
+                <label>
+                  Comment
+                  <div class="row collapse">
+                    <div class="small-9 columns">
+                      <input id="queue-comment" value="{{queuePos.comment}}" name="comment" type="text" maxlength="30" placeholder="eg. Lab 3"/>
                     </div>
                     <div class="small-3 columns">
                       <button type="submit" class="button postfix">Save</button>
@@ -105,31 +107,58 @@
                 </label>
               </form>
             </div>
-            <label>
-              Find queuer
-              <input ng-model="search" id="search" name="search" type="text" placeholder="Search terms"/>
-            </label>
-
+                      
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
-              <button class="button expand" type="submit">Queue me</button>
+              <button class="button expand button-bot-margin" type="submit">Queue me</button>
             </form>
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
-              <button class="button expand" type="submit">Leave queue</button>
+              <button class="button expand button-bot-margin" type="submit">Leave queue</button>
             </form>
+            <span th:if="${account.canEditQueue(queue)}">
+              <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
+                <label>
+                  Add queue owner
+                  <div class="row collapse">
+                    <div class="small-9 columns">
+                      <input id="add-queue-owner" name="name" type="text" placeholder="User to add"/>
+                    </div>
+                    <div class="small-3 columns">
+                      <button type="submit" class="button postfix">Add</button>
+                    </div>
+                  </div>
+                </label>
+              </form>
+              <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
+                <label>
+                  Remove queue owner
+                  <div class="row collapse">
+                    <div class="small-9 columns">
+                      <input id="remove-queue-owner" name="name" type="text" placeholder="User to remove"/>
+                    </div>
+                    <div class="small-3 columns">
+                      <button type="submit" class="button postfix button-bot-margin">Remove</button>
+                    </div>
+                  </div>
+                </label>
+              </form>
+            </span>
           </div>
-
           <div class="large-9 columns">
-            <div ng-hide="queue.positions.length">
-              <p>There is currently no-one queueing</p>
-            </div>
             <div ng-show="queue.positions.length" class="row">
               <table class="large-12 columns">
+              <div class="row">
+                <div class="large-8 columns"></div>
+                <label ng-show="queue.positions.length" class="large-4 columns"> 
+                  <input ng-model="search" class="search" name="search" type="text" placeholder="Find users"/>  
+                </label>
+                </div>
                 <thead>
                   <tr>
                     <th width="1">#</th>
-                    <th>User name</th>
-                    <th>Time in queue</th>
+                    <th>User</th>
+                    <th>Time</th>
+                    <th>Location</th>
                     <th>Comment</th>
                     <th width="1">&nbsp;</th>
                   </tr>
@@ -142,11 +171,13 @@
 
                     <td>{{queuePosition.startTime|queuetime}}</td>
 
-                    <td>{{queuePosition.comment || '(No comment)'}}</td>
+                    <td>{{queuePosition.location || ''}}</td>
+
+                    <td>{{queuePosition.comment || ''}}</td>
 
                     <td>
-                      <form ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                        <button type="submit" class="button tiny" style="margin-bottom: 0">Remove</button>
+                      <form class ="no-bot-margin" ng-if="queuePosition.removeUrl" th:action="'{{queuePosition.removeUrl}}'" th:method="POST">
+                        <button type="submit" class="button tiny no-bot-margin">Remove</button>
                       </form>
                     </td>
                   </tr>

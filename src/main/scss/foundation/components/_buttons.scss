@@ -45,6 +45,16 @@ $button-round: $global-rounded !default;
 $button-disabled-opacity: 0.7 !default;
 
 
+@mixin gradient($from, $to) {
+  /* fallback/image non-cover color */
+  background-color: $from;
+
+  background-image: -moz-linear-gradient($from, $to);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($to));
+  background-image: -webkit-linear-gradient($from, $to);
+  background-image: -o-linear-gradient($from, $to);
+}
+
 //
 // @MIXIN
 //
@@ -65,6 +75,13 @@ $button-disabled-opacity: 0.7 !default;
     position: relative;
     text-decoration: none;
     text-align: $button-font-align;
+
+    @include gradient(#008CBA, #0085DA);
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset, 0px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 1.2px;
+    
+    
   }
   @if $display { display: $display; }
 }

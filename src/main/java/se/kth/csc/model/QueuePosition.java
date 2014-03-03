@@ -26,6 +26,9 @@ public class QueuePosition {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "comment")
     private String comment;
 
@@ -58,6 +61,10 @@ public class QueuePosition {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
 
     public String getComment() { return comment; }
 

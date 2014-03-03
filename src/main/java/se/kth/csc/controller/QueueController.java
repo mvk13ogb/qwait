@@ -23,6 +23,8 @@ import se.kth.csc.persist.QueueStore;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Controller
 @RequestMapping(value = "/queue")
@@ -32,6 +34,7 @@ public class QueueController {
     private final QueueStore queueStore;
     private final AccountStore accountStore;
     private final QueuePositionStore queuePositionStore;
+    private static final int MAX_LEN = 30; //max len for comment fields
 
     protected QueueController() {
         // Needed for injection
@@ -93,7 +96,7 @@ public class QueueController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ModelAndView show(@PathVariable("id") int id, Principal principal)
+    public ModelAndView show(@PathVariable("id") int id, Principal principal, HttpServletRequest request)
             throws NotFoundException, JsonProcessingException {
         Queue queue = queueStore.fetchQueueWithId(id);
 
@@ -102,8 +105,15 @@ public class QueueController {
         }
 
         String queueJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queue);
-        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
-                "account", getCurrentAccount(principal)));
+        String hostName = "";
+        try{
+            hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
+        } catch (UnknownHostException e){
+            log.debug(e.getMessage());
+        }
+
+        return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson, 
+                "account", getCurrentAccount(principal), "hostName", hostName));
     }
 
     @Transactional
@@ -184,7 +194,25 @@ public class QueueController {
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/position/{positionId}/location", method = {RequestMethod.POST})
+    public String updateLocation(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String location)
+            throws NotFoundException {
+        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
+        Queue queue = queueStore.fetchQueueWithId(id);
+
+        if (queuePosition == null || queue == null) {
+            throw new NotFoundException();
+        }
+
+        int length = Math.min(location.length(), MAX_LEN);
+
+        queuePosition.setLocation(location.substring(0, length));
+
+        return "redirect:/queue/" + id;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
     public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
             throws NotFoundException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
@@ -194,7 +222,9 @@ public class QueueController {
             throw new NotFoundException();
         }
 
-        queuePosition.setComment(comment);
+        int length = Math.min(comment.length(), MAX_LEN);
+
+        queuePosition.setComment(comment.substring(0, length));
 
         return "redirect:/queue/" + id;
     }
