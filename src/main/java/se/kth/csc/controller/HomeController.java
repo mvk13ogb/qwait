@@ -42,7 +42,7 @@ public class HomeController {
     /**
      * The home page of the web application.
      */
-    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    @RequestMapping(value = "/about", method = RequestMethod.GET)
     public String index() {
         return "home";
     }
@@ -96,6 +96,6 @@ public class HomeController {
     // Used to enforce authentication when logging in from welcome page
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String loginRedirect() {
-        return "redirect:/queue/list";
+        return "redirect:/queue";
     }
 }
