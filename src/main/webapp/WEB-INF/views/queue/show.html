@@ -145,7 +145,7 @@
 
               <form th:if="${account.isAdmin()}" th:action="'{{queue.removeUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny alert expand">Remove queue</button>
-              </form>t
+              </form>
             </ul>
 
             <a th:if="${account.canEditQueue(queue)}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
