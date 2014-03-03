@@ -132,7 +132,7 @@
             </form>
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
-              <button class="button expand button-bot-margin" type="submit">Leave queue</button>
+              <button class="button expand alert button-bot-margin" type="submit">Leave queue</button>
             </form>
 
             <a th:if="${account != null ? account.canModerateQueue(queue) : false}" data-dropdown="edit-queue-drop" class="button dropdown expand" href="#">Edit queue</a>
