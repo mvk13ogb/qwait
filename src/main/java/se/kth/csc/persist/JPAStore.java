@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -42,6 +43,22 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     }
 
     @Override
+    public List<Queue> fetchAllModeratedQueues(Account account) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        //Root<Queue> queueRoot = q.from(Queue.class);
+        q.select(q.from(Queue.class));
+        List<Queue> list = entityManager.createQuery(q).getResultList();
+        List<Queue> tmpList = new LinkedList<Queue>();
+        for(Queue que : list){
+            if(que.getModerators().contains(account)){
+                tmpList.add(que);
+            }
+        }
+        return tmpList;
+    }
+
+    @Override
     public void storeQueue(Queue queue) {
         entityManager.persist(queue);
         log.info("Created a new queue with id {}", queue.getId());
@@ -50,7 +67,7 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public void removeQueue(Queue queue) {
         for(Account a : queue.getOwners()) {
-           a.getQueues().remove(queue);
+           a.getOwnedQueues().remove(queue);
         }
         queue.setOwners(null);
         entityManager.remove(queue);
