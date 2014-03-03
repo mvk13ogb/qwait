@@ -42,9 +42,7 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
     }
 
     private UserDetails createUser(Account account) {
-        if (account.isSuperAdmin()) {
-            return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER, Role.ADMIN, Role.SUPER_ADMIN));
-        } else if (account.isAdmin()) {
+        if (account.isAdmin()) {
             return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER, Role.ADMIN));
         } else { // Regular user
             return new User(account.getPrincipalName(), "", ImmutableSet.of(Role.USER));

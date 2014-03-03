@@ -23,9 +23,6 @@ public class Account {
     @Column(name = "admin")
     private boolean admin;
 
-    @Column(name = "super_admin")
-    private boolean superAdmin;
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
@@ -54,10 +51,8 @@ public class Account {
 
     public boolean isAdmin() { return admin; }
 
-    public boolean isSuperAdmin() { return superAdmin; }
-
     public boolean canEditQueue(Queue queue) {
-        if(isSuperAdmin()) {
+        if(isAdmin()) {
             return true;
         }
         return queues.contains(queue);
@@ -66,8 +61,6 @@ public class Account {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
-
-    public void setSuperAdmin(boolean superAdmin) { this.superAdmin = superAdmin; }
 
     @JsonView(Account.class)
     public Set<QueuePosition> getPositions() {
@@ -103,5 +96,4 @@ public class Account {
     public int hashCode() {
         return principalName.hashCode();
     }
-
 }

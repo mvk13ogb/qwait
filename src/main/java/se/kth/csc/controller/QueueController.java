@@ -59,6 +59,7 @@ public class QueueController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
         List<Queue> queues;
+        // TODO Change check for queues related to you
         if (request.isUserInRole("admin")) {
             queues = queueStore.fetchAllQueues();
         } else {
@@ -80,7 +81,7 @@ public class QueueController {
                          HttpServletRequest request,
                          Principal principal)
             throws ForbiddenException {
-        if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
+        if (request.isUserInRole(Role.ADMIN.getAuthority())) {
             Queue queue = new Queue();
             queue.setName(queueCreationInfo.getName());
             queue.addOwner(getCurrentAccount(principal));
@@ -120,7 +121,7 @@ public class QueueController {
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
     public String remove(@PathVariable("id") int id, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if (request.isUserInRole(Role.SUPER_ADMIN.getAuthority())) {
+        if (request.isUserInRole(Role.ADMIN.getAuthority())) {
             Queue queue = queueStore.fetchQueueWithId(id);
 
             if (queue == null) {

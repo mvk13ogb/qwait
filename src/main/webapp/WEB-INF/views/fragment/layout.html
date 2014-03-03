@@ -22,8 +22,8 @@
           <div th:replace="fragment/layout::menuentry ('Help', @{/help})"></div>
           <div th:replace="fragment/layout::menuentry ('Debug', @{/debug})"></div>
         </ul>
-        <ul sec:authorize="hasRole('super_admin')" class="left">
-          <div th:replace="fragment/layout::menuentry ('Admin', @{/superadmin/settings})"></div>
+        <ul sec:authorize="hasRole('admin')" class="left">
+          <div th:replace="fragment/layout::menuentry ('Admin', @{/admin/settings})"></div>
         </ul>
         <ul sec:authorize="!hasRole('ROLE_ANONYMOUS')" class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
