@@ -7,11 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import se.kth.csc.Application;
+
+import javax.inject.Singleton;
 
 import static org.springframework.context.annotation.ComponentScan.Filter;
 
@@ -22,6 +25,7 @@ import static org.springframework.context.annotation.ComponentScan.Filter;
  */
 @Configuration
 @ComponentScan(basePackageClasses = Application.class, excludeFilters = @Filter(Controller.class))
+@PropertySource("classpath:/settings.properties")
 class ApplicationConfig {
     private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
 
@@ -33,10 +37,9 @@ class ApplicationConfig {
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer(Environment environment) {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
 
-        // Load properties from "settings.properties"
-        ppc.setLocation(new ClassPathResource("/settings.properties"));
+        ppc.setEnvironment(environment);
 
-        log.info("Creating placeholder configurer based on \"settings.properties\" file");
+        log.info("Creating placeholder configurer");
         return ppc;
     }
 
