@@ -37,7 +37,7 @@ $topbar-link-color-hover: #fff !default;
 $topbar-link-color-active: #fff !default;
 $topbar-link-color-active-hover: #fff !default;
 $topbar-link-weight: normal !default;
-$topbar-link-font-size: rem-calc(13) !default;
+$topbar-link-font-size: rem-calc(14) !default;
 $topbar-link-hover-lightness: -10% !default; // Darken by 10%
 $topbar-link-bg-hover: #272727 !default;
 $topbar-link-bg-active: $primary-color !default;
@@ -56,7 +56,7 @@ $topbar-dropdown-label-bg: #333 !default;
 
 // Top menu icon styles
 $topbar-menu-link-transform: uppercase !default;
-$topbar-menu-link-font-size: rem-calc(13) !default;
+$topbar-menu-link-font-size: rem-calc(16) !default;
 $topbar-menu-link-weight: bold !default;
 $topbar-menu-link-color: #fff !default;
 $topbar-menu-icon-color: #fff !default;
@@ -67,7 +67,7 @@ $topbar-menu-icon-color-toggled: #888 !default;
 $topbar-transition-speed: 300ms !default;
 // Using rem-calc for the below breakpoint causes issues with top bar
 $topbar-breakpoint: #{lower-bound($medium-range)} !default; // Change to 9999px for always mobile layout
-$topbar-media-query: $medium-up !default;
+$topbar-media-query: $large-up !default;
 
 // Divider Styles
 $topbar-divider-border-bottom: solid 1px  scale-color($topbar-bg-color, $lightness: 13%) !default;
@@ -300,6 +300,7 @@ $topbar-arrows: true !default; //Set false to remove the triangle icon from the 
           font-size: $topbar-link-font-size;
           font-weight: $topbar-link-weight;
           background: $topbar-dropdown-bg;
+          text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
 
           &.button {
             background: $primary-color;

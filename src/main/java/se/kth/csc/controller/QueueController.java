@@ -56,7 +56,7 @@ public class QueueController {
         this.queuePositionStore = queuePositionStore;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
         List<Queue> queues;
         Principal user = request.getUserPrincipal();
@@ -104,7 +104,7 @@ public class QueueController {
                 queue.setLocked(false);
                 queueStore.storeQueue(queue);
 
-                return "redirect:/queue/list";
+                return "redirect:/queue";
             } else {
                 throw new BadNameException();
             }
@@ -148,7 +148,7 @@ public class QueueController {
 
             queueStore.removeQueue(queue);
 
-            return "redirect:/queue/list";
+            return "redirect:/queue";
         } else {
             throw new ForbiddenException();
         }
