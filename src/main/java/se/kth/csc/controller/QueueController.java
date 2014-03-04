@@ -126,8 +126,9 @@ public class QueueController {
     @RequestMapping(value = "/{id}/remove", method = RequestMethod.POST)
     public String remove(@PathVariable("id") int id, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
-        if (request.isUserInRole(Role.ADMIN.getAuthority())) {
-            Queue queue = queueStore.fetchQueueWithId(id);
+        Account account = accountStore.fetchAccountWithPrincipalName(request.getUserPrincipal().getName());
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canEditQueue(queue)) {
 
             if (queue == null) {
                 throw new NotFoundException();
