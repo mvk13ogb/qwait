@@ -11,10 +11,10 @@
          th:with="url = ${#ctx.httpServletRequest.requestURI}">
 
       <!--This logo is absolute, and shown on the main view-->      
-      <ul class="title-area topbar-absolute show-for-large-up">
+      <ul class="title-area top-absolute show-for-large-up">
         <li class="name">
           <a th:href="@{/queue}">
-            <img th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+            <img class="top-logo" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
           </a>
         </li>
       </ul>
@@ -23,7 +23,7 @@
       <ul class="title-area hide-for-large-up">
         <li class="name">
           <a th:href="@{/queue}">
-            <img class="logo-small" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+            <img class="top-logo logo-small" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
           </a>
         </li>
         <li class="toggle-topbar"><a href="#">Menu</a></li>
