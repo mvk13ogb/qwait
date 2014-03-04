@@ -55,8 +55,9 @@
                         Add a new queue
                         <div class="row collapse">
                           <div class="small-9 columns">
-                            <!--/* Regex do not allow leading space */-->
-                            <input id="queue-name" name="name" type="text" pattern="[\x21-\x7EåäöÅÄÖ]+[\x20-\x7EåäöÅÄÖ]*" required="" title="Queue name must not only contain whitespaces." placeholder="Queue name"/>
+                            <!--/* Regex do not allow leading or ending spaces, making queue name length > 2 */-->
+                            <input id="queue-name" name="name" type="text" pattern="[\x21-\x7EåäöÅÄÖ]+[\x20-\x7EåäöÅÄÖ]*[\x21-\x7EåäöÅÄÖ]+"
+                                   required="" title="Queue name must be of at least length 2, and can not lead or end with space." placeholder="Queue name"/>
                           </div>
                           <div class="small-3 columns">
                             <button type="submit" class="button postfix">Add</button>
