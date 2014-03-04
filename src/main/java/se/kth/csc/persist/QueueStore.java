@@ -1,6 +1,7 @@
 package se.kth.csc.persist;
 
 import se.kth.csc.model.Queue;
+import se.kth.csc.model.Account;
 
 import java.util.List;
 
@@ -11,6 +12,10 @@ public interface QueueStore {
     public List<Queue> fetchAllQueues();
 
     public List<Queue> fetchAllActiveQueues();
+
+    public List<Queue> fetchAllModeratedQueues(Account account);
+
+    public List<Queue> fetchAllOwnedQueues(Account account);
 
     public void storeQueue(Queue queue);
 

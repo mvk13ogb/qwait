@@ -27,7 +27,10 @@ public class Account {
     private Set<QueuePosition> positions = Sets.newHashSet();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners", cascade = CascadeType.ALL)
-    private Set<Queue> queues = Sets.newHashSet();
+    private Set<Queue> ownedQueues = Sets.newHashSet();
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "moderators", cascade = CascadeType.ALL)
+    private Set<Queue> moderatedQueues = Sets.newHashSet();
 
     public int getId() {
         return id;
@@ -55,7 +58,15 @@ public class Account {
         if(isAdmin()) {
             return true;
         }
-        return queues.contains(queue);
+        return ownedQueues.contains(queue);
+    }
+
+    public boolean canModerateQueue(Queue queue) {
+        if(isAdmin()) {
+            return true;
+        }
+        if(ownedQueues.contains(queue)) {return true;}
+        return moderatedQueues.contains(queue);
     }
 
     public void setAdmin(boolean admin) {
@@ -72,12 +83,21 @@ public class Account {
     }
 
     @JsonView(Account.class)
-    public Set<Queue> getQueues() {
-        return queues;
+    public Set<Queue> getOwnedQueues() {
+        return ownedQueues;
     }
 
-    public void setQueues(Set<Queue> queues) {
-        this.queues = Sets.newHashSet(queues);
+    @JsonView(Account.class)
+    public Set<Queue> getModeratedQueues() {
+        return moderatedQueues;
+    }
+
+    public void setOwnedQueues(Set<Queue> queues) {
+        this.ownedQueues = Sets.newHashSet(queues);
+    }
+
+    public void setModeratedQueues(Set<Queue> queues) {
+        this.moderatedQueues = Sets.newHashSet(queues);
     }
 
     @Override

@@ -25,6 +25,15 @@ public class Queue {
             @JoinColumn(name = "account_id", referencedColumnName = "id"))
     private Set<Account> owners = Sets.newHashSet();
 
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(name = "moderator_queue",
+            joinColumns =
+            @JoinColumn(name = "queue_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "account_id", referencedColumnName = "id"))
+    private Set<Account> moderators = Sets.newHashSet();
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
@@ -71,12 +80,25 @@ public class Queue {
         this.owners = owners;
     }
 
+    @JsonView(Queue.class)
+    public Set<Account> getModerators() { return moderators; }
+
+    public void setModerators(Set<Account> moderators) { this.moderators = moderators; }
+
     public void addOwner(Account owner) {
         this.owners.add(owner);
     }
 
     public void removeOwner(Account owner) {
         this.owners.remove(owner);
+    }
+
+    public void addModerator(Account moderator) {
+        this.moderators.add(moderator);
+    }
+
+    public void removeModerator(Account moderator) {
+        this.moderators.remove(moderator);
     }
 
     @JsonView(Queue.class)
