@@ -56,7 +56,7 @@
                         <div class="row collapse">
                           <div class="small-9 columns">
                             <!--/* Regex do not allow leading spaces or length > 30 */-->
-                            <input id="queue-name" name="name" type="text" pattern="[\x21-\x7EåäöÅÄÖ]{1}[\x20-\x7EåäöÅÄÖ|\x21-\x7EåäöÅÄÖ]"
+                            <input id="queue-name" name="name" type="text" pattern="[\x21-\x7EåäöÅÄÖ]{1}[\x20-\x7EåäöÅÄÖ|\x21-\x7EåäöÅÄÖ]{0,29}"
                                    required="" title="Queue name must be of at least length 2, and can not lead or end with space." placeholder="Queue name"/>
                           </div>
                           <div class="small-3 columns">
