@@ -34,6 +34,19 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     }
 
     @Override
+    public List<String> fetchAllQueueNames() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        q.select(q.from(Queue.class));
+        List<Queue> list = entityManager.createQuery(q).getResultList();
+        List<String> nameList = new LinkedList<String>();
+        for(Queue que : list){
+            nameList.add(que.getName());
+        }
+        return nameList;
+    }
+
+    @Override
     public List<Queue> fetchAllActiveQueues() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);

@@ -11,6 +11,8 @@ public interface QueueStore {
 
     public List<Queue> fetchAllQueues();
 
+    public List<String> fetchAllQueueNames();
+
     public List<Queue> fetchAllActiveQueues();
 
     public List<Queue> fetchAllModeratedQueues(Account account);
