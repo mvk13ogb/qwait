@@ -20,25 +20,10 @@ tr.active {
     top: 4px;
 }
 
-.top-logo {
-    width: 144px; height: 38px;
-    background: url('../../images/qwait-topbar-logo.png');
-    background-size: 144px 38px;
-}
-
-.top-logo.small {
-    width: 115px; height: 30px;
-    background-size: 115px 30px;
+.logo-small {
+    width: 115px;
+    height: 30px;
     margin: 8px;
-}
-
-.top-logo:hover {
-    background-color: #444;
-    -webkit-transition: background-color 200ms linear;
-    -moz-transition: background-color 200ms;
-    -o-transition: background-color 200ms;
-    -ms-transition: background-color 200ms;
-    transition: background-color 200ms linear;
 }
 
 .no-bot-margin {
@@ -56,4 +41,3 @@ tr.active {
 .button-bot-margin {
   margin-bottom: 40px;
 }
-
