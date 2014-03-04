@@ -1,7 +1,6 @@
 package se.kth.csc.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +23,16 @@ import java.security.Principal;
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final AccountStore accountStore;
-    private final ObjectMapper objectMapper;
 
     protected AdminController() {
         accountStore = null;
-        objectMapper = null;
     }
 
     @Autowired
     public AdminController(
-            AccountStore accountStore,
-            ObjectMapper objectMapper
+            AccountStore accountStore
     ) {
         this.accountStore = accountStore;
-        this.objectMapper = objectMapper;
     }
 
     @RequestMapping(value = "/settings")
