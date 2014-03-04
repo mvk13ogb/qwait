@@ -13,10 +13,17 @@ tr.active {
   background-size: 25px 25px;
 }
 
-.topbar-logo{
+.topbar-absolute {
     position: absolute !important;
-    left: 50%;
     margin-left: -72px !important;
+    left: 50%;
+    top: 4px;
+}
+
+.logo-small {
+    width: 115px;
+    height: 30px;
+    margin: 8px;
 }
 
 .no-bot-margin {
@@ -33,8 +40,4 @@ tr.active {
 
 .button-bot-margin {
   margin-bottom: 40px;
-}
-
-.img-box-margin {
-    margin: 4px;
 }

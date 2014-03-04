@@ -9,19 +9,21 @@
     </li>
     <nav th:fragment="topbar" class="top-bar" data-topbar="topbar"
          th:with="url = ${#ctx.httpServletRequest.requestURI}">
-      
-      <ul class="title-area topbar-logo show-for-large-up">
+
+      <!--This logo is absolute, and shown on the main view-->      
+      <ul class="title-area topbar-absolute show-for-large-up">
         <li class="name">
           <a th:href="@{/queue}">
-            <img class="img-box-margin" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+            <img th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
           </a>
         </li>
       </ul>
 
+      <!-- When the size reaches medium the top bar collapses, and this logo is shown instead-->
       <ul class="title-area hide-for-large-up">
         <li class="name">
           <a th:href="@{/queue}">
-            <img class="img-box-margin" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+            <img class="logo-small" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
           </a>
         </li>
         <li class="toggle-topbar"><a href="#">Menu</a></li>
@@ -35,7 +37,7 @@
           <div th:replace="fragment/layout::menuentry ('Debug', @{/debug})"></div>
         </ul>
         <ul sec:authorize="hasRole('admin')" class="left">
-          <div th:replace="fragment/layout::menuentry ('Admin', @{/admin/settings})"></div>
+          <div th:replace="fragment/layout::menuentry ('Admin', @{/admin})"></div>
         </ul>
         <ul sec:authorize="!hasRole('ROLE_ANONYMOUS')" class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>
