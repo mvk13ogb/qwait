@@ -58,6 +58,21 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     }
 
     @Override
+    public List<Queue> fetchAllOwnedQueues(Account account) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        q.select(q.from(Queue.class));
+        List<Queue> list = entityManager.createQuery(q).getResultList();
+        List<Queue> tmpList = new LinkedList<Queue>();
+        for(Queue que : list){
+            if(que.getOwners().contains(account)){
+                tmpList.add(que);
+            }
+        }
+        return tmpList;
+    }
+
+    @Override
     public void storeQueue(Queue queue) {
         entityManager.persist(queue);
         log.info("Created a new queue with id {}", queue.getId());

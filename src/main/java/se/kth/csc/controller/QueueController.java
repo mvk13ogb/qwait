@@ -65,7 +65,13 @@ public class QueueController {
         } else {
             queues = queueStore.fetchAllActiveQueues();
             List<Queue> modQueues = queueStore.fetchAllModeratedQueues(accountStore.fetchAccountWithPrincipalName(user.getName()));
+            List<Queue> ownQueues = queueStore.fetchAllOwnedQueues(accountStore.fetchAccountWithPrincipalName(user.getName()));
             for(Queue q : modQueues){
+                if(!queues.contains(q)){
+                    queues.add(q);
+                }
+            }
+            for(Queue q : ownQueues){
                 if(!queues.contains(q)){
                     queues.add(q);
                 }

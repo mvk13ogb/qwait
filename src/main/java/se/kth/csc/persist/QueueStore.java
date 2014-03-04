@@ -15,6 +15,8 @@ public interface QueueStore {
 
     public List<Queue> fetchAllModeratedQueues(Account account);
 
+    public List<Queue> fetchAllOwnedQueues(Account account);
+
     public void storeQueue(Queue queue);
 
     public void removeQueue(Queue queue);
