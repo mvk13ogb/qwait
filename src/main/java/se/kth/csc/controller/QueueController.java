@@ -56,7 +56,7 @@ public class QueueController {
         this.queuePositionStore = queuePositionStore;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
         List<Queue> queues;
         Principal user = request.getUserPrincipal();

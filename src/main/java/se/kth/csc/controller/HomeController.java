@@ -40,7 +40,7 @@ public class HomeController {
     }
 
     /**
-     * The home page of the web application.
+     * The about page of the web application.
      */
     @RequestMapping(value = "/about", method = RequestMethod.GET)
     public String index() {

@@ -45,7 +45,7 @@ public class AdminController {
         this.queueStore = queueStore;
     }
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = {"", "/"})
     public ModelAndView adminSettings(Principal principal) throws JsonProcessingException {
         return new ModelAndView("admin/settings");
     }
