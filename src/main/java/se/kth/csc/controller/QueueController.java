@@ -22,6 +22,7 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -111,7 +112,14 @@ public class QueueController {
             String queueName = queueCreationInfo.getName();
             int length = Math.min(queueName.length(), MAX_LEN);
             queueName = queueName.substring(0, length); // make queue name length max 30
-            if (queueName.trim().length() > 0) {
+            List<String> existingQueueNames = queueStore.fetchAllQueueNames();
+            List<String> existingQueueNamesTrimmed = new LinkedList<>();
+            for (String qName : existingQueueNames) {
+                existingQueueNamesTrimmed.add(qName.replaceAll("\\s","")); // replaceAll("\\s","")) removes all whitespaces
+            }
+
+            // replaceAll("\\s","")) removes all whitespaces
+            if (queueName.trim().length() > 0 && !existingQueueNamesTrimmed.contains(queueName.replaceAll("\\s",""))) {
                 Queue queue = new Queue();
                 queue.setName(queueName);
                 queue.addOwner(getCurrentAccount(principal));
