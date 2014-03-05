@@ -147,9 +147,9 @@ public class QueueController {
         if (account != null) {
             return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
                     "account", account, "hostName", hostName));
-        } else { // TODO Cannot be null in map
+        } else { // Null account not allowed, checks needed before method calling in view
             return new ModelAndView("queue/show", ImmutableMap.of("queue", queue, "queueJson", queueJson,
-                    "account", account, "hostName", hostName));
+                    "hostName", hostName));
         }
     }
 
