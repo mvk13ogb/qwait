@@ -1,7 +1,6 @@
 package se.kth.csc.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
-import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -25,24 +23,16 @@ import java.security.Principal;
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final AccountStore accountStore;
-    private final QueueStore queueStore;
-    private final ObjectMapper objectMapper;
 
     protected AdminController() {
         accountStore = null;
-        objectMapper = null;
-        queueStore = null;
     }
 
     @Autowired
     public AdminController(
-            AccountStore accountStore,
-            ObjectMapper objectMapper,
-            QueueStore queueStore
+            AccountStore accountStore
     ) {
         this.accountStore = accountStore;
-        this.objectMapper = objectMapper;
-        this.queueStore = queueStore;
     }
 
     @RequestMapping(value = {"", "/"})
