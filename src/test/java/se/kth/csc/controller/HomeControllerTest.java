@@ -2,7 +2,6 @@ package se.kth.csc.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
