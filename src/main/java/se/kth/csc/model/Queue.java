@@ -35,7 +35,7 @@ public class Queue {
     private Set<Account> moderators = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
-    private Set<QueuePosition> positions = Sets.newHashSet();
+    private Set<QueuePosition> positions = Sets.newLinkedHashSet();
 
     @Column(name = "active")
     private boolean active;
@@ -107,7 +107,7 @@ public class Queue {
     }
 
     public void setPositions(Set<QueuePosition> positions) {
-        this.positions = Sets.newHashSet(positions);
+        this.positions = Sets.newLinkedHashSet(positions);
     }
 
     @Override
