@@ -64,16 +64,18 @@ public class QueueController {
             queues = queueStore.fetchAllQueues();
         } else {
             queues = queueStore.fetchAllActiveQueues();
-            List<Queue> modQueues = queueStore.fetchAllModeratedQueues(getCurrentAccount(user));
-            List<Queue> ownQueues = queueStore.fetchAllOwnedQueues(getCurrentAccount(user));
-            for(Queue q : modQueues){
-                if(!queues.contains(q)){
-                    queues.add(q);
+            if (user != null) { // Anonymous user check
+                List<Queue> modQueues = queueStore.fetchAllModeratedQueues(getCurrentAccount(user));
+                List<Queue> ownQueues = queueStore.fetchAllOwnedQueues(getCurrentAccount(user));
+                for(Queue q : modQueues){
+                    if(!queues.contains(q)){
+                        queues.add(q);
+                    }
                 }
-            }
-            for(Queue q : ownQueues){
-                if(!queues.contains(q)){
-                    queues.add(q);
+                for(Queue q : ownQueues){
+                    if(!queues.contains(q)){
+                        queues.add(q);
+                    }
                 }
             }
         }
@@ -85,10 +87,10 @@ public class QueueController {
 
     /**
      * @param principal
-     * @return the account of the given principal, returns null if the principal is null
+     * @return the account of the given principal, return null if the principal is null
      */
     private Account getCurrentAccount(Principal principal) {
-        if (principal != null) // Not logged in users won't ha a principal
+        if (principal != null) // Anonymous users won't ha a principal
             return accountStore.fetchAccountWithPrincipalName(principal.getName());
         else {
             return null;
@@ -101,6 +103,9 @@ public class QueueController {
                          HttpServletRequest request,
                          Principal principal)
             throws ForbiddenException, BadNameException {
+        if (principal == null) // Anonymous user
+            throw new ForbiddenException();
+
         if (request.isUserInRole(Role.ADMIN.getAuthority())) {
             String queueName = queueCreationInfo.getName();
             if (queueName.trim().length() > 0) {
@@ -153,6 +158,9 @@ public class QueueController {
     public String remove(@PathVariable("id") int id, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
         Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) // Anonymous user
+            throw new ForbiddenException();
+
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canEditQueue(queue)) {
 
@@ -209,6 +217,8 @@ public class QueueController {
 
         if (queuePosition == null) {
             throw new NotFoundException();
+        } else if (account == null) { // Anonymous user
+            throw new ForbiddenException();
         }
 
         if (request.isUserInRole(Role.ADMIN.getAuthority()) || queuePosition.getAccount().equals(account)) {
@@ -267,6 +277,9 @@ public class QueueController {
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) // Anonymous user
+            throw new ForbiddenException();
+
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canModerateQueue(queue)) {
             queue.setActive(false);
@@ -286,6 +299,9 @@ public class QueueController {
     public String openQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) // Anonymous user
+            throw new ForbiddenException();
+
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canModerateQueue(queue)) {
             queue.setActive(true);
@@ -301,6 +317,9 @@ public class QueueController {
     public String lockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) // Anonymous user
+            throw new ForbiddenException();
+
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canModerateQueue(queue)) {
             queue.setLocked(true);
@@ -316,6 +335,9 @@ public class QueueController {
     public String unlockQueue(@PathVariable("id") int id, HttpServletRequest request)
             throws ForbiddenException {
         Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) // Anonymous user
+            throw new ForbiddenException();
+
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canModerateQueue(queue)) {
             queue.setLocked(false);
@@ -332,6 +354,9 @@ public class QueueController {
                                 @PathVariable("id") int id, HttpServletRequest request)
                                 throws NotFoundException, ForbiddenException {
         Account accountOfAdder = getCurrentAccount(request.getUserPrincipal());
+        if (accountOfAdder == null) // Anonymous user
+            throw new ForbiddenException();
+
         Account accountToAdd = accountStore.fetchAccountWithPrincipalName(newQueueOwner);
         Queue queue = queueStore.fetchQueueWithId(id);
         if(accountOfAdder.canEditQueue(queue)) {
@@ -355,6 +380,9 @@ public class QueueController {
                                    @PathVariable("id") int id, HttpServletRequest request)
                                    throws NotFoundException, ForbiddenException {
         Account accountOfRemover = getCurrentAccount(request.getUserPrincipal());
+        if (accountOfRemover == null) // Anonymous user
+            throw new ForbiddenException();
+
         Account accountToRemove = accountStore.fetchAccountWithPrincipalName(oldOwnerName);
         Queue queue = queueStore.fetchQueueWithId(id);
         if(accountOfRemover.canEditQueue(queue)) {
@@ -370,14 +398,15 @@ public class QueueController {
         }
     }
 
-
-
     @Transactional
     @RequestMapping(value = "/{id}/add-moderator", method = RequestMethod.POST)
     public String addQueueModerator(@RequestParam("name") String newQueueModerator,
                                 @PathVariable("id") int id, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
         Account accountOfAdder = getCurrentAccount(request.getUserPrincipal());
+        if (accountOfAdder == null) // Anonymous user
+            throw new ForbiddenException();
+
         Account accountToAdd = accountStore.fetchAccountWithPrincipalName(newQueueModerator);
         Queue queue = queueStore.fetchQueueWithId(id);
         if(accountOfAdder.canEditQueue(queue)) {
@@ -401,6 +430,9 @@ public class QueueController {
                                    @PathVariable("id") int id, HttpServletRequest request)
             throws NotFoundException, ForbiddenException {
         Account accountOfRemover = getCurrentAccount(request.getUserPrincipal());
+        if (accountOfRemover == null) // Anonymous user
+            throw new ForbiddenException();
+
         Account accountToRemove = accountStore.fetchAccountWithPrincipalName(oldModeratorName);
         Queue queue = queueStore.fetchQueueWithId(id);
         if(accountOfRemover.canEditQueue(queue)) {
