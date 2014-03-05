@@ -107,7 +107,7 @@ public class Queue {
     }
 
     public void setPositions(Set<QueuePosition> positions) {
-        this.positions = Sets.newHashSet(positions);
+        this.positions = Sets.newLinkedHashSet(positions);
     }
 
     @Override
