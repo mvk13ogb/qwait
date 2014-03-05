@@ -238,10 +238,15 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/location", method = {RequestMethod.POST})
-    public String updateLocation(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String location)
-            throws NotFoundException {
+    public String updateLocation(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String location,
+                                 Principal principal)
+            throws NotFoundException, ForbiddenException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
         Queue queue = queueStore.fetchQueueWithId(id);
+
+        // Null if anonymous
+        if (principal == null || !getCurrentAccount(principal).equals(queuePosition.getAccount()))
+            throw new ForbiddenException();
 
         if (queuePosition == null || queue == null) {
             throw new NotFoundException();
@@ -256,10 +261,15 @@ public class QueueController {
 
     @Transactional
     @RequestMapping(value = "/{id}/position/{positionId}/comment", method = {RequestMethod.POST})
-    public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment)
-            throws NotFoundException {
+    public String updateComment(@PathVariable("id") int id, @PathVariable("positionId") int positionId, String comment,
+                                Principal principal)
+            throws NotFoundException, ForbiddenException {
         QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithId(positionId);
         Queue queue = queueStore.fetchQueueWithId(id);
+
+        // Null if anonymous
+        if (principal == null || !getCurrentAccount(principal).equals(queuePosition.getAccount()))
+            throw new ForbiddenException();
 
         if (queuePosition == null || queue == null) {
             throw new NotFoundException();
