@@ -6,11 +6,42 @@ tr.active {
   background-color: #eee;
 }
 
+h1 {
+  margin-top: 15px; 
+}
+
 .search {
   @include form-element;
   background: url('../icons/magnifying-glass.png') no-repeat;
   background-position: right center;
   background-size: 25px 25px;
+}
+
+.top-bar {
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  overflow: hidden; //Overflows by one pixel in certain occasions
+}
+
+.top-absolute {
+  position: absolute !important;
+  margin-left: -72px !important;
+  left: 50%;
+  top: 4px;
+}
+
+.top-logo {
+  @include opacity(1);
+  @include transition(300ms);
+}
+
+.top-logo:hover {
+  @include opacity(0.5);
+}
+
+.logo-small {
+  width: 115px;
+  height: 30px;
+  margin: 8px;
 }
 
 .no-bot-margin {

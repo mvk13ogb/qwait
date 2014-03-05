@@ -9,21 +9,35 @@
     </li>
     <nav th:fragment="topbar" class="top-bar" data-topbar="topbar"
          th:with="url = ${#ctx.httpServletRequest.requestURI}">
-      <ul class="title-area">
+
+      <!--This logo is absolute, and shown on the main view-->      
+      <ul class="title-area top-absolute show-for-large-up">
         <li class="name">
-          <h1><a th:href="@{/home}">QWait</a></h1>
+          <a th:href="@{/queue}">
+            <img class="top-logo" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+          </a>
+        </li>
+      </ul>
+
+      <!-- When the size reaches medium the top bar collapses, and this logo is shown instead-->
+      <ul class="title-area hide-for-large-up">
+        <li class="name">
+          <a th:href="@{/queue}">
+            <img class="top-logo logo-small" th:src="@{/images/qwait-topbar-logo.png}" src="../../../icons/qwait-topbar-log.png"></img>
+          </a>
         </li>
         <li class="toggle-topbar"><a href="#">Menu</a></li>
       </ul>
+      
       <section class="top-bar-section">
         <ul class="left">
-          <div th:replace="fragment/layout::menuentry ('Home', @{/home})"></div>
-          <div th:replace="fragment/layout::menuentry ('Queues', @{/queue/list})"></div>
+          <div th:replace="fragment/layout::menuentry ('Queues', @{/queue})"></div>
+          <div th:replace="fragment/layout::menuentry ('About', @{/about})"></div>
           <div th:replace="fragment/layout::menuentry ('Help', @{/help})"></div>
           <div th:replace="fragment/layout::menuentry ('Debug', @{/debug})"></div>
         </ul>
         <ul sec:authorize="hasRole('admin')" class="left">
-          <div th:replace="fragment/layout::menuentry ('Admin', @{/admin/settings})"></div>
+          <div th:replace="fragment/layout::menuentry ('Admin', @{/admin})"></div>
         </ul>
         <ul sec:authorize="!hasRole('ROLE_ANONYMOUS')" class="right">
           <li><a href="#">Logged in as <strong th:text="${#authentication.name}">someone</strong></a></li>

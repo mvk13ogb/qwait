@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
-@RequestMapping(value="/admin")
+@RequestMapping(value = "/admin")
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final AccountStore accountStore;
@@ -35,9 +35,9 @@ public class AdminController {
         this.accountStore = accountStore;
     }
 
-    @RequestMapping(value = "/settings")
+    @RequestMapping(value = {"", "/"})
     public ModelAndView adminSettings(Principal principal) throws JsonProcessingException {
-        return new ModelAndView();
+        return new ModelAndView("admin/settings");
     }
 
     private Account getCurrentAccount(Principal principal) {
@@ -58,7 +58,7 @@ public class AdminController {
             log.info(adminName + " made admin");
 
             SecurityContextHolder.clearContext();
-            return "redirect:/admin/settings";
+            return "redirect:/admin";
         }
         else {
             throw new ForbiddenException();
@@ -79,7 +79,7 @@ public class AdminController {
             log.info(adminName + " removed from admin");
 
             SecurityContextHolder.clearContext();
-            return "redirect:/admin/settings";
+            return "redirect:/admin";
         }
         else {
             throw new ForbiddenException();
