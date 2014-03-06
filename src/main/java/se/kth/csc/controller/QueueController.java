@@ -109,7 +109,7 @@ public class QueueController {
         }
 
         if (request.isUserInRole(Role.ADMIN.getAuthority())) {
-            String queueName = queueCreationInfo.getName();
+            String queueName = queueCreationInfo.getName().trim();
             int length = Math.min(queueName.length(), MAX_LEN);
             queueName = queueName.substring(0, length); // make queue name length max 30
             List<String> existingQueueNames = queueStore.fetchAllQueueNames();
