@@ -21,8 +21,8 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      qwait.controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePosFunc', 'getQueuePosNr',
-          function ($scope, $sce, Page, getQueuePosFunc, getQueuePosNr) {
+      qwait.controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePos', 'getQueuePosNr',
+          function ($scope, $sce, Page, getQueuePos, getQueuePosNr) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
 
         // Users not logged in won't have a username
@@ -47,10 +47,10 @@
         $scope.queue.removeModeratorUrl = queueBaseUrl + $scope.queue.id + '/remove-moderator';
 
         // Inject queue position of current user
-        $scope.queuePos = getQueuePosFunc.getQueuePos($scope.principalName, $scope.queue.positions);
+        $scope.queuePos = getQueuePos($scope.principalName, $scope.queue.positions);
 
         // Inject queue position nr of current user
-        $scope.queuePosNr = getQueuePosNr.getQueuePosNr($scope.principalName, $scope.queue.positions);
+        $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
         var queuePosNr = $scope.queuePosNr;
         if (queuePosNr > 0) {
