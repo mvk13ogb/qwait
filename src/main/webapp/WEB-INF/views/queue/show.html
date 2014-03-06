@@ -283,7 +283,7 @@
                 </thead>
                 <tbody>
                 <!--/* TODO: Check if orderBy is necessary now when we have 'positions' stored in LinkedHashSet in Queue.java */-->
-                  <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false" ng-class="{'active':queue.removeOwnUrl}">
+                  <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false" ng-class="{'active':$index+1 == queuePosNr}">
                     <td>{{$index+1}}</td>
 
                     <td>{{queuePosition.account.name}}</td>
