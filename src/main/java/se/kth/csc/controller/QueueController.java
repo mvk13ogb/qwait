@@ -116,11 +116,11 @@ public class QueueController {
             HashSet<String> existingQueueNamesTrimmed = new HashSet<String>();
 
             for (String qName : queueStore.fetchAllQueueNames()) {
-                existingQueueNamesTrimmed.add(qName.replaceAll("\\s","")); // replaceAll("\\s","")) removes all whitespaces
+                existingQueueNamesTrimmed.add(qName.toLowerCase().replaceAll("\\s","")); // replaceAll("\\s","")) removes all whitespaces
             }
 
             // replaceAll("\\s","")) removes all whitespaces
-            if (queueName.trim().length() > 0 && !existingQueueNamesTrimmed.contains(queueName.replaceAll("\\s",""))) {
+            if (queueName.trim().length() > 0 && !existingQueueNamesTrimmed.contains(queueName.toLowerCase().replaceAll("\\s",""))) {
                 Queue queue = new Queue();
                 queue.setName(queueName);
                 queue.addOwner(getCurrentAccount(principal));
