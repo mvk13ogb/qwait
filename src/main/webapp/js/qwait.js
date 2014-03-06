@@ -95,8 +95,12 @@ qwait.factory('getQueuePos', function() {
 
 qwait.factory('getQueuePosNr', function() {
     return function(name, positions) {
-        for(var i=0; i<positions.length; i++) {
-            var pos = positions[i];
+        var sortedPositions = positions.sort(function(a,b) {
+            return(a.id - b.id);
+        })
+
+        for(var i=0; i<sortedPositions.length; i++) {
+            var pos = sortedPositions[i];
 
             if(pos.account.principalName == name)
                 return i+1;

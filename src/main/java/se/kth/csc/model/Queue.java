@@ -1,12 +1,9 @@
 package se.kth.csc.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,7 +35,7 @@ public class Queue {
     private Set<Account> moderators = Sets.newHashSet();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
-    private List<QueuePosition> positions = new LinkedList();
+    private Set<QueuePosition> positions = Sets.newHashSet();
 
     @Column(name = "active")
     private boolean active;
@@ -105,12 +102,12 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public List<QueuePosition> getPositions() {
+    public Set<QueuePosition> getPositions() {
         return positions;
     }
 
-    public void setPositions(List<QueuePosition> positions) {
-        this.positions = Lists.newLinkedList(positions);
+    public void setPositions(Set<QueuePosition> positions) {
+        this.positions = Sets.newHashSet(positions);
     }
 
     @Override
