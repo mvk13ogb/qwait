@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,15 +36,11 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public List<String> fetchAllQueueNames() {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        q.select(q.from(Queue.class));
-        List<Queue> list = entityManager.createQuery(q).getResultList();
-        List<String> nameList = new LinkedList<String>();
-        for(Queue que : list){
-            nameList.add(que.getName());
+        List<String> queueNames = new LinkedList<String>();
+        for (Queue queue : fetchAllQueues()) {
+            queueNames.add(queue.getName());
         }
-        return nameList;
+        return queueNames;
     }
 
     @Override
