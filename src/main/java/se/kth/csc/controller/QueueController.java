@@ -23,7 +23,6 @@ import se.kth.csc.persist.QueueStore;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
