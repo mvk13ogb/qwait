@@ -22,6 +22,7 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.net.InetAddress;
@@ -112,9 +113,9 @@ public class QueueController {
             String queueName = queueCreationInfo.getName().trim();
             int length = Math.min(queueName.length(), MAX_LEN);
             queueName = queueName.substring(0, length); // make queue name length max 30
-            List<String> existingQueueNames = queueStore.fetchAllQueueNames();
-            List<String> existingQueueNamesTrimmed = new LinkedList<>();
-            for (String qName : existingQueueNames) {
+            HashSet<String> existingQueueNamesTrimmed = new HashSet<String>();
+
+            for (String qName : queueStore.fetchAllQueueNames()) {
                 existingQueueNamesTrimmed.add(qName.replaceAll("\\s","")); // replaceAll("\\s","")) removes all whitespaces
             }
 
