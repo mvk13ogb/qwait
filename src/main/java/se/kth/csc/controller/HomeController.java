@@ -65,7 +65,7 @@ public class HomeController {
 
     @Transactional
     @RequestMapping(value = "/make-me-admin", method = RequestMethod.POST)
-    public String makeMeAdmin(Principal principal) {
+    public String makeMeAdmin(Principal principal) throws ForbiddenException {
         // Make user into an admin
         if (principal != null) {
             Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
@@ -75,13 +75,16 @@ public class HomeController {
             SecurityContextHolder.clearContext();
 
             log.info("User {} is now an admin and was logged out", account.getName());
+
+            return "redirect:/debug";
+        } else {
+            throw new ForbiddenException();
         }
-        return "redirect:/debug";
     }
 
     @Transactional
     @RequestMapping(value = "/make-me-not-admin", method = RequestMethod.POST)
-    public String makeMeNotAdmin(Principal principal) {
+    public String makeMeNotAdmin(Principal principal) throws ForbiddenException {
         // Make user into a non-admin
         if (principal != null) {
             Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
@@ -91,8 +94,11 @@ public class HomeController {
             SecurityContextHolder.clearContext();
 
             log.info("User {} is now not an admin and was logged out", account.getName());
+
+            return "redirect:/debug";
+        } else {
+            throw new ForbiddenException();
         }
-        return "redirect:/debug";
     }
 
     // Used to enforce authentication when logging in from welcome page
