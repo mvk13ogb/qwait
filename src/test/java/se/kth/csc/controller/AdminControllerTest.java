@@ -42,7 +42,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void removeUserAdmin() throws Exception {
+    public void testRemoveUserAdmin() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.isUserInRole(Role.ADMIN.getAuthority())).thenReturn(true);
         Principal principal = mock(Principal.class);
