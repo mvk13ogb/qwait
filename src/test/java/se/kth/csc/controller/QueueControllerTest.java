@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.mockito.Mock;
+import org.mockito.ArgumentCaptor;
 import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -124,7 +123,6 @@ public class QueueControllerTest {
         when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(owner);
 
         Queue queue = mock(Queue.class);
-
         when(queueStore.fetchQueueWithId(anyInt())).thenReturn(queue); // Ignore the id value
 
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -138,6 +136,8 @@ public class QueueControllerTest {
             // Do nothing
         }
 
+        verify(queue, atLeastOnce()).setActive(true);
+        assertTrue(queue.isActive()); // TODO Fails
         assertEquals("redirect:/queue/10", result);
     }
 }
