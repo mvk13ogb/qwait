@@ -81,6 +81,10 @@
 
   <body>
     <div th:replace="fragment/layout :: topbar"></div>
+    <div th:if="${account == null}" data-alert="" class="alert-box right">
+      In order to queue, you need to log in.
+      <a href="#" class="close">&times;</a>
+    </div>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1 class="text-center">{{queue.name}}</h1>
@@ -304,6 +308,7 @@
     <script src="../../../js-vendor/foundation.topbar.js" th:src="@{/js-vendor/foundation.topbar.js}"></script>
     <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.dropdown.js}"></script>
     <script src="../../../js-vendor/foundation.dropdown.js" th:src="@{/js-vendor/foundation.reveal.js}"></script>
+    <script src="../../../js-vendor/foundation.alert.js" th:src="@{/js-vendor/foundation.alert.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
