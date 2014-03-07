@@ -65,32 +65,40 @@ public class HomeController {
 
     @Transactional
     @RequestMapping(value = "/make-me-admin", method = RequestMethod.POST)
-    public String makeMeAdmin(Principal principal) {
+    public String makeMeAdmin(Principal principal) throws ForbiddenException {
         // Make user into an admin
-        Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-        account.setAdmin(true);
+        if (principal != null) {
+            Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+            account.setAdmin(true);
 
-        // Log out user to reload auth roles
-        SecurityContextHolder.clearContext();
+            // Log out user to reload auth roles
+            SecurityContextHolder.clearContext();
 
-        log.info("User {} is now an admin and was logged out", account.getName());
+            log.info("User {} is now an admin and was logged out", account.getName());
 
-        return "redirect:/debug";
+            return "redirect:/debug";
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     @Transactional
     @RequestMapping(value = "/make-me-not-admin", method = RequestMethod.POST)
-    public String makeMeNotAdmin(Principal principal) {
+    public String makeMeNotAdmin(Principal principal) throws ForbiddenException {
         // Make user into a non-admin
-        Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-        account.setAdmin(false);
+        if (principal != null) {
+            Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
+            account.setAdmin(false);
 
-        // Log out user to reload auth roles
-        SecurityContextHolder.clearContext();
+            // Log out user to reload auth roles
+            SecurityContextHolder.clearContext();
 
-        log.info("User {} is now not an admin and was logged out", account.getName());
+            log.info("User {} is now not an admin and was logged out", account.getName());
 
-        return "redirect:/debug";
+            return "redirect:/debug";
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     // Used to enforce authentication when logging in from welcome page
