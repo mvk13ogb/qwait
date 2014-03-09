@@ -54,4 +54,19 @@ public class HomeControllerTest {
     // Verify actual returned results
     assertEquals("redirect:/debug", result);
   }
+
+  @Test
+  public void testMakeMeNotAdmin() {
+    Principal principal = mock(Principal.class);
+    when(principal.getName()).thenReturn("testuser");
+
+    Account account = mock(Account.class);
+    when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(account);
+
+    String result = homeController.makeMeNotAdmin(principal);
+
+    verify(account, atLeastOnce()).setAdmin(false);
+
+    assertEquals("redirect:/debug", result);
+  }
 }
