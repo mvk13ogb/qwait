@@ -412,10 +412,10 @@
             <plugin>
                 <groupId>com.github.klieber</groupId>
                 <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.2</version>
+                <version>0.2.1</version>
                 <executions>
                     <execution>
-                        <phase>process-resources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>install</goal>
                         </goals>
@@ -428,7 +428,7 @@
             <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.3.1.3</version>
+                <version>1.3.1.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -439,14 +439,17 @@
                                 <source>${project.basedir}/src/main/webapp/js-vendor/jquery.js</source>
                                 <source>${project.basedir}/src/main/webapp/js-vendor/angular.js</source>
                             </preloadSources>
-                            <jsSrcDir>src/main/webapp/js</jsSrcDir>
-                            <jsTestSrcDir>src/test/webapp/js</jsTestSrcDir>
+                            <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+                            <jsTestSrcDir>${project.basedir}/src/test/webapp/js</jsTestSrcDir>
                             <specIncludes>
                                 <include>*.spec.js</include>
                             </specIncludes>
                             <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
                             <webDriverCapabilities>
-                                <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+                                <capability>
+                                    <name>phantomjs.binary.path</name>
+                                    <value>${phantomjs.binary}</value>
+                                </capability>
                             </webDriverCapabilities>
                         </configuration>
                     </execution>
