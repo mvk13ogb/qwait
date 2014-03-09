@@ -8,7 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
-import se.kth.csc.model.QueuePosition;
 import se.kth.csc.payload.QueueCreationInfo;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
@@ -67,6 +66,32 @@ public class QueueControllerTest {
         try {
             result = queueController.list(request);
             verify(objectMapper, atLeastOnce()).writerWithView(Queue.class).writeValueAsString(queues);
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Only test if a ModelAndView is returned and that a queue has been written
+     * to the ObjectMapper.
+     */
+    @Test
+    public void testShow() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+
+        Account account = mock(Account.class);
+        when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(account);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        ModelAndView expected = any(ModelAndView.class);
+        ModelAndView result = null;
+        try {
+            result = queueController.show(10, principal, request);
+            verify(objectMapper, atLeastOnce()).writerWithView(Queue.class).writeValueAsString(any(Queue.class));
         } catch (Exception e) {
             // Do nothing
         }
