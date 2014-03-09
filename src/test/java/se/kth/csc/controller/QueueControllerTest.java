@@ -13,6 +13,7 @@ import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.payload.QueueCreationInfo;
 import se.kth.csc.persist.AccountStore;
+import se.kth.csc.persist.JPAStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
@@ -137,7 +138,84 @@ public class QueueControllerTest {
         }
 
         verify(queue, atLeastOnce()).setActive(true);
-        assertTrue(queue.isActive()); // TODO Fails
+        assertEquals("redirect:/queue/10", result);
+    }
+
+    @Test
+    public void testClose() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+
+        Account owner = mock(Account.class);
+        when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(owner);
+
+        Queue queue = mock(Queue.class);
+        when(queueStore.fetchQueueWithId(anyInt())).thenReturn(queue); // Ignore the id value
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getUserPrincipal()).thenReturn(principal);
+        when(owner.canModerateQueue(queue)).thenReturn(true);
+
+        String result = "";
+        try {
+            result = queueController.closeQueue(10, request);
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        verify(queue, atLeastOnce()).setActive(false);
+        assertEquals("redirect:/queue/10", result);
+    }
+
+    @Test
+    public void testLock() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+
+        Account owner = mock(Account.class);
+        when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(owner);
+
+        Queue queue = mock(Queue.class);
+        when(queueStore.fetchQueueWithId(anyInt())).thenReturn(queue); // Ignore the id value
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getUserPrincipal()).thenReturn(principal);
+        when(owner.canModerateQueue(queue)).thenReturn(true);
+
+        String result = "";
+        try {
+            result = queueController.lockQueue(10, request);
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        verify(queue, atLeastOnce()).setLocked(true);
+        assertEquals("redirect:/queue/10", result);
+    }
+
+    @Test
+    public void testUnlock() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+
+        Account owner = mock(Account.class);
+        when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(owner);
+
+        Queue queue = mock(Queue.class);
+        when(queueStore.fetchQueueWithId(anyInt())).thenReturn(queue); // Ignore the id value
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getUserPrincipal()).thenReturn(principal);
+        when(owner.canModerateQueue(queue)).thenReturn(true);
+
+        String result = "";
+        try {
+            result = queueController.unlockQueue(10, request);
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        verify(queue, atLeastOnce()).setLocked(false);
         assertEquals("redirect:/queue/10", result);
     }
 }
