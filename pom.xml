@@ -436,8 +436,11 @@
                         </goals>
                         <configuration>
                             <preloadSources>
-                                <source>${project.basedir}/src/main/webapp/js-vendor/jquery.js</source>
-                                <source>${project.basedir}/src/main/webapp/js-vendor/angular.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/jquery.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/angular.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/moment-with-langs.js</source>
+
+                                <source>${project.basedir}/src/test/webapp/vendor/js/angular-mocks.js</source>
                             </preloadSources>
                             <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                             <jsTestSrcDir>${project.basedir}/src/test/webapp/js</jsTestSrcDir>
