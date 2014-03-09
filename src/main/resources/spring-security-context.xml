@@ -12,7 +12,7 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
         <security:intercept-url pattern="/" access="permitAll"/>
         <security:intercept-url pattern="/css/**" access="permitAll"/>
         <security:intercept-url pattern="/js/**" access="permitAll"/>
-        <security:intercept-url pattern="/js-vendor/**" access="permitAll"/>
+        <security:intercept-url pattern="/vendor/js/**" access="permitAll"/>
         <security:intercept-url pattern="/icons/**" access="permitAll"/>
         <security:intercept-url pattern="/images/**" access="permitAll"/>
         <security:intercept-url pattern="/queue/**" access="permitAll"/>

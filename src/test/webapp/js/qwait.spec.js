@@ -2,12 +2,13 @@
 describe('qwait core module', function () {
     beforeEach(module('qwait'));
 
-    describe('queuetime filter', function () {
-        it('filters times over a day correctly', inject(function (queuetimeFilter) {
-            expect(queuetimeFilter(25 * 60 * 60 * 1000)).toEqual('Over a day');
+    describe('duration filter', function () {
+        it('filters durations about a day long correctly', inject(function (durationFilter) {
+            expect(durationFilter(25 * 60 * 60 * 1000)).toEqual('a day');
         }));
-        it('filters times that are exactly one day correctly', inject(function (queuetimeFilter) {
-            expect(queuetimeFilter(24 * 60 * 60 * 1000)).toEqual('24h 0m');
+
+        it('filters durations about two minutes long correctly', inject(function (durationFilter) {
+            expect(durationFilter(2 * 60 * 1000)).toEqual('2 minutes');
         }));
     });
 });

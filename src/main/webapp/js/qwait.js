@@ -6,9 +6,9 @@
         $sceProvider.enabled(false);
     });
 
-    qwait.filter('queuetime', function () {
+    qwait.filter('duration', function () {
         return function (milliseconds) {
-            return moment(milliseconds).fromNow();
+            return moment.duration(milliseconds).humanize();
         }
     });
 
