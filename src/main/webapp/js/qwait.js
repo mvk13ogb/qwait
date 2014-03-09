@@ -80,18 +80,33 @@ qwait.filter('ownedBy', function() {
     };
 });
 
-qwait.factory('getQueuePosFunc', function() {
-    return {
-        getQueuePos: function(name, positions) {
-            for(var i=0; i<positions.length; i++) {
-                var pos = positions[i];
+qwait.factory('getQueuePos', function() {
+    return function(name, positions) {
+        for(var i=0; i<positions.length; i++) {
+            var pos = positions[i];
 
-                if(pos.account.principalName == name)
-                    return pos;
-            }
-
-            return null;
+            if(pos.account.principalName == name)
+                return pos;
         }
+
+        return null;
+    }
+});
+
+qwait.factory('getQueuePosNr', function() {
+    return function(name, positions) {
+        var sortedPositions = positions.sort(function(a,b) {
+            return(a.id - b.id);
+        })
+
+        for(var i=0; i<sortedPositions.length; i++) {
+            var pos = sortedPositions[i];
+
+            if(pos.account.principalName == name)
+                return i+1;
+        }
+
+        return null;
     }
 });
 

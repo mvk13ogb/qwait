@@ -2,8 +2,8 @@
 @import "settings";
 @import "foundation";
 
-tr.active {
-  background-color: #eee;
+tr.active td{
+  background-color: rgba(0, 128, 218, 0.3);
 }
 
 h1 {
