@@ -56,7 +56,7 @@ public class HomeControllerTest {
   }
 
   @Test
-  public void testMakeMeNotAdmin() {
+  public void testMakeMeNotAdmin() throws ForbiddenException {
     Principal principal = mock(Principal.class);
     when(principal.getName()).thenReturn("testuser");
 

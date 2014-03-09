@@ -103,7 +103,7 @@ public class QueueControllerTest {
      * Only tests if _a_ queue is stored due to object creation in method.
      */
     @Test
-    public void testCreate() {
+    public void testCreate() throws ForbiddenException, BadNameException {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("testuser");
 
@@ -120,15 +120,10 @@ public class QueueControllerTest {
         QueueCreationInfo queueCreationInfo = mock(QueueCreationInfo.class);
         when(queueCreationInfo.getName()).thenReturn("testqueue");
 
-        String result = "";
-        try {
-            result = queueController.create(queueCreationInfo, request, principal);
-        } catch (Exception e) {
-            // Do nothing
-        }
+        String result = queueController.create(queueCreationInfo, request, principal);
         verify(queueStore, atLeastOnce()).storeQueue(any(Queue.class));
 
-        assertEquals("redirect:/queue/list", result);
+        assertEquals("redirect:/queue", result);
     }
 
     @Test

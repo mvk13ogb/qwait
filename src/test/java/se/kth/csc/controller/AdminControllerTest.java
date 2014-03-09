@@ -24,7 +24,7 @@ public class AdminControllerTest {
     @Before
     public void setUp() throws Exception {
         accountStore = mock(AccountStore.class);
-        adminController = new AdminController(accountStore, null, null);
+        adminController = new AdminController(accountStore);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class AdminControllerTest {
 
         String result = adminController.makeUserAdmin("testuser", request);
         verify(account, atLeastOnce()).setAdmin(true);
-        assertEquals(result, "redirect:/admin/settings");
+        assertEquals("redirect:/admin", result);
     }
 
     @Test
@@ -52,6 +52,6 @@ public class AdminControllerTest {
 
         String result = adminController.removeUserAdmin("testuser", request);
         verify(account, atLeastOnce()).setAdmin(false);
-        assertEquals(result, "redirect:/admin/settings");
+        assertEquals("redirect:/admin", result);
     }
 }
