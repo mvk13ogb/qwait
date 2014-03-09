@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
@@ -15,6 +16,8 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -42,7 +45,11 @@ public class QueueControllerTest {
         queueController = new QueueController(objectMapper, queueStore, accountStore, queuePositionStore);
     }
 
-    /*@Test
+    /**
+     * Only test if any ModelAndView is returned and that something has been written
+     * to the ObjectMapper.
+     */
+    @Test
     public void testList() {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("testuser");
@@ -51,22 +58,21 @@ public class QueueControllerTest {
         when(request.getUserPrincipal()).thenReturn(principal);
         when(request.isUserInRole("admin")).thenReturn(true);
 
-        Queue queue = mock(Queue.class);
         List<Queue> queues = mock(LinkedList.class);
-        queues.add(queue);
         when(queueStore.fetchAllQueues()).thenReturn(queues);
+        when(queues.contains(any(Queue.class))).thenReturn(true); // Test when
 
-        String queuesJson = null;
+        ModelAndView expected = any(ModelAndView.class);
         ModelAndView result = null;
         try {
-            queuesJson = objectMapper.writerWithView(Queue.class).writeValueAsString(queues);
             result = queueController.list(request);
-        } catch (JsonProcessingException e) {
+            verify(objectMapper, atLeastOnce()).writerWithView(Queue.class).writeValueAsString(queues);
+        } catch (Exception e) {
             // Do nothing
         }
 
         assertEquals(expected, result);
-    }*/
+    }
 
     /**
      * Only tests if _a_ queue is stored due to object creation in method.
