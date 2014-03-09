@@ -99,15 +99,13 @@
         }
     });
 
-    qwait.factory('Page', function () {
-        var title = 'QWait';
+    qwait.factory('page', function () {
         return {
-            title: function () { return title; },
-            setTitle: function (newTitle) { title = newTitle }
+            title: ''
         };
     });
 
-    function titleCtrl($scope, Page) {
-        $scope.Page = Page;
-    }
+    qwait.controller('TitleCtrl', ['$scope', 'page', function ($scope, page) {
+        $scope.page = page;
+    }]);
 })();

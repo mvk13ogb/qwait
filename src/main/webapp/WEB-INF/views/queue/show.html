@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="qwait" xmlns:th="http://www.thymeleaf.org">
   <head>
-    <div ng-controller="titleCtrl">
-      <title ng-bind="Page.title() + ' &mdash; QWait'">QWait</title>
+    <div ng-controller="TitleCtrl">
+      <title>{{page.title.length > 0 ? page.title + ' - ' : ''}}QWait</title>
     </div>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -21,8 +21,8 @@
     <script src="../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript">
       /* <![CDATA[ */
-      angular.module('qwait').controller('QueueCtrl', ['$scope', '$sce', 'Page', 'getQueuePos', 'getQueuePosNr',
-          function ($scope, $sce, Page, getQueuePos, getQueuePosNr) {
+      angular.module('qwait').controller('QueueCtrl', ['$scope', '$sce', 'page', 'getQueuePos', 'getQueuePosNr',
+          function ($scope, $sce, page, getQueuePos, getQueuePosNr) {
         var queueBaseUrl = /*[[@{/queue/}]]*/ '';
 
         // Users not logged in won't have a username
@@ -36,6 +36,11 @@
         $scope.queue = JSON.parse(queueStr);
 
         $scope.hostName = /*[[${hostName}]]*/ '';
+
+        $scope.$watch('queue.positions', function(positions) {
+            var numPos = positions.length;
+            page.title = (numPos > 0 ? '[' + numPos + '] ' : '') + $scope.queue.name;
+        });
 
         // This URL construction happens here to prevent some CORS attacks
         $scope.queue.createPositionUrl = queueBaseUrl + $scope.queue.id + '/position/create';
@@ -126,7 +131,7 @@
                 </label>
               </form>
             </div>
-                      
+
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">Queue me</button>
             </form>
@@ -267,8 +272,8 @@
               <table class="large-12 columns">
               <div class="row">
                 <div class="large-8 columns"></div>
-                <label ng-show="queue.positions.length" class="large-4 columns"> 
-                  <input ng-model="search" class="search" name="search" type="text" placeholder="Find users"/>  
+                <label ng-show="queue.positions.length" class="large-4 columns">
+                  <input ng-model="search" class="search" name="search" type="text" placeholder="Find users"/>
                 </label>
                 </div>
                 <thead>
