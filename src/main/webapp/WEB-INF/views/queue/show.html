@@ -57,13 +57,6 @@
         // Inject queue position nr of current user
         $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
-        var queuePosNr = $scope.queuePosNr;
-        if (queuePosNr > 0) {
-          Page.setTitle('[' + queuePosNr + '] ' + $scope.queue.name);
-        } else {
-          Page.setTitle($scope.queue.name);
-        }
-
  var q = $scope.queue;
         q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
         q.unlockUrl = queueBaseUrl + $scope.queue.id + '/unlock';
