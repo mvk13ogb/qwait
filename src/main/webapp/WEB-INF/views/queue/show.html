@@ -104,12 +104,13 @@
             <div class="alert-margin show-for-large-up"></div>
             <div class="search-margin hide-for-large-up"></div>
             <div class="black-background button-bot-margin">
-              <div class="fi-alert size-48 text-center white"></div>
-              <p class="text-center white">In order to queue, you need to be logged in</p>
+              <div class="fi-alert white size-48 text-center small-top-padding"></div>
+              <!--Non-breaking space because we want two separate sentences in large-up, and one whole in medium-down-->
+              <p class="text-center white small-top-margin">In order to queue, you&nbsp;need&nbsp;to&nbsp;log&nbsp;in</p>
               <a th:href="@{/login}">
                 <div class="row collapse">
-                  <div class="small-11 small-centered columns">
-                    <button class="button postfix">
+                  <div class="small-12 small-centered columns login-spacing">
+                    <button class="button postfix no-bot-margin">
                       Log In
                     </button>
                   </div>
