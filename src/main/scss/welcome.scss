@@ -20,7 +20,11 @@ p {
     margin-right: auto;
     width: 637px;
     padding-top: 0px;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5)
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+a {
+    text-decoration: none;
 }
 
 button {
@@ -30,13 +34,12 @@ button {
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.6);
     width: 18em;
     margin-top: 1.5em;
-    margin-bottom: 1.5em;
     color: #FFF;
     background-color: rgb(25, 84, 166);
     display: inline-block;
     text-indent: 0px;
     padding: 0.8em;
-    border-radius: 4px;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
 
@@ -72,7 +75,7 @@ button:hover {
 }
 
 #qwait {
-    margin: 80px auto 20px auto;
+    margin: 60px auto 20px auto;
     width: 637px;
     height: 160px;
     background: url('../../images/qwait-transparent-partial.png');
