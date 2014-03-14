@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">>
-  <head>
-    <link rel="stylesheet" href="../../../foundation-icons/foundation-icons.css" th:href="@{/foundation-icons/foundation-icons.css}"/>
-  </head>
   <body>
     <li th:fragment="menuentry (title, url)"
         th:class="${#ctx.httpServletRequest.requestURI} == ${url} ? 'active' : ''">
@@ -30,8 +27,9 @@
           </a>
         </li>
         <li class="toggle-topbar">
-          <a href="#">Menu
-            <i class="fi-list size-16"></i>
+          <a href="#">
+            Menu
+            <i class="fi-list size-24 middle"></i>
           </a>
         </li>
       </ul>
