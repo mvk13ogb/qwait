@@ -13,8 +13,8 @@ h1 {
 .search {
   @include form-element;
   background: url('../icons/magnifying-glass.png') no-repeat;
-  background-position: right center;
-  background-size: 25px 25px;
+  background-position: right 3px center;
+  background-size: 24px 24px;
 }
 
 .top-bar {
@@ -86,7 +86,7 @@ h1 {
   vertical-align: middle;
 }
 
-.black-background{
+.grey-background{
   background-color: #333;
   border-radius: 2px;
 }
