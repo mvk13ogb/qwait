@@ -42,15 +42,21 @@
       <div id="presentation">
         <p>Welcome to QWait, the new web based queueing manager developed for KTH CSC. Since the last millennium, the mere mention of the queueing manager which must not be named has brought terror into the hearts of even the most fearless students, but we say: no more. We have built QWait with a robust backend that will never give up on you, and a lightweight web interface which can be used with your desktop, laptop, mobile device or toaster (given that it supports HTML). Best of all: it makes queueing simple, just as it should be.</p>
       </div>
-      <a href ="http://localhost:8080/queue" th:href="@{/login}">
-        <button>
-          <img src="../../images/kth-logo-transparent.png" th:href="@{/images/kth-logo-transparent.png}" id="kthicon" />
-          Log in with your KTH-id
-        </button>
-      </a>
-      <a href ="http://localhost:8080/queue" th:href="@{/queue}">
-        <p>Enter as Guest</p>
-      </a>
+      <div>
+        <a href ="http://localhost:8080/queue" th:href="@{/login}">
+          <button class="kth-button">
+            <img src="../../images/kth-logo-transparent.png" th:href="@{/images/kth-logo-transparent.png}" id="kthicon" />
+            Log in with your KTH-id
+          </button>
+        </a>
+      </div>
+      <div>
+        <a href ="http://localhost:8080/queue" th:href="@{/queue}">
+          <button class="guest-button">
+            Enter as Guest
+          </button>
+        </a>
+      </div>
     </div>
   </body>
 </html>
