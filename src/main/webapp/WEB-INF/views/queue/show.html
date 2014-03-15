@@ -99,12 +99,13 @@
         </div>
         <div class="row">
 
-          <!--This content is only shown for guests -->
           <div th:if="${account == null}" class="large-3 columns">
+            <!--This content is only shown for guests -->
             <div class="alert-margin show-for-large-up"></div>
             <div class="search-margin hide-for-large-up"></div>
             <div class="black-background button-bot-margin">
               <div class="fi-alert white size-48 text-center small-top-padding"></div>
+              
               <!--Non-breaking space because we want two separate sentences in large-up, and one whole in medium-down-->
               <p class="text-center white small-top-margin">In order to queue, you&nbsp;need&nbsp;to&nbsp;log&nbsp;in</p>
               <a th:href="@{/login}">
@@ -119,8 +120,8 @@
             </div>
           </div>
 
-          <!--This content is only shown for logged in users -->
           <div th:if="${account != null}" class="large-3 columns">
+            <!--This content is only shown for logged in users -->
             <div th:attr="ng-hide='!queue.active || queue.locked'">LOL TEST REMOVE THIS</div>
             <div class="search-margin show-for-large-up"></div>
             <div th:attr="ng-if='queuePos != null'">
@@ -321,13 +322,13 @@
           </div>
 
           <div class="large-9 columns">
-            <div ng-show="queue.positions.length" class="row">
+            <div ng-show="queue.positions.length" class="row collapse">
               <table class="large-12 columns">
-              <div class="row">
-                <div class="large-8 columns"></div>
-                <label ng-show="queue.positions.length" class="large-4 columns">
-                  <input ng-model="search" class="search" name="search" type="text" placeholder="Find users"/>
-                </label>
+                <div class="row collapse">
+                  <div class="large-8 columns"></div>
+                  <label ng-show="queue.positions.length" class="large-4 columns">
+                    <input ng-model="search" class="search" name="search" type="text" placeholder="Find users"/>
+                  </label>
                 </div>
                 <thead>
                   <tr>
