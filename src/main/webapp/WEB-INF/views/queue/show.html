@@ -162,7 +162,7 @@
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">
-              <i class="fi-x size-24 red middle"></i>
+              <i class="fi-x size-24 red middle icon-margin"></i>
               Leave queue
               </button>
             </form>
@@ -199,8 +199,7 @@
               </form>
 
               <form th:if="${account != null ? account.canEditQueue(queue) : false}" th:action="'{{queue.removeUrl}}'" th:method="POST">
-                <button type="submit" class="button tiny expand">
-                  <i class="fi-x size-24 red middle icon-margin"></i>
+                <button type="submit" class="button alert tiny expand">
                   Delete queue
                 </button>
               </form>
@@ -354,7 +353,10 @@
 
                     <td>
                       <form th:if="${account != null ? account.canModerateQueue(queue) : false}" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                        <button type="submit" class="button alert tiny" style="margin-bottom: 0">Remove</button>
+                        <button type="submit" class="button alert tiny" style="margin-bottom: 0">
+                          <i class="fi-x size-24 red middle icon-margin"></i>
+                          Remove
+                        </button>
                       </form>
                     </td>
                   </tr>
