@@ -94,12 +94,12 @@
                     <td class="text-center">{{queue.positions.length}}</td>
                     <!--TODO Change to moderator-->
                     <td class="text-center" sec:authorize="hasRole('admin')">
-                      <i class="fi-unlock size-24 green" ng-show="!queue.locked"></i>
-                      <i class="fi-lock size-24 red" ng-show="queue.locked"></i>
+                      <i class="fi-unlock size-24 green" title="This queue is unlocked" ng-show="!queue.locked"></i>
+                      <i class="fi-lock size-24 red" title="This queue is locked, and does not accept new queuers" ng-show="queue.locked"></i>
                     </td>
                     <td class="text-center" sec:authorize="hasRole('admin')">
-                      <i class="fi-eye size-24 green" ng-show="queue.active"></i>
-                      <i class="fi-eye size-24 red" ng-show="!queue.active"></i>
+                      <i class="fi-eye size-24 green" title="This queue is open" ng-show="queue.active"></i>
+                      <i class="fi-eye size-24 red" title="This queue is closed, and is hidden from view" ng-show="!queue.active"></i>
                     </td>
                   </tr>
                 </tbody>
