@@ -155,15 +155,15 @@
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">
-                <i class="fi-plus size-18"></i>
-                Queue me
+                <i class="fi-plus size-24 white-icon middle icon-margin"></i>
+                <span class="middle">Queue me</span>
               </button>
             </form>
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">
-              <i class="fi-x size-24 red middle icon-margin"></i>
-              Leave queue
+              <i class="fi-x size-24 red-icon middle icon-margin"></i>
+              <span class="middle">Leave queue</span>
               </button>
             </form>
 
@@ -172,28 +172,28 @@
 
               <form th:attr="ng-show='queue.locked'" th:action="'{{queue.unlockUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny expand">
-                <i class="fi-unlock size-24 green middle icon-margin"></i>
+                <i class="fi-unlock size-24 green-icon middle icon-margin"></i>
                 Unlock queue
                 </button>
               </form>
 
               <form th:attr="ng-hide='queue.locked'" th:action="'{{queue.lockUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny expand">
-                  <i class="fi-lock size-24 red middle icon-margin"></i>
+                  <i class="fi-lock size-24 red-icon middle icon-margin"></i>
                   Lock queue
                 </button>
               </form>
 
               <form th:attr="ng-hide='queue.active'" th:action="'{{queue.openUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny expand">
-                  <i class="fi-eye size-24 green middle icon-margin"></i>
+                  <i class="fi-eye size-24 green-icon middle icon-margin"></i>
                   Open queue
                 </button>
               </form>
 
               <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
                 <button type="submit" class="button tiny expand">
-                  <i class="fi-eye size-24 red middle icon-margin"></i>
+                  <i class="fi-eye size-24 red-icon middle icon-margin"></i>
                   Close queue
                 </button>
               </form>
@@ -208,7 +208,7 @@
             <a th:if="${account != null ? account.canEditQueue(queue) : false}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
             <ul id="edit-owners-drop" class="f-dropdown content medium" data-dropdown-content="">
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="addQueueOwnerModal">
-                <i class="fi-plus size-16 middle icon-margin"></i>
+                <i class="fi-plus size-16 white-icon middle icon-margin"></i>
                 Add owner
               </a>
               <div class="reveal-modal medium" id="addQueueOwnerModal" data-reveal="">
@@ -229,7 +229,7 @@
               </div>
 
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="removeQueueOwnerModal">
-              <i class="fi-x size-24 red middle icon-margin"></i>
+              <i class="fi-x size-24 red-icon middle icon-margin"></i>
                 Remove owner
               </a>
               <div class="reveal-modal medium" id="removeQueueOwnerModal" data-reveal="">
@@ -265,7 +265,7 @@
             <a th:if="${account != null ? account.canEditQueue(queue) : false}" data-dropdown="edit-moderators-drop" class="button dropdown expand" href="#">Edit moderators</a>
             <ul id="edit-moderators-drop" class="f-dropdown content medium" data-dropdown-content="">
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="addQueueModeratorModal">
-                <i class="fi-plus size-16 middle icon-margin"></i>
+                <i class="fi-plus size-16 white-icon middle icon-margin"></i>
                 Add moderator
               </a>
               <div class="reveal-modal medium" id="addQueueModeratorModal" data-reveal="">
@@ -286,7 +286,7 @@
               </div>
 
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="removeQueueModeratorModal">
-                <i class="fi-x size-24 red middle icon-margin"></i>
+                <i class="fi-x size-24 red-icon middle icon-margin"></i>
                 Remove moderator
               </a>
               <div class="reveal-modal medium" id="removeQueueModeratorModal" data-reveal="">
@@ -354,7 +354,7 @@
                     <td>
                       <form th:if="${account != null ? account.canModerateQueue(queue) : false}" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
                         <button type="submit" class="button alert tiny" style="margin-bottom: 0">
-                          <i class="fi-x size-24 red middle icon-margin"></i>
+                          <i class="fi-x size-24 red-icon middle icon-margin"></i>
                           Remove
                         </button>
                       </form>

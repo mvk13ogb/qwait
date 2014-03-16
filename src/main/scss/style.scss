@@ -74,6 +74,7 @@ h1 {
 
 .menu-icon-padding {
   padding-left: 3px;
+  padding-top: 2px;
 }
 
 .login-spacing {
@@ -90,19 +91,25 @@ h1 {
   vertical-align: middle;
 }
 
-.grey-background{
+.grey-background {
   background-color: #333;
   border-radius: 2px;
 }
 
-.green{
+.green-icon {
   color: #20C040;
+  text-shadow: 0.5px 0.5px #007000
 }
 
-.red{
+.red-icon {
   color: #F02020;
+  text-shadow: 0.5px 0.5px #B00000;
 }
 
-.white{
+.white .white-icon {
   color: white;
+}
+
+.white-icon {
+  text-shadow: 0.5px 0.5px rgba(50, 50, 50, 0.8);
 }

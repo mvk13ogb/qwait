@@ -63,7 +63,7 @@
                           </div>
                           <div class="small-3 columns">
                             <button type="submit" class="button postfix">
-                              <i class="fi-plus size-16"></i>
+                              <i class="fi-plus white-icon size-16"></i>
                               Add
                             </button>
                           </div>
@@ -94,12 +94,12 @@
                     <td class="text-center">{{queue.positions.length}}</td>
                     <!--TODO Change to moderator-->
                     <td class="text-center" sec:authorize="hasRole('admin')">
-                      <i class="fi-unlock size-24 green" title="This queue is unlocked" ng-show="!queue.locked"></i>
-                      <i class="fi-lock size-24 red" title="This queue is locked, and does not accept new queuers" ng-show="queue.locked"></i>
+                      <i class="fi-unlock size-24 green-icon" title="This queue is unlocked" ng-show="!queue.locked"></i>
+                      <i class="fi-lock size-24 red-icon" title="This queue is locked, and does not accept new queuers" ng-show="queue.locked"></i>
                     </td>
                     <td class="text-center" sec:authorize="hasRole('admin')">
-                      <i class="fi-eye size-24 green" title="This queue is open" ng-show="queue.active"></i>
-                      <i class="fi-eye size-24 red" title="This queue is closed, and is hidden from view" ng-show="!queue.active"></i>
+                      <i class="fi-eye size-24 green-icon" title="This queue is open" ng-show="queue.active"></i>
+                      <i class="fi-eye size-24 red-icon" title="This queue is closed, and is hidden from view" ng-show="!queue.active"></i>
                     </td>
                   </tr>
                 </tbody>

@@ -1,14 +1,14 @@
 body {
   background-color:#008CBA;
-  color: white;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
   font-family: Alegreya Sans SC;
   font-size: 200%;
+  color: white;
+
   width: 100%;
-  
   margin-top: 0px;
   padding: 0px;
 }
@@ -16,27 +16,33 @@ h1 {
 p {
   font-family: Open Sans;
   font-size: 16px;
-  width: 637px;
+  color: white;
 
+  width: 637px;
   margin-left: auto;
   margin-right: auto;
   padding-top: 0px;
 }
 
 a {
+  color: white;
   text-decoration: none;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
 button {
-  border-radius: 2px;
+  border-radius: 3px;
   border: none;
   cursor: pointer;
   
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
 
-  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
 }
 
 .guest-button {
