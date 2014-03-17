@@ -94,11 +94,11 @@
         </div>
         <div class="row">
 
+          <!--This content is only shown for guests -->
           <div th:if="${account == null}" class="large-3 columns">
-            <!--This content is only shown for guests -->
             <div class="alert-margin show-for-large-up"></div>
             <div class="search-margin hide-for-large-up"></div>
-            <div class="grey-background button-bot-margin">
+            <div class="grey-background">
               <div class="fi-alert white size-48 text-center small-top-padding"></div>
               
               <!--Non-breaking space because we want two separate sentences in large-up, and one whole in medium-down-->
@@ -115,11 +115,43 @@
             </div>
           </div>
 
+          <!--This content is only shown for logged in users -->
           <div th:if="${account != null}" class="large-3 columns">
-            <!--This content is only shown for logged in users -->
-            <div th:attr="ng-hide='!queue.active || queue.locked'">LOL TEST REMOVE THIS</div>
-            <div class="search-margin show-for-large-up"></div>
-            <div th:attr="ng-if='queuePos != null'">
+
+            <!-- Only if the queue is locked -->
+            <div th:attr="ng-hide='!queue.locked || !queue.active'">
+              <div class="alert-margin show-for-large-up"></div>
+              <div class="search-margin hide-for-large-up"></div>
+              <div class="grey-background button-bot-margin">
+                <div class="fi-lock red-icon size-48 text-center small-top-padding"></div>
+                <p class="text-center white small-top-margin bot-padding">This queue is locked, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered</p>
+              </div>
+            </div>
+
+            <!-- Only if the queue is closed -->
+            <div th:attr="ng-hide='queue.active || queue.locked'">
+              <div class="search-margin"></div>
+              <div class="grey-background button-bot-margin">
+                <div class="fi-eye red-icon size-48 text-center small-top-padding"></div>
+                <p class="text-center white small-top-margin bot-padding">This queue is closed, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered</p>
+              </div>
+            </div>
+
+            <!-- Only the queue is both locked and closed-->
+            <div th:attr="ng-hide='queue.active || !queue.locked'">
+              <div class="search-margin"></div>
+              <div class="grey-background button-bot-margin">
+                <div class="text-center small-top-padding">
+                  <i class="fi-lock red-icon size-48 icon-margin"></i>
+                  <i class="fi-eye red-icon size-48"></i>
+                </div>
+                <p class="text-center white small-top-margin bot-padding">This queue is both locked&nbsp;and&nbsp;closed</p>
+              </div>
+            </div>
+            
+            <!-- We hide the log in if the queue is locked or closed -->
+            <div th:attr="ng-if='queuePos != null', ng-hide='queue.locked || !queue.active'">
+              <div class="search-margin show-for-large-up"></div>
               <form th:action="'{{queuePos.locationUrl}}'" th:method="POST">
                 <label>
                   Location
@@ -346,11 +378,11 @@
 
                     <td>{{queuePosition.comment || ''}}</td>
 
-                    <td>
-                      <form th:if="${account != null ? account.canModerateQueue(queue) : false}" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" style="margin-bottom: 0">
-                        <button type="submit" class="button alert tiny" style="margin-bottom: 0">
-                          <i class="fi-x size-18 red-icon middle icon-margin"></i>
-                          Remove
+                    <td class="table-button-padding">
+                      <form th:if="${account != null ? account.canModerateQueue(queue) : false}" th:action="'{{queuePosition.removeUrl}}'" th:method="POST" class="no-bot-margin">
+                        <button type="submit" class="button remove-button tinier no-bot-margin">
+                          <i class="fi-x size-16 red-icon icon-margin middle"></i>
+                          <span class="middle">Remove</span>
                         </button>
                       </form>
                     </td>

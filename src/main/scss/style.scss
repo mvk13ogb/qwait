@@ -72,6 +72,10 @@ h1 {
   padding-top: 4px;
 }
 
+.bot-padding {
+  padding-bottom: 5px;
+}
+
 .menu-icon-padding {
   padding-left: 3px;
   padding-top: 2px;
@@ -83,12 +87,26 @@ h1 {
   margin-bottom: 12px;
 }
 
+.table-button-padding {
+  padding: 6px;
+}
+
 .icon-margin {
   margin-right: 2px;
 }
 
 .middle {
   vertical-align: middle;
+}
+
+//Used for not making the remove button wrap
+.remove-button {
+  min-width: 75px;
+}
+
+.tinier {
+  font-size: 0.7rem;
+  padding: 0.4rem 0rem 0.5em;
 }
 
 .grey-background {
