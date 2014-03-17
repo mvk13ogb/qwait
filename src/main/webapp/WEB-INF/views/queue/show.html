@@ -57,7 +57,7 @@
         // Inject queue position nr of current user
         $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
- var q = $scope.queue;
+        var q = $scope.queue;
         q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
         q.unlockUrl = queueBaseUrl + $scope.queue.id + '/unlock';
         q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
@@ -75,6 +75,8 @@
           position.locationUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/location';
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
+
+        $scope.date = moment(); // Inject timestamp to retrieve with Angular
       }]);
       /* ]]> */
     </script>
@@ -285,7 +287,7 @@
 
                     <td>{{queuePosition.account.name}}</td>
 
-                    <td>{{queuePosition.startTime | duration}}</td>
+                    <td>{{date - queuePosition.startTime | duration}}</td>
 
                     <td>{{queuePosition.location || ''}}</td>
 

@@ -4,17 +4,11 @@ describe('qwait core module', function () {
 
     describe('duration filter', function () {
         it('filters durations about a day long correctly', inject(function (durationFilter) {
-            var d = new Date("March 11, 2014 15:15:00");
-            Date = function(){return d;};
-            var d2 = new Date("March 10, 2014 15:10:00");
-            expect(durationFilter(d2)).toEqual('a day');
+            expect(durationFilter(25 * 60 * 60 * 1000)).toEqual('a day');
         }));
 
         it('filters durations about two minutes long correctly', inject(function (durationFilter) {
-            var d = new Date("March 11, 2014 15:15:00");
-            Date = function(){return d;};
-            var d2 = new Date("March 11, 2014 15:13:00");
-            expect(durationFilter(d2)).toEqual('2 minutes');
+            expect(durationFilter(2 * 60 * 1000)).toEqual('2 minutes');
         }));
     });
 });

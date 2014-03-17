@@ -8,8 +8,7 @@
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
-            var date = new Date();
-            return moment.duration(date-milliseconds).humanize();
+            return moment.duration(milliseconds).humanize();
         }
     });
 
