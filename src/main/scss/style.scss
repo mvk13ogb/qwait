@@ -98,18 +98,18 @@ h1 {
 
 .green-icon {
   color: #20C040;
-  text-shadow: 0.5px 0.5px #007000
+  text-shadow: 1px 1px #007000
 }
 
 .red-icon {
   color: #F02020;
-  text-shadow: 0.5px 0.5px #B00000;
+  text-shadow: 1px 1px #B00000;
 }
 
-.white .white-icon {
+.white, .white-icon {
   color: white;
 }
 
 .white-icon {
-  text-shadow: 0.5px 0.5px rgba(50, 50, 50, 0.8);
+  text-shadow: 1px 1px rgba(50, 50, 50, 0.8);
 }

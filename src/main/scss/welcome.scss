@@ -25,12 +25,7 @@ p {
 }
 
 a {
-  color: white;
   text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 
 button {
@@ -43,30 +38,6 @@ button {
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
-}
-
-.guest-button {
-  font-size: 15px;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-
-  background-color: #F0F0F0;
-  color: rgb(25, 84, 166);
-  margin-top: 15px;
-
-  -webkit-transition: background-color 200ms;
-  -moz-transition: background-color 200ms;
-  -o-transition: background-color 200ms;
-  -ms-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-}
-
-.guest-button:hover {
-  background-color: #CCC;
-  -webkit-transition: background-color 200ms linear;
-  -moz-transition: background-color 200ms;
-  -o-transition: background-color 200ms;
-  -ms-transition: background-color 200ms;
-  transition: background-color 200ms linear;
 }
 
 .kth-button {
@@ -95,6 +66,10 @@ button {
   -o-transition: background-color 200ms;
   -ms-transition: background-color 200ms;
   transition: background-color 200ms linear;
+}
+
+.guest:hover {
+    color: #CCC;
 }
 
 .center {
