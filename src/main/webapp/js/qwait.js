@@ -108,4 +108,87 @@
     qwait.controller('TitleCtrl', ['$scope', 'page', function ($scope, page) {
         $scope.page = page;
     }]);
+
+    //This function returns the official color of the computer lab. 
+    //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
+    qwait.filter('getComputerColor', function () {
+        return function (location) {
+
+            if(/(blå|blue)/i.test(location)){
+                return "blue";
+            }
+
+            else if(/(röd|red)/i.test(location)){
+                return "red";
+            }
+
+            else if(/(orange)/i.test(location)){
+                return "#FF7F00";
+            }
+
+            else if(/(gul|yellow)/i.test(location)){
+                return "yellow";
+            }
+
+            else if(/(grön|green)/i.test(location)){
+                return "green";
+            }
+
+            else if(/(brun|brown)/i.test(location)){
+                return "#7F3F1F";
+            }
+
+            else if(/(grå|grey|gray)/i.test(location)){ 
+                return "grey";
+            }
+            
+            else if(/(karmosin|crimson)/i.test(location)){
+                return "#D91536";
+            }
+
+            else if(/(vit|white)/i.test(location)){
+                return "white";
+            }
+
+            else if(/(magenta|cerise)/i.test(location)){
+                return "magenta";
+            }
+
+            else if(/(violett|violet)/i.test(location)){
+                return "#AC00E6";
+            }
+
+            else if(/(turkos|turquoise)/i.test(location)){
+                return "turquoise";
+            }
+
+
+            //These computer labs have official colours too
+            else if(/(spel)/i.test(location)){
+                return "#E6ADAD";
+            }
+
+            else if(/(sport)/i.test(location)){
+                return "#ADADE6";
+            }
+
+            else if(/(musik)/i.test(location)){
+                return "#ADE7AD";
+            }
+
+            else if(/(konst)/i.test(location)){
+                return "#E8E7AF";
+            }
+
+            else if(/(mat)/i.test(location)){
+                return "#E8C9AF";
+            }
+
+            //If the location doesn't match anything we return an empty string
+            else{
+                return "";
+            }
+        };
+    });
+
 })();

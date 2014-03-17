@@ -90,7 +90,7 @@
         <h1 class="text-center">{{queue.name}}</h1>
         <h4 class="text-center" th:attr="ng-if='queuePosNr > 0'">Your position is {{queuePosNr}}</h4>
         <div ng-hide="queue.positions.length">
-          <div class="text-center">There is currently no-one queueing</div>
+          <div class="text-center">There is currently no-one queueing.</div>
         </div>
         <div class="row">
 
@@ -98,11 +98,11 @@
           <div th:if="${account == null}" class="large-3 columns">
             <div class="alert-margin show-for-large-up"></div>
             <div class="search-margin hide-for-large-up"></div>
-            <div class="grey-background">
+            <div class="grey-background button-bot-margin">
               <div class="fi-alert white size-48 text-center small-top-padding"></div>
               
-              <!--Non-breaking space because we want two separate sentences in large-up, and one whole in medium-down-->
-              <p class="text-center white small-top-margin">In order to queue, you&nbsp;need&nbsp;to&nbsp;log&nbsp;in</p>
+              <!--Non-breaking space because we want two separate sentences in large-up, and one whole in medium-down -->
+              <p class="text-center white small-top-margin">In order to queue, you&nbsp;need&nbsp;to&nbsp;log&nbsp;in.</p>
               <a th:href="@{/login}">
                 <div class="row collapse">
                   <div class="small-12 small-centered columns login-spacing">
@@ -118,22 +118,21 @@
           <!--This content is only shown for logged in users -->
           <div th:if="${account != null}" class="large-3 columns">
 
-            <!-- Only if the queue is locked -->
+            <!-- If the queue is locked -->
             <div th:attr="ng-hide='!queue.locked || !queue.active'">
-              <div class="alert-margin show-for-large-up"></div>
-              <div class="search-margin hide-for-large-up"></div>
+              <div class="search-margin"></div>
               <div class="grey-background button-bot-margin">
                 <div class="fi-lock red-icon size-48 text-center small-top-padding"></div>
-                <p class="text-center white small-top-margin bot-padding">This queue is locked, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered</p>
+                <p class="text-center white small-top-margin bot-padding">This queue is locked, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered.</p>
               </div>
             </div>
 
-            <!-- Only if the queue is closed -->
+            <!-- If the queue is closed -->
             <div th:attr="ng-hide='queue.active || queue.locked'">
               <div class="search-margin"></div>
               <div class="grey-background button-bot-margin">
                 <div class="fi-eye red-icon size-48 text-center small-top-padding"></div>
-                <p class="text-center white small-top-margin bot-padding">This queue is closed, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered</p>
+                <p class="text-center white small-top-margin bot-padding">This queue is closed, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered.</p>
               </div>
             </div>
 
@@ -145,7 +144,7 @@
                   <i class="fi-lock red-icon size-48 icon-margin"></i>
                   <i class="fi-eye red-icon size-48"></i>
                 </div>
-                <p class="text-center white small-top-margin bot-padding">This queue is both locked&nbsp;and&nbsp;closed</p>
+                <p class="text-center white small-top-margin bot-padding">This queue is both locked&nbsp;and&nbsp;closed.</p>
               </div>
             </div>
             
@@ -368,7 +367,10 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false" ng-class="{'active':$index+1 == queuePosNr}">
-                    <td>{{$index+1}}</td>
+                    <td>
+                      <div class="location-indicator" th:if="${account != null ? account.canModerateQueue(queue) : false}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"></div>
+                      {{$index+1}}
+                    </td>
 
                     <td>{{queuePosition.account.name}}</td>
 

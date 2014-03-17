@@ -109,6 +109,15 @@ h1 {
   padding: 0.4rem 0rem 0.5em;
 }
 
+.location-indicator {
+  position: absolute; 
+  margin-left: -10px; 
+  margin-top: -13px;
+
+  border-bottom: 10px double transparent; 
+  border-left: 10px solid transparent; 
+}
+
 .grey-background {
   background-color: #333;
   border-radius: 2px;
