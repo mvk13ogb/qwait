@@ -57,14 +57,7 @@
         // Inject queue position nr of current user
         $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
-        var queuePosNr = $scope.queuePosNr;
-        if (queuePosNr > 0) {
-          Page.setTitle('[' + queuePosNr + '] ' + $scope.queue.name);
-        } else {
-          Page.setTitle($scope.queue.name);
-        }
-
- var q = $scope.queue;
+        var q = $scope.queue;
         q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
         q.unlockUrl = queueBaseUrl + $scope.queue.id + '/unlock';
         q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
@@ -82,6 +75,8 @@
           position.locationUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/location';
           position.commentUrl = queueBaseUrl + $scope.queue.id + '/position/' + position.id + '/comment';
         }
+
+        $scope.date = moment(); // Inject timestamp to retrieve with Angular
       }]);
       /* ]]> */
     </script>
@@ -292,7 +287,7 @@
 
                     <td>{{queuePosition.account.name}}</td>
 
-                    <td>{{queuePosition.startTime - Date.now() |duration}}</td>
+                    <td>{{date - queuePosition.startTime | duration}}</td>
 
                     <td>{{queuePosition.location || ''}}</td>
 
@@ -318,6 +313,7 @@
     <script src="../../../vendor/js/foundation.dropdown.js" th:src="@{/vendor/js/foundation.dropdown.js}"></script>
     <script src="../../../vendor/js/foundation.reveal.js" th:src="@{/vendor/js/foundation.reveal.js}"></script>
     <script src="../../../vendor/js/foundation.alert.js" th:src="@{/vendor/js/foundation.alert.js}"></script>
+    <script src="../../../vendor/js/moment-with-langs.js" th:src="@{/vendor/js/moment-with-langs.js}"></script>
     <script>$(document).foundation();</script>
   </body>
 </html>
