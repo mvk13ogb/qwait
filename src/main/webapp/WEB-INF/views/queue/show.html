@@ -191,7 +191,7 @@
               </button>
             </form>
 
-            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">
               <i class="fi-x size-18 red-icon middle icon-margin"></i>
               <span class="middle">Leave queue</span>
