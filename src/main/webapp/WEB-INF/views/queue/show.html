@@ -120,7 +120,8 @@
 
             <!-- If the queue is locked -->
             <div th:attr="ng-hide='!queue.locked || !queue.active'">
-              <div class="search-margin"></div>
+              <div class="alert-margin show-for-large-up"></div>
+              <div class="search-margin hide-for-large-up"></div>
               <div class="grey-background button-bot-margin">
                 <div class="fi-lock red-icon size-48 text-center small-top-padding"></div>
                 <p class="text-center white small-top-margin bot-padding">This queue is locked, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered.</p>
@@ -129,7 +130,8 @@
 
             <!-- If the queue is closed -->
             <div th:attr="ng-hide='queue.active || queue.locked'">
-              <div class="search-margin"></div>
+              <div class="alert-margin show-for-large-up"></div>
+              <div class="search-margin hide-for-large-up"></div>
               <div class="grey-background button-bot-margin">
                 <div class="fi-eye red-icon size-48 text-center small-top-padding"></div>
                 <p class="text-center white small-top-margin bot-padding">This queue is closed, so&nbsp;it&nbsp;can't&nbsp;be&nbsp;entered.</p>
@@ -138,7 +140,8 @@
 
             <!-- Only the queue is both locked and closed-->
             <div th:attr="ng-hide='queue.active || !queue.locked'">
-              <div class="search-margin"></div>
+              <div class="alert-margin show-for-large-up"></div>
+              <div class="search-margin hide-for-large-up"></div>
               <div class="grey-background button-bot-margin">
                 <div class="text-center small-top-padding">
                   <i class="fi-lock red-icon size-48 icon-margin"></i>
@@ -148,7 +151,7 @@
               </div>
             </div>
             
-            <!-- We hide the log in if the queue is locked or closed -->
+            <!-- We hide the queue form if the queue is locked or closed -->
             <div th:attr="ng-if='queuePos != null', ng-hide='queue.locked || !queue.active'">
               <div class="search-margin show-for-large-up"></div>
               <form th:action="'{{queuePos.locationUrl}}'" th:method="POST">
@@ -180,13 +183,15 @@
             </div>
 
             <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos != null'" th:action="'{{queue.createPositionUrl}}'" th:method="POST">
+              <div class="alert-margin show-for-large-up"></div>
+              <div class="search-margin hide-for-large-up"></div>
               <button class="button expand button-bot-margin" type="submit">
                 <i class="fi-plus size-18 white-icon middle icon-margin"></i>
                 <span class="middle">Queue me</span>
               </button>
             </form>
 
-            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='!queue.active || queue.locked || queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
+            <form sec:authorize="!hasRole('ROLE_ANONYMOUS')" th:attr="ng-hide='queuePos == null'" th:action="'{{queue.removeOwnUrl}}'" th:method="POST">
               <button class="button expand button-bot-margin" type="submit">
               <i class="fi-x size-18 red-icon middle icon-margin"></i>
               <span class="middle">Leave queue</span>
