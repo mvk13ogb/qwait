@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="qwait" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
   <head>
-    <title>Queue List &mdash; QWait</title>
+    <title>Queues | QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <link rel="shortcut icon" id="favicon" href="../../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" href="../../../icons/apple-touch-icon.png" th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" href="../../../../../../target/webapp/css/style.css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="../../../foundation-icons/foundation-icons.css" th:href="@{/foundation-icons/foundation-icons.css}"/>
 
     <script src="../../vendor/js/angular.js" th:src="@{/vendor/js/angular.js}"></script>
     <script src="../../../../js/qwait.js" th:src="@{/js/qwait.js}"></script>
@@ -40,15 +41,15 @@
     <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueListCtrl">
-        <h1 class="no-bot-margin text-center">Queue List</h1>
+        <h1 class="no-bot-margin text-center">Queues</h1>
         <div ng-hide="queues.length">
           <p class="text-center">There are currently no queues.</p>
         </div>
         <div class="row">
           <div class="large-9 large-centered columns">
-            <div class="row">
+            <div class="row collapse">
               <table class="large-12 columns">
-                <div class="row">
+                <div class="row collapse">
                   <div class="large-4 columns">
                     <form sec:authorize="hasRole('admin')" th:action="@{/queue/create}" th:method="POST">
                       <label>
@@ -61,7 +62,10 @@
 
                           </div>
                           <div class="small-3 columns">
-                            <button type="submit" class="button postfix">Add</button>
+                            <button type="submit" class="button postfix">
+                              <i class="fi-plus white-icon size-16"></i>
+                              Add
+                            </button>
                           </div>
                         </div>
                       </label>
@@ -75,9 +79,8 @@
                 <thead ng-show="queues.length">
                   <tr>
                     <th>Name</th>
-                    <th width="48">
-                      <img th:src="@{/icons/queue-man.png}"
-                            src="../../../icons/queue-man.png" height="17" width="17"/>
+                    <th class="text-center" width="48">
+                      <i class="fi-torso size-24"></i>
                     </th>
                     <!--TODO-->
                     <th sec:authorize="hasRole('admin')" width="1">Locked</th>
@@ -87,11 +90,17 @@
                 <tbody ng-show="queues.length">
                   <!-- Filter only by name -->
                   <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
-                    <td><a href="show.html" th:href="@{/queue/{{queue.id}}}">{{queue.name}}</a></td>
-                    <td>{{queue.positions.length}}</td>
+                    <td><a href="show.html" th:href="@{/queue/{{queue.id}}}" style="color: {{(queue.locked || !queue.active) ? 'red' : ''}}">{{queue.name}}</a></td>
+                    <td class="text-center">{{queue.positions.length}}</td>
                     <!--TODO Change to moderator-->
-                    <td sec:authorize="hasRole('admin')">{{queue.locked}}</td>
-                    <td sec:authorize="hasRole('admin')">{{queue.active}}</td>
+                    <td class="text-center" sec:authorize="hasRole('admin')">
+                      <i class="fi-unlock size-24 green-icon" title="This queue is unlocked" ng-show="!queue.locked"></i>
+                      <i class="fi-lock size-24 red-icon" title="This queue is locked, and does not accept new queuers" ng-show="queue.locked"></i>
+                    </td>
+                    <td class="text-center" sec:authorize="hasRole('admin')">
+                      <i class="fi-eye size-24 green-icon" title="This queue is open" ng-show="queue.active"></i>
+                      <i class="fi-eye size-24 red-icon" title="This queue is closed, and is hidden from view" ng-show="!queue.active"></i>
+                    </td>
                   </tr>
                 </tbody>
               </table>
