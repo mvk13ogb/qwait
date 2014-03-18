@@ -87,7 +87,7 @@
     <div th:replace="fragment/layout :: topbar"></div>
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
-        <h1 class="text-center">{{queue.name}}</h1>
+        <h1 class="text-center" style="color: {{(queue.locked || !queue.active) ? 'red' : ''}}">{{queue.name}}</h1>
         <h4 class="text-center" th:attr="ng-if='queuePosNr > 0'">Your position is {{queuePosNr}}</h4>
         <div ng-hide="queue.positions.length">
           <div class="text-center">There is currently no-one queueing.</div>
