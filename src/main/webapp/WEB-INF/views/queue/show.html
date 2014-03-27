@@ -251,7 +251,7 @@
 
                 <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
                   <label>
-                    Add queue owner
+                    Add owner
                     <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
                     <button type="submit" class="button postfix">Add</button>
                   </label>
@@ -272,7 +272,7 @@
 
                 <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
                   <label>
-                    Remove queue owner
+                    Remove owner
                     <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
                     <button type="submit" class="button postfix">Remove</button>
                   </label>
@@ -329,7 +329,7 @@
 
                 <form th:action="'{{queue.removeModeratorUrl}}'" th:method="POST">
                   <label>
-                    Remove queue assistant
+                    Remove assistant
                     <input id="remove-queue-moderator" name="name" type="text" placeholder="Username to remove"/>
                     <button type="submit" class="button postfix">Remove</button>
                   </label>
