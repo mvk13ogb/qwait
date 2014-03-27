@@ -38,9 +38,15 @@
 
         $scope.hostName = /*[[${hostName}]]*/ '';
 
+        // Inject queue position of current user
+        $scope.queuePos = getQueuePos($scope.principalName, $scope.queue.positions);
+
+        // Inject queue position nr of current user
+        $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
+
         $scope.$watch('queue.positions', function(positions) {
-            var numPos = positions.length;
-            page.title = (numPos > 0 ? '[' + numPos + '] ' : '') + $scope.queue.name;
+            queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
+            page.title = (queuePosNr > 0 ? '[' + queuePosNr + '] ' : '') + $scope.queue.name;
         });
 
         // This URL construction happens here to prevent some CORS attacks
@@ -51,12 +57,6 @@
 
         $scope.queue.addModeratorUrl = queueBaseUrl + $scope.queue.id + '/add-moderator';
         $scope.queue.removeModeratorUrl = queueBaseUrl + $scope.queue.id + '/remove-moderator';
-
-        // Inject queue position of current user
-        $scope.queuePos = getQueuePos($scope.principalName, $scope.queue.positions);
-
-        // Inject queue position nr of current user
-        $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
         var q = $scope.queue;
         q.lockUrl = queueBaseUrl + $scope.queue.id + '/lock';
