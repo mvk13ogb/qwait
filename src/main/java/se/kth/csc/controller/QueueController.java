@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,7 @@ public class QueueController {
     public ModelAndView list(HttpServletRequest request) throws JsonProcessingException {
         List<Queue> queues;
         Principal user = request.getUserPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (request.isUserInRole("admin")) {
             queues = queueStore.fetchAllQueues();
         } else {
