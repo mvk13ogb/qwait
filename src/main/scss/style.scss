@@ -112,10 +112,17 @@ h1 {
 .location-indicator {
   position: absolute; 
   margin-left: -10px; 
-  margin-top: -13px;
 
   border-bottom: 10px double transparent; 
   border-left: 10px solid transparent; 
+}
+
+.admin-location-indicator {
+  margin-top: -13px;
+}
+
+.user-location-indicator {
+  margin-top: -9px;
 }
 
 .grey-background {
