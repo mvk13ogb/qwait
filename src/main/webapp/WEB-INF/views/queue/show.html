@@ -88,7 +88,7 @@
     <div class="row">
       <div class="large-12 columns" ng-controller="QueueCtrl">
         <h1 class="text-center" style="color: {{(queue.locked || !queue.active) ? 'red' : ''}}">{{queue.name}}</h1>
-        <h4 class="text-center" th:attr="ng-if='queuePosNr > 0'">Your position is {{queuePosNr}}</h4>
+        <h4 class="text-center" th:attr="ng-if='queuePosNr > 0'">Your position is: {{queuePosNr}}</h4>
         <div ng-hide="queue.positions.length">
           <div class="text-center">There is currently no-one queueing.</div>
         </div>
@@ -251,7 +251,7 @@
 
                 <form th:action="'{{queue.addOwnerUrl}}'" th:method="POST">
                   <label>
-                    Add Queue Owner
+                    Add owner
                     <input id="add-queue-owner" name="name" type="text" placeholder="Username to add"/>
                     <button type="submit" class="button postfix">Add</button>
                   </label>
@@ -266,13 +266,13 @@
               <div class="reveal-modal medium" id="removeQueueOwnerModal" data-reveal="">
                 <h2>Remove queue owner</h2>
                 <p>
-                  You are about to remove a owner from the queue {{queue.name}}.
+                  You are about to remove an owner from the queue {{queue.name}}.
                   Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to remove.
                 </p>
 
                 <form th:action="'{{queue.removeOwnerUrl}}'" th:method="POST">
                   <label>
-                    Remove Queue Owner
+                    Remove owner
                     <input id="remove-queue-owner" name="name" type="text" placeholder="Username to remove"/>
                     <button type="submit" class="button postfix">Remove</button>
                   </label>
@@ -280,7 +280,7 @@
                 <a class="close-reveal-modal">×</a>
               </div>
 
-              <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="seeQueueOwnersModal">See queue owners</a>
+              <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="seeQueueOwnersModal">Show owners</a>
               <div class="reveal-modal" id="seeQueueOwnersModal" data-reveal="">
                 <h2>Queue owners of {{queue.name}}</h2>
                 <ul>
@@ -293,22 +293,22 @@
               </div>
             </ul>
 
-            <a th:if="${account != null ? account.canEditQueue(queue) : false}" data-dropdown="edit-moderators-drop" class="button dropdown expand" href="#">Edit moderators</a>
+            <a th:if="${account != null ? account.canEditQueue(queue) : false}" data-dropdown="edit-moderators-drop" class="button dropdown expand" href="#">Edit assistants</a>
             <ul id="edit-moderators-drop" class="f-dropdown content medium" data-dropdown-content="">
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="addQueueModeratorModal">
                 <i class="fi-plus size-18 white-icon middle icon-margin"></i>
-                Add moderator
+                Add assistant
               </a>
               <div class="reveal-modal medium" id="addQueueModeratorModal" data-reveal="">
-                <h2>Add queue moderator</h2>
+                <h2>Add queue assistant</h2>
                 <p>
-                  You are about to add a new moderator to the queue {{queue.name}}.
+                  You are about to add a new assistant to the queue {{queue.name}}.
                   Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to add.
                 </p>
 
                 <form th:action="'{{queue.addModeratorUrl}}'" th:method="POST">
                   <label>
-                    Add Queue Moderator
+                    Add assistant
                      <input id="add-queue-moderator" name="name" type="text" placeholder="Username to add"/>
                      <button type="submit" class="button postfix">Add</button>
                   </label>
@@ -318,18 +318,18 @@
 
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="removeQueueModeratorModal">
                 <i class="fi-x size-18 red-icon middle icon-margin"></i>
-                Remove moderator
+                Remove assistant
               </a>
               <div class="reveal-modal medium" id="removeQueueModeratorModal" data-reveal="">
-                <h2>Remove queue moderator</h2>
+                <h2>Remove queue assistant</h2>
                 <p>
-                  You are about to remove a moderator from the queue {{queue.name}}.
+                  You are about to remove an assistant from the queue {{queue.name}}.
                   Enter the KTH-id (a total of 8 characters on the form u1xxxxxx) of the person you want to remove.
                 </p>
 
                 <form th:action="'{{queue.removeModeratorUrl}}'" th:method="POST">
                   <label>
-                    Remove Queue Moderator
+                    Remove assistant
                     <input id="remove-queue-moderator" name="name" type="text" placeholder="Username to remove"/>
                     <button type="submit" class="button postfix">Remove</button>
                   </label>
@@ -337,11 +337,11 @@
                 <a class="close-reveal-modal">×</a>
               </div>
 
-              <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="seeQueueModeratorsModal">See queue moderators</a>
+              <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="seeQueueModeratorsModal">Show assistants</a>
               <div class="reveal-modal" id="seeQueueModeratorsModal" data-reveal="">
-                <h2>Queue moderators of {{queue.name}}</h2>
+                <h2>Queue assistants of {{queue.name}}</h2>
                   <ul>
-                    <p ng-hide="queue.moderators.length">No queue moderators.</p>
+                    <p ng-hide="queue.moderators.length">No queue assistants.</p>
                       <li ng-repeat="moderator in queue.moderators">
                         {{moderator.principalName}}
                       </li>
@@ -373,7 +373,8 @@
                 <tbody>
                   <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false" ng-class="{'active':$index+1 == queuePosNr}">
                     <td>
-                      <div class="location-indicator" th:if="${account != null ? account.canModerateQueue(queue) : false}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"></div>
+                      <div class="location-indicator admin-location-indicator" th:if="${account != null ? account.canModerateQueue(queue) : false}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"/>
+                      <div class="location-indicator user-location-indicator" th:if="${account != null ? !account.canModerateQueue(queue) : true}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"/>
                       {{$index+1}}
                     </td>
 
