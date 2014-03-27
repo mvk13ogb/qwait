@@ -373,8 +373,8 @@
                 <tbody>
                   <tr ng-repeat="queuePosition in queue.positions | filter:search | orderBy:'id':false" ng-class="{'active':$index+1 == queuePosNr}">
                     <td>
-                      <div class="location-indicator admin-location-indicator" th:if="${account != null ? account.canModerateQueue(queue) : false}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"></div>
-                      <div class="location-indicator user-location-indicator" th:if="${account != null ? !account.canModerateQueue(queue) : true}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"></div>
+                      <div class="location-indicator admin-location-indicator" th:if="${account != null ? account.canModerateQueue(queue) : false}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"/>
+                      <div class="location-indicator user-location-indicator" th:if="${account != null ? !account.canModerateQueue(queue) : true}" style="border-left-color: {{(queuePosition.location || '') | getComputerColor}}"/>
                       {{$index+1}}
                     </td>
 
