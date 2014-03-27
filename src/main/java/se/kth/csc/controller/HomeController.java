@@ -35,8 +35,12 @@ public class HomeController {
      * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String welcome(){
-        return "welcome";
+    public String welcome(Principal principal){
+        if (principal != null) {
+            return "redirect:/queue";
+        } else {
+            return "welcome";
+        }
     }
 
     /**
