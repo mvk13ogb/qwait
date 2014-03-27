@@ -222,18 +222,47 @@
                 </button>
               </form>
 
-              <form th:attr="ng-show='queue.active'" th:action="'{{queue.closeUrl}}'" th:method="POST">
-                <button type="submit" class="button tiny expand">
-                  <i class="fi-eye size-18 red-icon middle icon-margin"></i>
-                  Close queue
-                </button>
-              </form>
 
-              <form th:if="${account != null ? account.canEditQueue(queue) : false}" th:action="'{{queue.removeUrl}}'" th:method="POST">
-                <button type="submit" class="button alert tiny expand">
-                  Delete queue
-                </button>
-              </form>
+              <a th:attr="ng-show='queue.active'" th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="closeQueueModal">
+                <i class="fi-eye size-18 red-icon middle icon-margin"></i>
+                Close Queue
+              </a>
+              <div th:attr="ng-show='queue.active'" class="reveal-modal medium" id="closeQueueModal" data-reveal="">
+                <h2>Close queue</h2>
+                <p>
+                  You are about to close the queue:  {{queue.name}}.<br/>
+                  This will cause all queuers to be thrown out and the queue will be made invisible.<br/>
+                  Are you sure you want to do this?
+                </p>
+
+                <form th:action="'{{queue.closeUrl}}'" th:method="POST">
+                  <button type="submit" class="button tiny expand">
+                    <i class="fi-eye size-18 red-icon middle icon-margin"></i>
+                    Close queue
+                  </button>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand alert" href="#" data-reveal-id="deleteQueueModal">
+                Delete queue
+              </a>
+              <div class="reveal-modal medium" id="deleteQueueModal" data-reveal="">
+                <h2>Delete queue</h2>
+                <p>
+                  You are about to permanently delete the queue:  {{queue.name}}.<br/>
+                  This will cause all queuers to be thrown out.<br/>
+                  Are you sure you want to do this?
+                </p>
+
+
+                <form th:action="'{{queue.removeUrl}}'" th:method="POST">
+                  <button type="submit" class="button tiny expand alert">
+                    Delete queue
+                  </button>
+                </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
             </ul>
 
             <a th:if="${account != null ? account.canEditQueue(queue) : false}" data-dropdown="edit-owners-drop" class="button dropdown expand" href="#">Edit owners</a>
