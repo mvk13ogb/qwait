@@ -298,6 +298,31 @@ public class QueueController {
         return "redirect:/queue/" + id;
     }
 
+    private void queueClear(Queue queue) {
+        for (QueuePosition pos : queue.getPositions ()) {
+            queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
+        }
+        queue.getPositions().clear();
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/clear", method = RequestMethod.POST)
+    public String clearQueue(@PathVariable("id") int id, HttpServletRequest request)
+            throws ForbiddenException {
+        Account account = getCurrentAccount(request.getUserPrincipal());
+        if (account == null) { // Anonymous user
+            throw new ForbiddenException();
+        }
+
+        Queue queue = queueStore.fetchQueueWithId(id);
+        if (account.canModerateQueue(queue)) {
+            queueClear(queue);
+            return "redirect:/queue/" + id;
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
     @Transactional
     @RequestMapping(value = "/{id}/close", method = RequestMethod.POST)
     public String closeQueue(@PathVariable("id") int id, HttpServletRequest request)
@@ -310,10 +335,7 @@ public class QueueController {
         Queue queue = queueStore.fetchQueueWithId(id);
         if (account.canModerateQueue(queue)) {
             queue.setActive(false);
-            for (QueuePosition pos : queue.getPositions ()) {
-                queuePositionStore.removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(pos.getId()));
-            }
-            queue.getPositions().clear();
+            queueClear(queue);
 
            return "redirect:/queue/" + id;
         } else {
