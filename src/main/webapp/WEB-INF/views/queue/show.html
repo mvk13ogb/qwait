@@ -44,7 +44,7 @@
         // Inject queue position nr of current user
         $scope.queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
 
-        $scope.$watch('queue.positions', function(positions) {
+        $scope.$watch('queue.positions', function() {
             queuePosNr = getQueuePosNr($scope.principalName, $scope.queue.positions);
             page.title = (queuePosNr > 0 ? '[' + queuePosNr + '] ' : '') + $scope.queue.name;
         });
