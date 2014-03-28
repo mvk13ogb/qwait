@@ -436,7 +436,7 @@
                     <td>{{date - queuePosition.startTime | duration}}</td>
 
                     <td>
-                      <i class="fi-stop size-12 location-indicator" th:attr="ng-hide='!((queuePosition.location || ) | getComputerColor)'" style="color: {{(queuePosition.location || '') | getComputerColor}}"></i>
+                      <i class="fi-stop size-12 location-indicator" style="color: {{(queuePosition.location || '') | getComputerColor}}"></i>
                       {{queuePosition.location || ''}}
                     </td>
 
