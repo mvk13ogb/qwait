@@ -229,7 +229,7 @@
               </a>
               <div th:attr="ng-show='queue.active'" class="reveal-modal medium" id="closeQueueModal" data-reveal="">
                 
-                <h2>Close queue: {{queue.name}}</h2>
+                <h2>Close queue {{queue.name}}</h2>
                 <p>This will clear the queue and hide it. Are you sure?</p>
 
                 <form th:action="'{{queue.closeUrl}}'" th:method="POST">
@@ -245,7 +245,7 @@
                 Delete queue
               </a>
               <div class="reveal-modal medium" id="deleteQueueModal" data-reveal="">
-                <h2>Delete queue: {{queue.name}}</h2>
+                <h2>Delete queue {{queue.name}}</h2>
                 <p>You are about to permanently delete the queue <strong>{{queue.name}}</strong>.</p> 
                 <p>There is no going back after this. Are you sure?</p>
 
