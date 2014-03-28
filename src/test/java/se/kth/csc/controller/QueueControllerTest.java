@@ -1,6 +1,7 @@
 package se.kth.csc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
+import se.kth.csc.model.QueuePosition;
 import se.kth.csc.payload.QueueCreationInfo;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
@@ -15,8 +17,10 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -228,5 +232,37 @@ public class QueueControllerTest {
 
         verify(queue, atLeastOnce()).setLocked(false);
         assertEquals("redirect:/queue/10", result);
+    }
+
+    @Test
+    public void testClearQueue() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+
+        Account owner = mock(Account.class);
+        when(accountStore.fetchAccountWithPrincipalName("testuser")).thenReturn(owner);
+
+        Set<QueuePosition> queuePositions = Sets.newHashSet();
+        QueuePosition queuePos1 = mock(QueuePosition.class);
+        when(queuePos1.getId()).thenReturn(1);
+        queuePositions.add(queuePos1);
+
+        Queue queue = mock(Queue.class);
+        when(queueStore.fetchQueueWithId(anyInt())).thenReturn(queue);
+        when(queue.getPositions()).thenReturn(queuePositions);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getUserPrincipal()).thenReturn(principal);
+        when(owner.canModerateQueue(queue)).thenReturn(true);
+
+
+        String result = "";
+        try {
+            result = queueController.clearQueue(10, request);
+        } catch (Exception e) {
+        }
+
+        verify(queuePositionStore, atLeastOnce()).removeQueuePosition(queuePositionStore.fetchQueuePositionWithId(1));
+        assertEquals(result, "redirect:/queue/10");
     }
 }

@@ -64,6 +64,7 @@
         q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
         q.closeUrl = queueBaseUrl + $scope.queue.id + '/close';
         q.removeUrl = queueBaseUrl + $scope.queue.id + '/remove';
+        q.clearUrl = queueBaseUrl + $scope.queue.id + '/clear';
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
@@ -222,7 +223,6 @@
                 </button>
               </form>
 
-
               <a th:attr="ng-show='queue.active'" th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="closeQueueModal">
                 <i class="fi-eye size-18 red-icon middle icon-margin"></i>
                 Close Queue
@@ -243,6 +243,13 @@
                 </form>
                 <a class="close-reveal-modal">×</a>
               </div>
+
+              <form ng-show="queue.positions.length" th:action="'{{queue.clearUrl}}'" th:method="POST">
+                <button type="submit" class="button tiny expand">
+                  <i class="fi-x size-18 red-icon middle icon-margin"></i>
+                  Clear queue
+                </button>
+              </form>
 
               <a th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand alert" href="#" data-reveal-id="deleteQueueModal">
                 Delete queue
