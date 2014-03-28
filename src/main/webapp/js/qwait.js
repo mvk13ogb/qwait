@@ -184,9 +184,9 @@
                 return "#E8C9AF";
             }
 
-            //If the location doesn't match anything we return an empty string
+            //If the location doesn't match anything we return so that the element will be invisible
             else{
-                return "";
+                return "transparent";
             }
         };
     });
