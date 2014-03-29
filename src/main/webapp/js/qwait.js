@@ -8,7 +8,13 @@
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
-            return moment.duration(milliseconds).humanize();
+            var res = moment.duration(milliseconds).humanize();
+
+            res = res.replace(/(minutes|minute)/g, "min");
+            res = res.replace(/a few seconds/g, "< 1 min");
+            res = res.replace(/(a|an)/g, "1");
+
+            return res;
         }
     });
 
