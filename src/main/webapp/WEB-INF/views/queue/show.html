@@ -223,7 +223,7 @@
                 </button>
               </form>
 
-              <a th:attr="ng-show='queue.active'" th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="closeQueueModal">
+              <a th:attr="ng-show='queue.active'" th:if="${account != null ? account.canModerateQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="closeQueueModal">
                 <i class="fi-eye size-18 red-icon middle icon-margin"></i>
                 Close queue
               </a>
@@ -241,7 +241,7 @@
                 <a class="close-reveal-modal">×</a>
               </div>
 
-              <a th:if="${account != null ? account.canEditQueue(queue) : false}" ng-show="queue.positions.length" class="button tiny expand" href="#" data-reveal-id="clearQueueModal">
+              <a th:if="${account != null ? account.canModerateQueue(queue) : false}" ng-show="queue.positions.length" class="button tiny expand" href="#" data-reveal-id="clearQueueModal">
                 <i class="fi-x size-18 red-icon middle icon-margin"></i>
                 Clear queue
               </a>
