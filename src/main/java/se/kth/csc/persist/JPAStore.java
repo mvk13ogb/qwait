@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,14 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public Queue fetchQueueWithId(int id) {
         return entityManager.find(Queue.class, id);
+    }
+
+    @Override
+    public Queue fetchQueueWithName(String name) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        Root<Queue> queue = q.from(Queue.class);
+        return entityManager.createQuery(q.select(queue).where(cb.equal(queue.get(Queue_.name), name))).getSingleResult();
     }
 
     @Override
@@ -142,6 +151,26 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public QueuePosition fetchQueuePositionWithId(int id) {
         return entityManager.find(QueuePosition.class, id);
+    }
+
+    @Override
+    public QueuePosition fetchQueuePositionWithQueueAndUser(String queueName, String userName) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<QueuePosition> q = cb.createQuery(QueuePosition.class);
+
+        Root<QueuePosition> queuePosition = q.from(QueuePosition.class);
+        Join<QueuePosition, Queue> queue = queuePosition.join(QueuePosition_.queue);
+        Join<QueuePosition, Account> account = queuePosition.join(QueuePosition_.account);
+
+        try {
+            return entityManager.createQuery(
+                    q.select(queuePosition)
+                            .where(cb.and(cb.equal(queue.get(Queue_.name), queueName),
+                                    cb.equal(account.get(Account_.name), userName)))
+            ).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
