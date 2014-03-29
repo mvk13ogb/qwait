@@ -1,12 +1,16 @@
 package se.kth.csc.controller;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
+import se.kth.csc.payload.AccountSnapshot;
+import se.kth.csc.payload.QueuePositionSnapshot;
+import se.kth.csc.payload.QueueSnapshot;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
@@ -35,12 +39,13 @@ public class ApiControllerTest {
     @Test
     public void testGetUser() throws NotFoundException {
         String principalName = "testuser";
-        Account expected = mock(Account.class);
+        Account expected = mock(Account.class, RETURNS_DEEP_STUBS);
+        when(expected.getPrincipalName()).thenReturn(principalName);
         when(accountStore.fetchAccountWithPrincipalName(principalName)).thenReturn(expected);
 
-        Account actual = apiController.getUser(principalName);
+        AccountSnapshot actual = apiController.getUser(principalName);
 
-        assertEquals(expected, actual);
+        assertEquals(principalName, actual.getName());
     }
 
     @Test(expected = NotFoundException.class)
@@ -92,15 +97,16 @@ public class ApiControllerTest {
 
     @Test
     public void testGetQueueList() {
-        Queue queue1 = mock(Queue.class);
-        Queue queue2 = mock(Queue.class);
+        Queue queue1 = mock(Queue.class, RETURNS_DEEP_STUBS);
+        Queue queue2 = mock(Queue.class, RETURNS_DEEP_STUBS);
         ImmutableList<Queue> expected = ImmutableList.of(queue1, queue2);
 
         when(queueStore.fetchAllQueues()).thenReturn(expected);
 
-        Iterable<Queue> actual = apiController.getQueueList();
+        Iterable<QueueSnapshot> actual = apiController.getQueueList();
 
-        assertEquals(expected, actual);
+        // TODO: compare more thoroughly
+        assertEquals(expected.size(), Iterables.size(actual));
     }
 
     @Test
@@ -109,21 +115,23 @@ public class ApiControllerTest {
 
         when(queueStore.fetchAllQueues()).thenReturn(expected);
 
-        Iterable<Queue> actual = apiController.getQueueList();
+        Iterable<QueueSnapshot> actual = apiController.getQueueList();
 
-        assertEquals(expected, actual);
+        // TODO: compare more thoroughly
+        assertEquals(expected.size(), Iterables.size(actual));
     }
 
     @Test
     public void testGetQueue() throws NotFoundException {
         String queueName = "testqueue";
-        Queue expected = mock(Queue.class);
+        Queue expected = mock(Queue.class, RETURNS_DEEP_STUBS);
+        when(expected.getName()).thenReturn(queueName);
 
         when(queueStore.fetchQueueWithName(queueName)).thenReturn(expected);
 
-        Queue actual = apiController.getQueue(queueName);
+        QueueSnapshot actual = apiController.getQueue(queueName);
 
-        assertEquals(expected, actual);
+        assertEquals(queueName, actual.getName());
     }
 
 
@@ -198,13 +206,16 @@ public class ApiControllerTest {
     public void testGetQueuePosition() throws NotFoundException {
         String queueName = "testqueue";
         String userName = "testuser";
-        QueuePosition expected = mock(QueuePosition.class);
+        QueuePosition expected = mock(QueuePosition.class, RETURNS_DEEP_STUBS);
+        when(expected.getAccount().getPrincipalName()).thenReturn(userName);
+        when(expected.getQueue().getName()).thenReturn(queueName);
 
         when(queuePositionStore.fetchQueuePositionWithQueueAndUser(queueName, userName)).thenReturn(expected);
 
-        QueuePosition actual = apiController.getQueuePosition(queueName, userName);
+        QueuePositionSnapshot actual = apiController.getQueuePosition(queueName, userName);
 
-        assertEquals(expected, actual);
+        assertEquals(queueName, actual.getQueue().getName());
+        assertEquals(userName, actual.getUser().getName());
     }
 
     @Test(expected = NotFoundException.class)

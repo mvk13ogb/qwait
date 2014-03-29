@@ -1,6 +1,8 @@
 package se.kth.csc.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
+import se.kth.csc.payload.*;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
@@ -45,7 +48,7 @@ public class ApiController {
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
      * /queue/{queueName}/position/{userName}/comment GET PUT DELETE
      * /queue/{queueName}/clear POST
-     * /queue/{queueName}/closed GET PUT
+     * /queue/{queueName}/active GET PUT
      * /queue/{queueName}/locked GET PUT
      * /queue/{queueName}/owner/{userName} PUT GET DELETE
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
@@ -82,10 +85,9 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/user/{userName}", method = RequestMethod.GET)
-    @JsonView(Account.class)
     @ResponseBody
-    public Account getUser(@PathVariable("userName") String userName) throws NotFoundException {
-        return fetchAccountOr404(userName);
+    public AccountSnapshot getUser(@PathVariable("userName") String userName) throws NotFoundException {
+        return AccountSnapshotter.INSTANCE.apply(fetchAccountOr404(userName));
     }
 
     @RequestMapping(value = "/user/{userName}/role/admin", method = RequestMethod.GET)
@@ -101,17 +103,15 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/queue/list", method = RequestMethod.GET)
-    @JsonView(Queue.class)
     @ResponseBody
-    public Iterable<Queue> getQueueList() {
-        return queueStore.fetchAllQueues();
+    public Iterable<QueueSnapshot> getQueueList() {
+        return transformSet(queueStore.fetchAllQueues(), QueueSnapshotter.INSTANCE);
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.GET)
-    @JsonView(Queue.class)
     @ResponseBody
-    public Queue getQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
-        return fetchQueueOr404(queueName);
+    public QueueSnapshot getQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
+        return QueueSnapshotter.INSTANCE.apply(fetchQueueOr404(queueName));
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.PUT)
@@ -129,10 +129,10 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.GET)
-    @JsonView(Queue.class)
     @ResponseBody
-    public QueuePosition getQueuePosition(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
-        return fetchQueuePositionOr404(queueName, userName);
+    public QueuePositionSnapshot getQueuePosition(@PathVariable("queueName") String queueName,
+                                                  @PathVariable("userName") String userName) throws NotFoundException {
+        return QueuePositionSnapshotter.INSTANCE.apply(fetchQueuePositionOr404(queueName, userName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.PUT)
@@ -178,7 +178,6 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.GET)
-    @JsonView(Queue.class)
     @ResponseBody
     public String getQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         String comment = fetchQueuePositionOr404(queueName, userName).getComment();
@@ -207,16 +206,16 @@ public class ApiController {
         fetchQueueOr404(queueName).getPositions().clear();
     }
 
-    @RequestMapping(value = "/queue/{queueName}/closed", method = RequestMethod.GET)
+    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.GET)
     @ResponseBody
-    public boolean getQueueClosed(@PathVariable("queueName") String queueName) throws NotFoundException {
-        return !fetchQueueOr404(queueName).isActive();
+    public boolean getQueueActive(@PathVariable("queueName") String queueName) throws NotFoundException {
+        return fetchQueueOr404(queueName).isActive();
     }
 
-    @RequestMapping(value = "/queue/{queueName}/closed", method = RequestMethod.PUT)
+    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.PUT)
     @Transactional
-    public void putQueueClosed(@PathVariable("queueName") String queueName, @RequestBody boolean closed) throws NotFoundException {
-        fetchQueueOr404(queueName).setActive(!closed);
+    public void putQueueActive(@PathVariable("queueName") String queueName, @RequestBody boolean active) throws NotFoundException {
+        fetchQueueOr404(queueName).setActive(active);
     }
 
     @RequestMapping(value = "/queue/{queueName}/locked", method = RequestMethod.GET)
@@ -232,14 +231,13 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/queue/{queueName}/owner/{userName}", method = RequestMethod.GET)
-    @JsonView(Account.class)
     @ResponseBody
-    public Account getQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public AccountSnapshot getQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         Queue queue = fetchQueueOr404(queueName);
         Account account = fetchAccountOr404(userName);
 
         if (queue.getOwners().contains(account)) {
-            return account;
+            return AccountSnapshotter.INSTANCE.apply(account);
         } else {
             throw new NotFoundException(String.format("Not an owner for queue %s: %s", queueName, userName));
         }
@@ -264,14 +262,13 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/queue/{queueName}/moderator/{userName}", method = RequestMethod.GET)
-    @JsonView(Account.class)
     @ResponseBody
-    public Account getQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public AccountSnapshot getQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         Queue queue = fetchQueueOr404(queueName);
         Account account = fetchAccountOr404(userName);
 
         if (queue.getModerators().contains(account)) {
-            return account;
+            return AccountSnapshotter.INSTANCE.apply(account);
         } else {
             throw new NotFoundException(String.format("Not a moderator for queue %s: %s", queueName, userName));
         }
@@ -295,4 +292,70 @@ public class ApiController {
         queue.getModerators().remove(account);
     }
 
+    private static <A, B> ImmutableSet<B> transformSet(Iterable<A> iterable, Function<? super A, ? extends B> function) {
+        return ImmutableSet.copyOf(Iterables.transform(iterable, function));
+    }
+
+    private enum AccountSnapshotter implements Function<Account, AccountSnapshot> {
+        INSTANCE;
+
+        @Override
+        public AccountSnapshot apply(Account account) {
+            return account == null ? null : new AccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin(),
+                    transformSet(account.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE),
+                    transformSet(account.getOwnedQueues(), NormalizedQueueSnapshotter.INSTANCE),
+                    transformSet(account.getModeratedQueues(), NormalizedQueueSnapshotter.INSTANCE));
+        }
+    }
+
+    private enum QueueSnapshotter implements Function<Queue, QueueSnapshot> {
+        INSTANCE;
+
+        @Override
+        public QueueSnapshot apply(Queue queue) {
+            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.isActive(), queue.isLocked(),
+                    transformSet(queue.getOwners(), NormalizedAccountSnapshotter.INSTANCE),
+                    transformSet(queue.getModerators(), NormalizedAccountSnapshotter.INSTANCE),
+                    transformSet(queue.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE));
+        }
+    }
+
+    private enum QueuePositionSnapshotter implements Function<QueuePosition, QueuePositionSnapshot> {
+        INSTANCE;
+
+        @Override
+        public QueuePositionSnapshot apply(QueuePosition queuePosition) {
+            return queuePosition == null ? null : new QueuePositionSnapshot(queuePosition.getStartTime(), queuePosition.getLocation(),
+                    queuePosition.getComment(),
+                    NormalizedQueueSnapshotter.INSTANCE.apply(queuePosition.getQueue()),
+                    NormalizedAccountSnapshotter.INSTANCE.apply(queuePosition.getAccount()));
+        }
+    }
+
+    private enum NormalizedAccountSnapshotter implements Function<Account, NormalizedAccountSnapshot> {
+        INSTANCE;
+
+        @Override
+        public NormalizedAccountSnapshot apply(Account account) {
+            return account == null ? null : new NormalizedAccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin());
+        }
+    }
+
+    private enum NormalizedQueueSnapshotter implements Function<Queue, NormalizedQueueSnapshot> {
+        INSTANCE;
+
+        @Override
+        public NormalizedQueueSnapshot apply(Queue queue) {
+            return queue == null ? null : new NormalizedQueueSnapshot(queue.getName(), queue.isActive(), queue.isLocked());
+        }
+    }
+
+    private enum NormalizedQueuePositionSnapshotter implements Function<QueuePosition, NormalizedQueuePositionSnapshot> {
+        INSTANCE;
+
+        @Override
+        public NormalizedQueuePositionSnapshot apply(QueuePosition queuePosition) {
+            return queuePosition == null ? null : new NormalizedQueuePositionSnapshot(queuePosition.getStartTime(), queuePosition.getLocation(), queuePosition.getComment());
+        }
+    }
 }
