@@ -18,9 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect;
 import org.thymeleaf.messageresolver.StandardMessageResolver;
-import org.thymeleaf.spring3.SpringTemplateEngine;
-import org.thymeleaf.spring3.messageresolver.SpringMessageResolver;
-import org.thymeleaf.spring3.view.ThymeleafViewResolver;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import se.kth.csc.Application;

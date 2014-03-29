@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
@@ -17,8 +16,6 @@ import se.kth.csc.persist.QueueStore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +58,7 @@ public class QueueControllerTest {
         when(request.getUserPrincipal()).thenReturn(principal);
         when(request.isUserInRole("admin")).thenReturn(true);
 
-        List<Queue> queues = mock(LinkedList.class);
+        @SuppressWarnings("unchecked") List<Queue> queues = (List<Queue>) mock(List.class);
         when(queueStore.fetchAllQueues()).thenReturn(queues);
         when(queues.contains(any(Queue.class))).thenReturn(true); // Test when
 

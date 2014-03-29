@@ -58,8 +58,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         q.select(q.from(Queue.class));
         List<Queue> list = entityManager.createQuery(q).getResultList();
         List<Queue> tmpList = new LinkedList<Queue>();
-        for(Queue que : list){
-            if(que.getModerators().contains(account)){
+        for (Queue que : list) {
+            if (que.getModerators().contains(account)) {
                 tmpList.add(que);
             }
         }
@@ -73,8 +73,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         q.select(q.from(Queue.class));
         List<Queue> list = entityManager.createQuery(q).getResultList();
         List<Queue> tmpList = new LinkedList<Queue>();
-        for(Queue que : list){
-            if(que.getOwners().contains(account)){
+        for (Queue que : list) {
+            if (que.getOwners().contains(account)) {
                 tmpList.add(que);
             }
         }
@@ -89,8 +89,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueue(Queue queue) {
-        for(Account a : queue.getOwners()) {
-           a.getOwnedQueues().remove(queue);
+        for (Account a : queue.getOwners()) {
+            a.getOwnedQueues().remove(queue);
         }
         queue.setOwners(null);
         entityManager.remove(queue);

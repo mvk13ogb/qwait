@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "queue_position")
+@Table(name = "queue_position", uniqueConstraints = @UniqueConstraint(columnNames = {"queue_id", "account_id"}))
 public class QueuePosition {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -62,11 +62,19 @@ public class QueuePosition {
         this.account = account;
     }
 
-    public String getLocation() { return location; }
+    public String getLocation() {
+        return location;
+    }
 
-    public void setLocation(String location) { this.location = location; }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    public String getComment() { return comment; }
+    public String getComment() {
+        return comment;
+    }
 
-    public void setComment(String comment) { this.comment = comment; }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
