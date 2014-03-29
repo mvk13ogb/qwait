@@ -12,7 +12,7 @@
 
             res = res.replace(/a few seconds/g, "< 1 min");
             res = res.replace(/minute(s)?/g, "min");
-            res = res.replace(/(a|an)/g, "1");
+            res = res.replace(/a(n)? /g, "1 ");
 
             return res;
         }

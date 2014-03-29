@@ -64,6 +64,7 @@
         q.openUrl = queueBaseUrl + $scope.queue.id + '/open';
         q.closeUrl = queueBaseUrl + $scope.queue.id + '/close';
         q.removeUrl = queueBaseUrl + $scope.queue.id + '/remove';
+        q.clearUrl = queueBaseUrl + $scope.queue.id + '/clear';
 
         for (var i = 0; i < $scope.queue.positions.length; i++) {
           var position = $scope.queue.positions[i];
@@ -222,7 +223,6 @@
                 </button>
               </form>
 
-
               <a th:attr="ng-show='queue.active'" th:if="${account != null ? account.canEditQueue(queue) : false}" class="button tiny expand" href="#" data-reveal-id="closeQueueModal">
                 <i class="fi-eye size-18 red-icon middle icon-margin"></i>
                 Close queue
@@ -230,7 +230,7 @@
               <div th:attr="ng-show='queue.active'" class="reveal-modal medium" id="closeQueueModal" data-reveal="">
                 
                 <h2>Close queue {{queue.name}}</h2>
-                <p>This will clear the queue and hide it. Are you sure?</p>
+                <p>This will remove all users from the queue and hide + lock it. Are you sure?</p>
 
                 <form th:action="'{{queue.closeUrl}}'" th:method="POST">
                   <button type="submit" class="button tiny expand">
@@ -238,6 +238,23 @@
                     Close queue
                   </button>
                 </form>
+                <a class="close-reveal-modal">×</a>
+              </div>
+
+              <a th:if="${account != null ? account.canEditQueue(queue) : false}" ng-show="queue.positions.length" class="button tiny expand" href="#" data-reveal-id="clearQueueModal">
+                <i class="fi-x size-18 red-icon middle icon-margin"></i>
+                Clear queue
+              </a>
+              <div class="reveal-modal medium" id="clearQueueModal" data-reveal="">
+                <h2>Clear queue {{queue.name}}</h2>
+                <p>This will remove all users from the queue. Are you sure?</p>
+
+                  <form th:action="'{{queue.clearUrl}}'" th:method="POST">
+                    <button type="submit" class="button tiny expand">
+                      <i class="fi-x size-18 red-icon middle icon-margin"></i>
+                      Clear queue
+                    </button>
+                  </form>
                 <a class="close-reveal-modal">×</a>
               </div>
 
