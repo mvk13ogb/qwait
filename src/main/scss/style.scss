@@ -2,6 +2,8 @@
 @import "settings";
 @import "foundation";
 
+@import "foundation/components/mixins";
+
 tr.active td{
   background-color: rgba(0, 128, 218, 0.3);
 }
