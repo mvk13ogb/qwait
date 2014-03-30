@@ -17,9 +17,7 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
         <security:intercept-url pattern="/icons/**" access="permitAll"/>
         <security:intercept-url pattern="/foundation-icons/**" access="permitAll"/>
         <security:intercept-url pattern="/images/**" access="permitAll"/>
-        <security:intercept-url pattern="/queue/**" access="permitAll"/>
-        <security:intercept-url pattern="/about" access="permitAll"/>
-        <security:intercept-url pattern="/help" access="permitAll"/>
+        <security:intercept-url pattern="/partial/**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
         <security:logout invalidate-session="true" logout-url="/logout"
                          logout-success-url="${security.cas.logoutUrl}"/>
