@@ -104,43 +104,43 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
     public void clearQueue(Queue queue) {
         queue.getPositions().clear();
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
     public void setActive(Queue queue, boolean active) {
         queue.setActive(active);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
     public void setLocked(Queue queue, boolean locked) {
         queue.setLocked(locked);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void addOwner(Queue queue, Account owner) {
         queue.getOwners().add(owner);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void removeOwner(Queue queue, Account owner) {
         queue.getOwners().remove(owner);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void addModerator(Queue queue, Account owner) {
         queue.getModerators().add(owner);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void removeModerator(Queue queue, Account owner) {
         queue.getModerators().remove(owner);
     }
