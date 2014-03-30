@@ -3,6 +3,8 @@ describe('qwait core module', function () {
     beforeEach(module('qwait'));
 
     describe('duration filter', function () {
+
+        //These tests are currently in english only, humanize might return localized strings
         it('filters durations about a day long correctly', inject(function (durationFilter) {
             expect(durationFilter(25 * 60 * 60 * 1000)).toEqual('a day');
         }));
