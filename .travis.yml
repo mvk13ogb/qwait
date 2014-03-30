@@ -1,4 +1,5 @@
 language: java
+script: mvn verify
 env:
   - secure: "h08AjZZ0G2A9gHFbUrLNwBgjqj52On0+psV82JAopZxcdynIK2QQ5uDavZKOU/W3rUSUHJvl7pjzZkZgUccJX+iqUXZh7hJxY79nTPSjMNW4Hl9I7qQp1etKZMxfc0x+1ikZVpzbsfpYaypkf8hTYVKVZTcFDg6yueHL+Q2rI0Q="
 after_success:
