@@ -4,23 +4,23 @@ describe('qwait core module', function () {
 
     describe('duration filter', function () {
         it('filters durations about a day long correctly', inject(function (durationFilter) {
-            expect(durationFilter(25 * 60 * 60 * 1000)).toEqual('1 day');
+            expect(durationFilter(25 * 60 * 60 * 1000)).toEqual('a day');
         }));
 
         it('filters durations about an hour long correctly', inject(function (durationFilter) {
-            expect(durationFilter(60 * 60 * 1000)).toEqual('1 hour');
+            expect(durationFilter(60 * 60 * 1000)).toEqual('an hour');
         }));
 
         it('filters durations about two minutes long correctly', inject(function (durationFilter) {
-            expect(durationFilter(2 * 60 * 1000)).toEqual('2 min');
+            expect(durationFilter(2 * 60 * 1000)).toEqual('2 minutes');
         }));
 
         it('filters durations about one minute long correctly', inject(function (durationFilter) {
-            expect(durationFilter(1 * 60 * 1000)).toEqual('1 min');
+            expect(durationFilter(1 * 60 * 1000)).toEqual('a minute');
         }));
 
         it('filters durations new queuer correctly', inject(function (durationFilter) {
-            expect(durationFilter(1 * 1000)).toEqual('< 1 min');
+            expect(durationFilter(1 * 1000)).toEqual('a few seconds');
         }));
     });
 
