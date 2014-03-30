@@ -30,8 +30,8 @@ public class ApiController {
 
     /* API:
      * /user/{userName} GET
-     * /user/{userName}/role/admin GET PUT
-     * /queue/list GET
+     * /user/{userName}/role/admin GET PUT DELETE
+     * /queues GET
      * /queue/{queueName} GET PUT DELETE
      * /queue/{queueName}/position/{userName} GET PUT DELETE
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
@@ -62,7 +62,7 @@ public class ApiController {
         apiProvider.setAdmin(fetchAccountOr404(userName), admin);
     }
 
-    @RequestMapping(value = "/queue/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/queues", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<QueueSnapshot> getQueueList() {
         return transformSet(apiProvider.fetchAllQueues(), QueueSnapshotter.INSTANCE);
