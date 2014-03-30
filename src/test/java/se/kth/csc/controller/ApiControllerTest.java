@@ -9,11 +9,14 @@ import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
 import se.kth.csc.payload.AccountSnapshot;
+import se.kth.csc.payload.QueueParameters;
 import se.kth.csc.payload.QueuePositionSnapshot;
 import se.kth.csc.payload.QueueSnapshot;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
+
+import java.security.Principal;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.isA;
@@ -33,7 +36,7 @@ public class ApiControllerTest {
         queueStore = mock(QueueStore.class);
         queuePositionStore = mock(QueuePositionStore.class);
 
-        apiController = new ApiController(accountStore, queueStore, queuePositionStore);
+        apiController = new ApiController(new ApiProviderImpl(accountStore, queueStore, queuePositionStore));
     }
 
     @Test
@@ -146,10 +149,16 @@ public class ApiControllerTest {
     }
 
     @Test
-    public void testPutQueue() throws ConflictException {
+    public void testPutQueue() throws NotFoundException, ForbiddenException {
         String queueName = "testqueue";
+        Principal principal = mock(Principal.class);
+        Account account = mock(Account.class);
 
-        apiController.putQueue(queueName);
+        String userName = "testuser";
+        when(principal.getName()).thenReturn(userName);
+        when(accountStore.fetchAccountWithPrincipalName(userName)).thenReturn(account);
+
+        apiController.putQueue(queueName, new QueueParameters("Test queue"), principal);
 
         ArgumentCaptor<Queue> queueCaptor = ArgumentCaptor.forClass(Queue.class);
 
@@ -160,24 +169,25 @@ public class ApiControllerTest {
         assertEquals(queueName, queue.getName());
     }
 
-    @Test
-    public void testPutQueueConflict() throws ConflictException {
+    @Test(expected = ConflictException.class)
+    public void testPutQueueConflict() throws NotFoundException, ForbiddenException {
         final String queueName = "testqueue";
+        Principal principal = mock(Principal.class);
+        Account account = mock(Account.class);
+
+        String userName = "testuser";
+        when(principal.getName()).thenReturn(userName);
+        when(accountStore.fetchAccountWithPrincipalName(userName)).thenReturn(account);
 
         // First do nothing, then throw exception, when storeQueue is called with an argument that both is a Queue and
         // has a name property equal to queueName
         doNothing().doThrow(ConflictException.class).when(queueStore).storeQueue(
                 argThat(both(isA(Queue.class)).and(hasProperty("name", equalTo(queueName)))));
 
-        apiController.putQueue(queueName);
+        apiController.putQueue(queueName, new QueueParameters("Test queue"), principal);
 
         // The queue already exists now, so this should lead to a conflict
-        try {
-            apiController.putQueue(queueName);
-            fail("No conflict");
-        } catch (ConflictException e) {
-            // Do nothing
-        }
+        apiController.putQueue(queueName, new QueueParameters("Test queue"), principal);
     }
 
     @Test
