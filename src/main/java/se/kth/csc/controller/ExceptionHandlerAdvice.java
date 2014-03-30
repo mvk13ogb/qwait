@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * General error handler for the application.
  */
@@ -18,24 +20,10 @@ class ExceptionHandlerAdvice {
     /**
      * Handle exceptions thrown by handlers.
      */
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView exception(Exception exception, WebRequest request) {
-        ModelAndView modelAndView = new ModelAndView("error/general");
-        Throwable rootCause = Throwables.getRootCause(exception);
-        modelAndView.addObject("errorMessage", rootCause.getClass().getName() + (rootCause.getMessage() != null ? ": " + rootCause.getMessage() : ""));
-        modelAndView.addObject("stackTrace", rootCause.getStackTrace());
-
-        log.error("An exception was thrown while handling {}", request.getDescription(true), exception);
-
-        return modelAndView;
-    }
-
-    /**
-     * Handle exceptions thrown by handlers.
-     */
     @ExceptionHandler(value = NotFoundException.class)
-    public String notFound(Exception exception, WebRequest request) {
+    public String notFound(Exception exception, WebRequest request, HttpServletResponse response) {
         log.error("Not found: {}", request.getDescription(true), exception);
+        response.setStatus(404);
 
         return "error/not-found";
     }

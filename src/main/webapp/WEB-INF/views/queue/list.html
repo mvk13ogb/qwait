@@ -90,7 +90,7 @@
                 <tbody ng-show="queues.length">
                   <!-- Filter only by name -->
                   <tr ng-repeat="queue in queues | filter:search | orderBy:['-positions.length','name']">
-                    <td><a href="show.html" th:href="@{/queue/{{queue.id}}}" style="color: {{(queue.locked || !queue.active) ? 'red' : ''}}">{{queue.name}}</a></td>
+                    <td><a href="show.html" th:href="@{/queue/{{queue.id}}}" style="color: {{(queue.locked || !queue.active) ? 'red' : ''}}">{{queue.title}}</a></td>
                     <td class="text-center">{{queue.positions.length}}</td>
                     <!--TODO Change to moderator-->
                     <td class="text-center" sec:authorize="hasRole('admin')">

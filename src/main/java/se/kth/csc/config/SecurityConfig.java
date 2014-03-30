@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
@@ -58,7 +59,8 @@ public class SecurityConfig {
 
     @Autowired
     @Bean(name = "casAuthenticationProvider")
-    public CasAuthenticationProvider casAuthenticationProvider(
+    @Profile("default")
+    public CasAuthenticationProvider authenticationProvider(
             AuthenticationUserDetailsService authenticationUserDetailsService,
             ServiceProperties serviceProperties,
             @Value("${security.cas.ticketValidator}") String ticketValidator,

@@ -23,13 +23,13 @@ public class Account {
     @Column(name = "admin")
     private boolean admin;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private Set<Queue> ownedQueues = Sets.newHashSet();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "moderators", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "moderators", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private Set<Queue> moderatedQueues = Sets.newHashSet();
 
     public int getId() {

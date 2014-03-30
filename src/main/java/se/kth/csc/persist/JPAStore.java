@@ -32,7 +32,11 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
         Root<Queue> queue = q.from(Queue.class);
-        return entityManager.createQuery(q.select(queue).where(cb.equal(queue.get(Queue_.name), name))).getSingleResult();
+        try {
+            return entityManager.createQuery(q.select(queue).where(cb.equal(queue.get(Queue_.name), name))).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
@@ -98,10 +102,18 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueue(Queue queue) {
-        for (Account a : queue.getOwners()) {
-            a.getOwnedQueues().remove(queue);
+        for (Account owner : queue.getOwners()) {
+            owner.getOwnedQueues().remove(queue);
         }
-        queue.setOwners(null);
+        for (Account moderator : queue.getModerators()) {
+            moderator.getModeratedQueues().remove(queue);
+        }
+        for (QueuePosition position : queue.getPositions()) {
+            removeQueuePosition(position);
+        }
+        queue.getOwners().clear();
+        queue.getModerators().clear();
+        queue.getPositions().clear();
         entityManager.remove(queue);
         log.info("Removed queue with id {}", queue.getId());
     }
@@ -181,6 +193,10 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueuePosition(QueuePosition queuePosition) {
+        queuePosition.getAccount().getPositions().remove(queuePosition);
+        queuePosition.getQueue().getPositions().remove(queuePosition);
+        queuePosition.setQueue(null);
+        queuePosition.setAccount(null);
         entityManager.remove(queuePosition);
         log.info("Removed a queue position with id {}", queuePosition.getId());
     }

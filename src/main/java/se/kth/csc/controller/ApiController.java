@@ -11,9 +11,8 @@ import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
 import se.kth.csc.payload.*;
-import se.kth.csc.persist.AccountStore;
-import se.kth.csc.persist.QueuePositionStore;
-import se.kth.csc.persist.QueueStore;
+
+import java.security.Principal;
 
 /**
  * A portable REST API for QWait. This class bears some similarities to other controllers in the project, but the
@@ -22,28 +21,18 @@ import se.kth.csc.persist.QueueStore;
 @Controller
 @RequestMapping("/api")
 public class ApiController {
-    private final AccountStore accountStore;
-    private final QueueStore queueStore;
-    private final QueuePositionStore queuePositionStore;
-
-    protected ApiController() {
-        accountStore = null;
-        queueStore = null;
-        queuePositionStore = null;
-    }
+    private final ApiProvider apiProvider;
 
     @Autowired
-    public ApiController(AccountStore accountStore, QueueStore queueStore, QueuePositionStore queuePositionStore) {
-        this.accountStore = accountStore;
-        this.queueStore = queueStore;
-        this.queuePositionStore = queuePositionStore;
+    public ApiController(ApiProvider apiProvider) {
+        this.apiProvider = apiProvider;
     }
 
     /* API:
      * /user/{userName} GET
      * /user/{userName}/role/admin GET PUT
      * /queue/list GET
-     * /queue/{queueName} GET PUT DELETE
+     * /queue/{queueNa  me} GET PUT DELETE
      * /queue/{queueName}/position/{userName} GET PUT DELETE
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
      * /queue/{queueName}/position/{userName}/comment GET PUT DELETE
@@ -53,36 +42,6 @@ public class ApiController {
      * /queue/{queueName}/owner/{userName} PUT GET DELETE
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
      */
-
-    private Account fetchAccountOr404(String userName) throws NotFoundException {
-        Account account = accountStore.fetchAccountWithPrincipalName(userName);
-
-        if (account == null) {
-            throw new NotFoundException(String.format("User %s not found", userName));
-        } else {
-            return account;
-        }
-    }
-
-    private Queue fetchQueueOr404(String queueName) throws NotFoundException {
-        Queue queue = queueStore.fetchQueueWithName(queueName);
-
-        if (queue == null) {
-            throw new NotFoundException(String.format("Queue %s not found", queueName));
-        } else {
-            return queue;
-        }
-    }
-
-    private QueuePosition fetchQueuePositionOr404(String queueName, String userName) throws NotFoundException {
-        QueuePosition queuePosition = queuePositionStore.fetchQueuePositionWithQueueAndUser(queueName, userName);
-
-        if (queuePosition == null) {
-            throw new NotFoundException(String.format("Queue position for queue %s and user %s not found", queueName, userName));
-        } else {
-            return queuePosition;
-        }
-    }
 
     @RequestMapping(value = "/user/{userName}", method = RequestMethod.GET)
     @ResponseBody
@@ -98,14 +57,15 @@ public class ApiController {
 
     @RequestMapping(value = "/user/{userName}/role/admin", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putUserRoleAdmin(@PathVariable("userName") String userName, @RequestBody boolean admin) throws NotFoundException {
-        fetchAccountOr404(userName).setAdmin(admin);
+        apiProvider.setAdmin(fetchAccountOr404(userName), admin);
     }
 
     @RequestMapping(value = "/queue/list", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<QueueSnapshot> getQueueList() {
-        return transformSet(queueStore.fetchAllQueues(), QueueSnapshotter.INSTANCE);
+        return transformSet(apiProvider.fetchAllQueues(), QueueSnapshotter.INSTANCE);
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.GET)
@@ -116,16 +76,19 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.PUT)
     @Transactional
-    public void putQueue(@PathVariable("queueName") String queueName) throws ConflictException {
-        Queue queue = new Queue();
-        queue.setName(queueName);
-        queueStore.storeQueue(queue);
+    @ResponseBody
+    public void putQueue(@PathVariable("queueName") String queueName, @RequestBody QueueParameters queueParameters, Principal principal) throws NotFoundException, ForbiddenException {
+        if (principal == null) {
+            throw new ForbiddenException();
+        }
+        apiProvider.createQueue(queueName, fetchAccountOr404(principal.getName()), queueParameters.getTitle());
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.DELETE)
     @Transactional
+    @ResponseBody
     public void deleteQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
-        queueStore.removeQueue(fetchQueueOr404(queueName));
+        apiProvider.deleteQueue(fetchQueueOr404(queueName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.GET)
@@ -137,21 +100,19 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putQueuePosition(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         Queue queue = fetchQueueOr404(queueName);
         Account account = fetchAccountOr404(userName);
 
-        QueuePosition queuePosition = new QueuePosition();
-        queuePosition.setQueue(queue);
-        queuePosition.setAccount(account);
-
-        queuePositionStore.storeQueuePosition(queuePosition);
+        apiProvider.addQueuePosition(queue, account);
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.DELETE)
     @Transactional
+    @ResponseBody
     public void deleteQueuePosition(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
-        queuePositionStore.removeQueuePosition(fetchQueuePositionOr404(queueName, userName));
+        apiProvider.deleteQueuePosition(fetchQueuePositionOr404(queueName, userName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.GET)
@@ -167,14 +128,16 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName, @RequestBody String location) throws NotFoundException {
-        fetchQueuePositionOr404(queueName, userName).setLocation(location);
+        apiProvider.setLocation(fetchQueuePositionOr404(queueName, userName), location);
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.DELETE)
     @Transactional
+    @ResponseBody
     public void deleteQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
-        fetchQueuePositionOr404(queueName, userName).setLocation(null);
+        apiProvider.setLocation(fetchQueuePositionOr404(queueName, userName), null);
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.GET)
@@ -190,20 +153,23 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName, @RequestBody String comment) throws NotFoundException {
-        fetchQueuePositionOr404(queueName, userName).setComment(comment);
+        apiProvider.setComment(fetchQueuePositionOr404(queueName, userName), comment);
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.DELETE)
     @Transactional
+    @ResponseBody
     public void deleteQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
-        fetchQueuePositionOr404(queueName, userName).setComment(null);
+        apiProvider.setComment(fetchQueuePositionOr404(queueName, userName), null);
     }
 
     @RequestMapping(value = "/queue/{queueName}/clear", method = RequestMethod.POST)
     @Transactional
+    @ResponseBody
     public void clearQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
-        fetchQueueOr404(queueName).getPositions().clear();
+        apiProvider.clearQueue(fetchQueueOr404(queueName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.GET)
@@ -214,8 +180,9 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putQueueActive(@PathVariable("queueName") String queueName, @RequestBody boolean active) throws NotFoundException {
-        fetchQueueOr404(queueName).setActive(active);
+        apiProvider.setActive(fetchQueueOr404(queueName), active);
     }
 
     @RequestMapping(value = "/queue/{queueName}/locked", method = RequestMethod.GET)
@@ -226,8 +193,9 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/locked", method = RequestMethod.PUT)
     @Transactional
+    @ResponseBody
     public void putQueueLocked(@PathVariable("queueName") String queueName, @RequestBody boolean locked) throws NotFoundException {
-        fetchQueueOr404(queueName).setLocked(locked);
+        apiProvider.setLocked(fetchQueueOr404(queueName), locked);
     }
 
     @RequestMapping(value = "/queue/{queueName}/owner/{userName}", method = RequestMethod.GET)
@@ -245,20 +213,22 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/owner/{userName}", method = RequestMethod.PUT)
     @Transactional
-    public void putQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) {
-        Queue queue = queueStore.fetchQueueWithName(queueName);
-        Account account = accountStore.fetchAccountWithPrincipalName(userName);
+    @ResponseBody
+    public void putQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+        Queue queue = fetchQueueOr404(queueName);
+        Account account = fetchAccountOr404(userName);
 
-        queue.getOwners().add(account);
+        apiProvider.addOwner(queue, account);
     }
 
     @RequestMapping(value = "/queue/{queueName}/owner/{userName}", method = RequestMethod.DELETE)
     @Transactional
-    public void deleteQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) {
-        Queue queue = queueStore.fetchQueueWithName(queueName);
-        Account account = accountStore.fetchAccountWithPrincipalName(userName);
+    @ResponseBody
+    public void deleteQueueOwner(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+        Queue queue = fetchQueueOr404(queueName);
+        Account account = fetchAccountOr404(userName);
 
-        queue.getOwners().remove(account);
+        apiProvider.removeOwner(queue, account);
     }
 
     @RequestMapping(value = "/queue/{queueName}/moderator/{userName}", method = RequestMethod.GET)
@@ -276,20 +246,53 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/moderator/{userName}", method = RequestMethod.PUT)
     @Transactional
-    public void putQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) {
-        Queue queue = queueStore.fetchQueueWithName(queueName);
-        Account account = accountStore.fetchAccountWithPrincipalName(userName);
+    @ResponseBody
+    public void putQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+        Queue queue = fetchQueueOr404(queueName);
+        Account account = fetchAccountOr404(userName);
 
-        queue.getModerators().add(account);
+        apiProvider.addModerator(queue, account);
     }
 
     @RequestMapping(value = "/queue/{queueName}/moderator/{userName}", method = RequestMethod.DELETE)
     @Transactional
-    public void deleteQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) {
-        Queue queue = queueStore.fetchQueueWithName(queueName);
-        Account account = accountStore.fetchAccountWithPrincipalName(userName);
+    @ResponseBody
+    public void deleteQueueModerator(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+        Queue queue = fetchQueueOr404(queueName);
+        Account account = fetchAccountOr404(userName);
 
-        queue.getModerators().remove(account);
+        apiProvider.removeModerator(queue, account);
+    }
+
+    public QueuePosition fetchQueuePositionOr404(String queueName, String userName) throws NotFoundException {
+        QueuePosition queuePosition = apiProvider.fetchQueuePosition(queueName, userName);
+
+        if (queuePosition == null) {
+            throw new NotFoundException(String.format("Queue position for queue %s and user %s not found", queueName, userName));
+        } else {
+            return queuePosition;
+        }
+    }
+
+
+    public Account fetchAccountOr404(String userName) throws NotFoundException {
+        Account account = apiProvider.fetchAccount(userName);
+
+        if (account == null) {
+            throw new NotFoundException(String.format("User %s not found", userName));
+        } else {
+            return account;
+        }
+    }
+
+    public Queue fetchQueueOr404(String queueName) throws NotFoundException {
+        Queue queue = apiProvider.fetchQueue(queueName);
+
+        if (queue == null) {
+            throw new NotFoundException(String.format("Queue %s not found", queueName));
+        } else {
+            return queue;
+        }
     }
 
     private static <A, B> ImmutableSet<B> transformSet(Iterable<A> iterable, Function<? super A, ? extends B> function) {
@@ -313,7 +316,7 @@ public class ApiController {
 
         @Override
         public QueueSnapshot apply(Queue queue) {
-            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.isActive(), queue.isLocked(),
+            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.getTitle(), queue.isActive(), queue.isLocked(),
                     transformSet(queue.getOwners(), NormalizedAccountSnapshotter.INSTANCE),
                     transformSet(queue.getModerators(), NormalizedAccountSnapshotter.INSTANCE),
                     transformSet(queue.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE));
@@ -346,7 +349,7 @@ public class ApiController {
 
         @Override
         public NormalizedQueueSnapshot apply(Queue queue) {
-            return queue == null ? null : new NormalizedQueueSnapshot(queue.getName(), queue.isActive(), queue.isLocked());
+            return queue == null ? null : new NormalizedQueueSnapshot(queue.getName(), queue.getTitle(), queue.isActive(), queue.isLocked());
         }
     }
 
