@@ -58,7 +58,7 @@ public class SecurityConfig {
     }
 
     @Autowired
-    @Bean(name = "casAuthenticationProvider")
+    @Bean(name = "authenticationProvider")
     @Profile("default")
     public CasAuthenticationProvider authenticationProvider(
             AuthenticationUserDetailsService authenticationUserDetailsService,
