@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.dao.DataIntegrityViolationException;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
@@ -169,7 +170,7 @@ public class ApiControllerTest {
         assertEquals(queueName, queue.getName());
     }
 
-    @Test(expected = ConflictException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testPutQueueConflict() throws NotFoundException, ForbiddenException {
         final String queueName = "testqueue";
         Principal principal = mock(Principal.class);
@@ -181,7 +182,7 @@ public class ApiControllerTest {
 
         // First do nothing, then throw exception, when storeQueue is called with an argument that both is a Queue and
         // has a name property equal to queueName
-        doNothing().doThrow(ConflictException.class).when(queueStore).storeQueue(
+        doNothing().doThrow(DataIntegrityViolationException.class).when(queueStore).storeQueue(
                 argThat(both(isA(Queue.class)).and(hasProperty("name", equalTo(queueName)))));
 
         apiController.putQueue(queueName, new QueueParameters("Test queue"), principal);

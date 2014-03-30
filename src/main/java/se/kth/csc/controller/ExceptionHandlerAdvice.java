@@ -3,6 +3,7 @@ package se.kth.csc.controller;
 import com.google.common.base.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,8 +24,13 @@ class ExceptionHandlerAdvice {
     @ExceptionHandler(value = NotFoundException.class)
     public String notFound(Exception exception, WebRequest request, HttpServletResponse response) {
         log.error("Not found: {}", request.getDescription(true), exception);
-        response.setStatus(404);
+        response.setStatus(404); // Not found
 
         return "error/not-found";
+    }
+
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public void dataIntegrityViolation(HttpServletResponse response) {
+        response.setStatus(409); // Conflict
     }
 }

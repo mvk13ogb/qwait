@@ -32,7 +32,7 @@ public class ApiController {
      * /user/{userName} GET
      * /user/{userName}/role/admin GET PUT
      * /queue/list GET
-     * /queue/{queueNa  me} GET PUT DELETE
+     * /queue/{queueName} GET PUT DELETE
      * /queue/{queueName}/position/{userName} GET PUT DELETE
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
      * /queue/{queueName}/position/{userName}/comment GET PUT DELETE
