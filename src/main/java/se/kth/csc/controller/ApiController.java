@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import se.kth.csc.auth.Role;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
@@ -299,12 +300,21 @@ public class ApiController {
         return ImmutableSet.copyOf(Iterables.transform(iterable, function));
     }
 
+    private static ImmutableSet<String> getRoles(Account account) {
+        if (account.isAdmin()) {
+            return ImmutableSet.of(Role.ADMIN.getAuthority(), Role.USER.getAuthority());
+        } else {
+            return ImmutableSet.of(Role.USER.getAuthority());
+        }
+    }
+
     private enum AccountSnapshotter implements Function<Account, AccountSnapshot> {
         INSTANCE;
 
         @Override
         public AccountSnapshot apply(Account account) {
-            return account == null ? null : new AccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin(),
+            return account == null ? null : new AccountSnapshot(
+                    account.getPrincipalName(), account.getName(), account.isAdmin(), false, getRoles(account),
                     transformSet(account.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE),
                     transformSet(account.getOwnedQueues(), NormalizedQueueSnapshotter.INSTANCE),
                     transformSet(account.getModeratedQueues(), NormalizedQueueSnapshotter.INSTANCE));
@@ -340,7 +350,8 @@ public class ApiController {
 
         @Override
         public NormalizedAccountSnapshot apply(Account account) {
-            return account == null ? null : new NormalizedAccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin());
+            return account == null ? null : new NormalizedAccountSnapshot(account.getPrincipalName(), account.getName(),
+                    account.isAdmin(), false, getRoles(account));
         }
     }
 
