@@ -216,6 +216,10 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("abc123")));
+        mockMvc.perform(delete("/api/queue/abc123").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/list").session(session))
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
@@ -638,6 +642,36 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("positions", hasSize(0)));
+    }
+
+    @Test
+    public void testOwnerAddAndRevokeOwner() throws Exception {
+        MockHttpSession session = signInAs("testUser", "admin");
+        MockHttpSession session2 = signInAs("testUser2");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/user/testUser/role/admin").session(session).contentType(MediaType.APPLICATION_JSON).content("false"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is("testUser")))
+                .andExpect(jsonPath("admin", is(false)));
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("owners[0].name", is("testUser")));
+        mockMvc.perform(get("/api/user/testUser2").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/testUser2").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("owners", hasSize(2)));
+        mockMvc.perform(delete("/api/queue/abc123/owner/testUser").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("owners", hasSize(1)))
+                .andExpect(jsonPath("owners[0].name", is("testUser2")));
     }
 
 }
