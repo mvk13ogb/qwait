@@ -784,14 +784,34 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     }
 
     @Test
-    public void testLockUnlockQueue() throws Exception {
+    public void testLockUnlockQueueAsAdmin() throws Exception {
         MockHttpSession session1 = signInAs("testUser1", "admin");
         MockHttpSession session2 = signInAs("testUser2", "admin");
-        MockHttpSession session3 = signInAs("testUser3");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser2").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("admin", is(true)));
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("locked", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/locked").contentType(MediaType.APPLICATION_JSON).session(session2).content("true"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("locked", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/locked").contentType(MediaType.APPLICATION_JSON).session(session2).content("false"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("locked", is(false)));
+    }
 
-        // Only queue owner
+    @Test
+    public void testLockUnlockQueueAsOwner() throws Exception {
+        MockHttpSession session1 = signInAs("testUser1", "admin");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
         mockMvc.perform(put("/api/user/testUser1/role/admin").contentType(MediaType.APPLICATION_JSON).session(session1).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/testUser1").session(session1))
@@ -810,11 +830,25 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("locked", is(false)));
+    }
 
-        // Only admin
+    @Test
+    public void testLockUnlockQueueAsModerator() throws Exception {
+        MockHttpSession session1 = signInAs("testUser1", "admin");
+        MockHttpSession session2 = signInAs("testUser2");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("admin", is(true)));
+                .andExpect(jsonPath("ownedQueues", hasSize(0)))
+                .andExpect(jsonPath("moderatedQueues", hasSize(0)));
+        mockMvc.perform(put("/api/queue/abc123/moderator/testUser2").session(session1))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser2").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("ownedQueues", hasSize(0)))
+                .andExpect(jsonPath("moderatedQueues", hasSize(1)))
+                .andExpect(jsonPath("moderatedQueues[0].name", is("abc123")));
         mockMvc.perform(get("/api/queue/abc123").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("locked", is(false)));
@@ -826,32 +860,6 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(put("/api/queue/abc123/locked").contentType(MediaType.APPLICATION_JSON).session(session2).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session2))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("locked", is(false)));
-
-        // Moderator only
-        mockMvc.perform(get("/api/user/testUser3").session(session3))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("ownedQueues", hasSize(0)))
-                .andExpect(jsonPath("moderatedQueues", hasSize(0)));
-        mockMvc.perform(put("/api/queue/abc123/moderator/testUser3").session(session1))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/api/user/testUser3").session(session3))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("ownedQueues", hasSize(0)))
-                .andExpect(jsonPath("moderatedQueues", hasSize(1)))
-                .andExpect(jsonPath("moderatedQueues[0].name", is("abc123")));
-        mockMvc.perform(get("/api/queue/abc123").session(session3))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("locked", is(false)));
-        mockMvc.perform(put("/api/queue/abc123/locked").contentType(MediaType.APPLICATION_JSON).session(session3).content("true"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/api/queue/abc123").session(session3))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("locked", is(true)));
-        mockMvc.perform(put("/api/queue/abc123/locked").contentType(MediaType.APPLICATION_JSON).session(session3).content("false"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/api/queue/abc123").session(session3))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("locked", is(false)));
     }
