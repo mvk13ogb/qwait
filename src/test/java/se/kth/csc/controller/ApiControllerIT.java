@@ -623,7 +623,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     /* Testing the clear functionality by adding a queue, populating queue and trying
     to clear the queue from an admin account. */
     @Test
-    public void testAddQueueAddQueuersClearQueue() throws Exception {
+    public void testClearQueue() throws Exception {
         MockHttpSession session = signInAs("testUser", "admin");
         MockHttpSession session2 = signInAs("testUser2");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
@@ -744,7 +744,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123/position/testUser").session(session2))
                 .andExpect(status().isOk());
-        mockMvc.perform(put("/api/queue/abc123/position/testUser/comment").session(session2)
+        mockMvc.perform(put("/api/queue/abc123/position/testUser/comment").contentType(MediaType.APPLICATION_JSON).session(session2)
                 .content("{\"comment\":\"This is a comment\"}"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123/position/testUser/comment").session(session2))
@@ -770,13 +770,13 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/queue/abc123/position/testAdmin").session(session))
                 .andExpect(status().isOk());
-        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").session(session)
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").contentType(MediaType.APPLICATION_JSON).session(session)
                 .content("{\"comment\":\"This is a comment\"}"))
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session2))
                 .andExpect(status().isOk());
         // Try to modify another user's comment
-        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").session(session2)
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").contentType(MediaType.APPLICATION_JSON).session(session2)
                 .content("{\"comment\":\"This is another a comment\"}"))
                 .andExpect(status().isForbidden());
         mockMvc.perform(delete("/api/queue/abc123/position/testAdmin/comment").session(session2))
@@ -854,5 +854,62 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session3))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("locked", is(false)));
+    }
+
+    /**
+     * Test to add and remove the location for a user.
+     * @throws Exception
+     */
+    @Test
+    public void testAddRemoveLocation() throws Exception {
+        MockHttpSession session = signInAs("testAdmin", "admin");
+        MockHttpSession session2 = signInAs("testUser");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session)
+                .content("{\"title\":\"Test Queue\"}"))
+                .andExpect(status().isOk());
+        // Test to add location for a user
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser/location").contentType(MediaType.APPLICATION_JSON).session(session2)
+                .content("{\"location\":\"This is a location\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser/location").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("location", is("This is a location")));
+        // Test to remove location
+        mockMvc.perform(delete("/api/queue/abc123/position/testUser/location").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser/location").session(session2))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Test to add and remove a location for another user.
+     * @throws Exception
+     */
+    @Test
+    public void testAddRemoveLocationForbidden() throws Exception {
+        MockHttpSession session = signInAs("testAdmin", "admin");
+        MockHttpSession session2 = signInAs("testUser");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session)
+                .content("{\"title\":\"Test Queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/location").contentType(MediaType.APPLICATION_JSON).session(session)
+                .content("{\"location\":\"This is a location\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        // Try to modify another user's location
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/location").contentType(MediaType.APPLICATION_JSON).session(session2)
+                .content("{\"location\":\"This is another a location\"}"))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/api/queue/abc123/position/testAdmin/location").session(session2))
+                .andExpect(status().isForbidden());
     }
 }
