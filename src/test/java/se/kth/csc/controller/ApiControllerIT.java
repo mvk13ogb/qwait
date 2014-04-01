@@ -596,6 +596,26 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("$[0].name", is("abc123")));
     }
 
+    @Test
+    public void testAddQueuePopulateQueue() throws Exception {
+        MockHttpSession session = signInAs("testUser", "admin");
+        MockHttpSession session2 = signInAs("testUser2");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("positions", hasSize(1)));
+        mockMvc.perform(put("/api/queue/abc123/position/testUser2").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("positions", hasSize(2)));
+    }
+
     /* Testing the clear functionality by adding a queue, populating queue and trying
     to clear the queue from an admin account. */
     @Test
