@@ -15,7 +15,8 @@
 
     <script th:src="@{/vendor/js/jquery.js}"></script>
     <script th:src="@{/vendor/js/angular.js}"></script>
-    <script th:src="@{/vendor/js/angular-resource.js}"></script>
+    <script th:src="@{/vendor/js/sockjs.js}"></script>
+    <script th:src="@{/vendor/js/stomp.js}"></script>
     <script th:src="@{/vendor/js/angular-route.js}"></script>
     <script th:src="@{/vendor/js/moment-with-langs.js}"></script>
     <script th:src="@{/js/qwait.js}"></script>
@@ -57,12 +58,18 @@
             <a href="#/about">About</a>
           </li>
         </ul>
-        <ul ng-if="!user.current.anonymous" class="right">
-          <li><a href="#">Logged in as <strong>{{user.current.readableName}}</strong></a></li>
-          <li><a th:href="@{/logout}">Log Out</a></li>
-        </ul>
-        <ul ng-if="user.current.anonymous" class="right">
-          <li><a th:href="@{/login}">Log In</a></li>
+        <ul class="right">
+          <li>
+            <a>
+              <span ng-if="messagebus.protocol">{{messagebus.describeProtocol(messagebus.protocol)}}</span>
+              <span ng-if="messagebus.ready" class="success label">Connected</span>
+              <span ng-if="!messagebus.ready" class="alert label">Disconnected</span>
+            </a>
+          </li>
+          <li ng-if="!user.current.anonymous"><a href="#">Logged in as
+            <strong>{{user.current.readableName}}</strong></a></li>
+          <li ng-if="!user.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
+          <li ng-if="user.current.anonymous"><a th:href="@{/login}">Log In</a></li>
         </ul>
       </section>
     </nav>

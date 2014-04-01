@@ -70,6 +70,22 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>9.1.0.v20131115</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -320,7 +336,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.1.0.v20131115</version>
+                <version>9.1.3.v20140225</version>
                 <configuration>
                     <webApp>
                         <resourceBases>

@@ -1,4 +1,4 @@
-package se.kth.csc.payload;
+package se.kth.csc.payload.api;
 
 public class NormalizedQueueSnapshot {
     private final String name;

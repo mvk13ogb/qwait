@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'ngResource', 'request']);
+    var qwait = angular.module('qwait', ['ngRoute', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -24,18 +24,156 @@
             });
     }]);
 
-    qwait.factory('user', ['$resource', '$cacheFactory', 'requestInfo', function ($resource, $cacheFactory, requestInfo) {
-        var userCache = $cacheFactory('user');
+    qwait.factory('user', ['$http', '$cacheFactory', 'messagebus', 'requestInfo', function ($http, $cacheFactory, messagebus, requestInfo) {
+        var result = {},
+            cache = $cacheFactory('user');
 
-        var result = $resource('/api/user/:name', {name: '@name'}, {
-            setAdmin: {method: 'PUT', url: '/api/user/:name/role/admin'}
+        messagebus.whenReady(function () {
+            messagebus.subscribe('/topic/user/*', function (data) {
+                switch (data.body['@type']) {
+                    case 'UserAdminStatusChanged':
+                        var user = cache.get(data.body.name);
+                        if (user) {
+                            user.admin = data.body.admin;
+                        }
+                        break;
+                    default:
+                        console.log('Unrecognized user message', data.body);
+                }
+            });
         });
 
-        if (requestInfo.currentUser.name) {
-            result.current = result.get({name: requestInfo.currentUser.name});
-        } else {
-            result.current = requestInfo.currentUser;
+        result.get = function (name) {
+            var promise = $http.get('/api/user/' + name);
+            promise.success(function (user) {
+                cache.put(name, user);
+            });
+            return promise;
+        };
+
+        result.setAdmin = function (userName, admin) {
+            return $http.put('/api/user/' + userName + '/role/admin', admin);
+        };
+
+        result.current = requestInfo.currentUser;
+
+        if (result.current.name) {
+            result.get(result.current.name).success(function (user) {
+                result.current = user;
+            });
         }
+
+        return result;
+    }]);
+
+    qwait.factory('queue', ['$http', 'messagebus', function ($http, messagebus) {
+        var result = {};
+
+        result.all = {};
+
+        messagebus.whenReady(function () {
+            messagebus.subscribe('/topic/queue/*', function (data) {
+                var queue, i;
+                switch (data.body['@type']) {
+                    case 'QueueActiveStatusChanged':
+                        queue = result.all[data.body.name];
+                        if (queue) {
+                            queue.active = data.body.active;
+                        }
+                        break;
+                    case 'QueueCleared':
+                        queue = result.all[data.body.name];
+                        if (queue) {
+                            queue.positions = [];
+                        }
+                        break;
+                    case 'QueueCreated':
+                        result.get(data.body.name);
+                        break;
+                    case 'QueueLockedStatusChanged':
+                        queue = result.all[data.body.name];
+                        if (queue) {
+                            queue.locked = data.body.locked;
+                        }
+                        break;
+                    case 'QueueModeratorAdded':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            queue.moderators.push(data.body.userName);
+                        }
+                        break;
+                    case 'QueueModeratorRemoved':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            i = queue.moderators.indexOf(data.body.userName);
+
+                            if (i != -1) {
+                                queue.moderators.splice(i, 1);
+                            }
+                        }
+                        break;
+                    case 'QueueOwnerAdded':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            queue.owners.push(data.body.userName);
+                        }
+                        break;
+                    case 'QueueOwnerRemoved':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            i = queue.owners.indexOf(data.body.userName);
+
+                            if (i != -1) {
+                                queue.owners.splice(i, 1);
+                            }
+                        }
+                        break;
+                    case 'QueuePositionCommentChanged':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if (queue.positions[i].userName = data.body.userName) {
+                                    queue.positions[i].comment = data.body.comment;
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionCreated':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+
+                        }
+                        break;
+                    case 'QueuePositionLocationChanged':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if (queue.positions[i].userName = data.body.userName) {
+                                    queue.positions[i].location = data.body.location;
+                                }
+                            }
+                        }
+                    case 'QueuePositionRemoved':
+                        break;
+                    default:
+                        console.log('Unrecognized user message', data.body);
+                }
+            });
+        });
+
+        $http.get('/api/queues').success(function (queues) {
+            for (var i = 0; i < queues.length; i++) {
+                result.all[queues[i].name] = queues[i];
+            }
+        });
+
+        result.get = function (name) {
+            var promise = $http.get('/api/queue/' + name);
+            promise.success(function (queue) {
+                result.all[queue.name] = queue;
+            });
+            return promise;
+        };
 
         return result;
     }]);
@@ -68,10 +206,151 @@
         };
     });
 
-    qwait.controller('TopbarCtrl', ['$scope', '$location', 'user', 'system', function ($scope, $location, user, system) {
+    qwait.factory('messagebus', ['$rootScope', '$timeout', '$interval', function ($rootScope, $timeout, $interval) {
+        var result = {},
+            client = Stomp.over(new SockJS('/bus/client')),
+            readyContinuations = [],
+            countdownJob = null,
+            reconnectJob = null;
+
+        client.debug = false;
+
+        result.ready = false;
+        result.protocol = null;
+        result.reconnectAttempts = 0;
+        result.reconnectInMillis = 0;
+
+        result.describeProtocol = function (protocol) {
+            switch (protocol) {
+                case 'websocket':
+                    return 'WebSocket';
+                case 'xdr-streaming':
+                    return 'XDR Streaming';
+                case 'xhr-streaming':
+                    return 'XHR Streaming';
+                case 'iframe-eventsource':
+                    return 'IFrame EventSource';
+                case 'iframe-htmlfile':
+                    return 'IFrame HTML File';
+                case 'xdr-polling':
+                    return 'XDR Polling';
+                case 'xhr-polling':
+                    return 'XHR Polling';
+                case 'iframe-xhr-polling':
+                    return 'IFrame XHR Polling';
+                case 'jsonp-polling':
+                    return 'JSONP Polling';
+                default:
+                    return 'Unknown';
+            }
+        };
+
+        function doConnect() {
+            client.connect({}, function (frame) {
+                $rootScope.$apply(function () {
+                    console.log('Connected to client bus', frame);
+
+                    result.ready = true;
+                    result.protocol = client.ws.protocol;
+                    result.reconnectInMillis = 0;
+                    result.reconnectAttempts = 0;
+
+                    if (countdownJob) {
+                        $interval.cancel(countdownJob);
+                        countdownJob = null;
+                    }
+
+                    if (reconnectJob) {
+                        $timeout.cancel(reconnectJob);
+                        reconnectJob = null;
+                    }
+
+                    for (var i = 0; i < readyContinuations.length; i++) {
+                        readyContinuations[i]();
+                    }
+                    readyContinuations = [];
+                });
+            }, function (frame) {
+                $rootScope.$apply(function () {
+                    console.log('Disconnected from client bus', frame);
+                    result.ready = false;
+                    result.protocol = null;
+
+                    // Exponential back-off
+                    result.reconnectInMillis = 100 * Math.random() * (Math.pow(2, result.reconnectAttempts) - 1);
+                    result.reconnectAttempts++;
+                    console.log('Scheduling reconnect in ' + moment.duration(result.reconnectInMillis).humanize());
+
+                    if (reconnectJob) {
+                        $timeout.cancel(reconnectJob);
+                    }
+                    reconnectJob = $timeout(doConnect, result.reconnectInMillis);
+
+                    if (countdownJob) {
+                        $interval.cancel(countdownJob);
+                    }
+                    countdownJob = $interval(function () {
+                        result.reconnectInMillis -= 1000;
+
+                        if (result.reconnectInMillis <= 0) {
+                            $interval.cancel(countdownJob);
+                            countdownJob = null;
+                            result.reconnectInMillis = 0;
+                        }
+                    }, 1000);
+                });
+            });
+        }
+
+        doConnect();
+
+        result.send = function (destination, headers, body) {
+            return client.send(destination, headers, JSON.stringify(body));
+        };
+
+        result.subscribe = function (destination, callback, headers) {
+            return client.subscribe(destination, function (frame) {
+                frame.body = JSON.parse(frame.body);
+                $rootScope.$apply(function () {
+                    callback.apply(result, [frame]);
+                });
+            }, headers);
+        };
+
+        result.whenReady = function (continuation) {
+            if (result.ready) {
+                continuation();
+            } else {
+                readyContinuations.push(continuation);
+            }
+        };
+
+        return result;
+    }]);
+
+    qwait.factory('broadcaster', ['messagebus', function (messagebus) {
+        messagebus.whenReady(function () {
+            messagebus.subscribe('/topic/broadcast', function (data) {
+                console.log('Broadcast:', data.body.message);
+            });
+        });
+
+        return {
+            broadcast: function (message) {
+                messagebus.whenReady(function () {
+                    messagebus.send('/app/broadcast', {}, {message: message});
+                });
+            }
+        }
+    }]);
+
+    qwait.controller('TopbarCtrl', ['$scope', '$location', 'user', 'system', 'messagebus', 'broadcaster', function ($scope, $location, user, system, messagebus, broadcaster) {
         $scope.location = $location;
         $scope.user = user;
         $scope.system = system;
+        $scope.messagebus = messagebus;
+
+        broadcaster.broadcast('User ' + user.current.name + ' visiting home page');
     }]);
 
     qwait.controller('TitleCtrl', ['$scope', 'system', 'page', function ($scope, system, page) {
@@ -79,10 +358,11 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HomeCtrl', ['$scope', 'system', 'page', 'contributors', function ($scope, system, page, contributors) {
+    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', 'contributors', function ($scope, system, messagebus, page, contributors) {
         page.title = 'Home';
 
         $scope.system = system;
+        $scope.messagebus = messagebus;
         $scope.contributors = contributors;
     }]);
 

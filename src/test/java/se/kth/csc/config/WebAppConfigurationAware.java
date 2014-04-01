@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @WebAppConfiguration
 @ContextConfiguration(classes = {ApplicationConfig.class, EmbeddedDataSourceConfig.class, MockAuthConfig.class,
-        JpaConfig.class, SecurityConfig.class, WebMvcConfig.class})
+        JpaConfig.class, SecurityConfig.class, WebMvcConfig.class, WebSocketConfig.class})
 public abstract class WebAppConfigurationAware {
 
     @Inject

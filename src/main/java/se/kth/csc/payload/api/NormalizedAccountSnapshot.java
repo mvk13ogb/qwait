@@ -1,4 +1,4 @@
-package se.kth.csc.payload;
+package se.kth.csc.payload.api;
 
 import com.google.common.collect.ImmutableSet;
 
