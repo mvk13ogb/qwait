@@ -726,4 +726,60 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("active", is(true)));
     }
 
+    /**
+     * Test to add and remove a comment for a user.
+     * @throws Exception
+     */
+    @Test
+    public void testAddRemoveComment() throws Exception {
+        MockHttpSession session = signInAs("testAdmin", "admin");
+        MockHttpSession session2 = signInAs("testUser");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session)
+                .content("{\"title\":\"Test Queue\"}"))
+                .andExpect(status().isOk());
+        // Test to add comment for a user
+        mockMvc.perform(get("/api/queue/abc123").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser/comment").session(session2)
+                .content("{\"comment\":\"This is a comment\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser/comment").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("comment", is("This is a comment")));
+        // Test to remove comment
+        mockMvc.perform(delete("/api/queue/abc123/position/testUser/comment").session(session2))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123/position/testUser/comment").session(session2))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Test to add and remove a comment for another user.
+     * @throws Exception
+     */
+    @Test
+    public void testAddRemoveCommentForbidden() throws Exception {
+        MockHttpSession session = signInAs("testAdmin", "admin");
+        MockHttpSession session2 = signInAs("testUser");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session)
+                .content("{\"title\":\"Test Queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").session(session)
+                .content("{\"comment\":\"This is a comment\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session2))
+                .andExpect(status().isOk());
+        // Try to modify another user's comment
+        mockMvc.perform(put("/api/queue/abc123/position/testAdmin/comment").session(session2)
+                .content("{\"comment\":\"This is another a comment\"}"))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/api/queue/abc123/position/testAdmin/comment").session(session2))
+                .andExpect(status().isForbidden());
+    }
 }

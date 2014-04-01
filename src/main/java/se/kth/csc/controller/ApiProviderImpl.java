@@ -92,13 +92,13 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.owner.principalName == authentication.name")
+    @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setComment(QueuePosition queuePosition, String comment) {
         queuePosition.setComment(comment);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.owner.principalName == authentication.name")
+    @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setLocation(QueuePosition queuePosition, String location) {
         queuePosition.setComment(location);
     }
