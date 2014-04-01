@@ -1,5 +1,6 @@
 package se.kth.csc.controller;
 
+import com.google.common.collect.ImmutableSet;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -100,13 +101,15 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setLocation(QueuePosition queuePosition, String location) {
-        queuePosition.setComment(location);
+        queuePosition.setLocation(location);
     }
 
     @Override
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void clearQueue(Queue queue) {
-        queue.getPositions().clear();
+        for (QueuePosition position : ImmutableSet.copyOf(queue.getPositions())) {
+            queuePositionStore.removeQueuePosition(position);
+        }
     }
 
     @Override
