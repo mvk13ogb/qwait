@@ -163,8 +163,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("active", is(true)))
                 .andExpect(jsonPath("locked", is(false)))
                 .andExpect(jsonPath("owners", hasSize(1)))
-                .andExpect(jsonPath("owners[0].name", is("testUser")))
-                .andExpect(jsonPath("owners[0].admin", is(true)))
+                .andExpect(jsonPath("owners[0]", is("testUser")))
                 .andExpect(jsonPath("moderators", hasSize(0)))
                 .andExpect(jsonPath("positions", hasSize(0)));
         mockMvc.perform(get("/api/user/testUser").session(session))
@@ -172,7 +171,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -211,14 +210,14 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("abc123")));
         mockMvc.perform(delete("/api/queue/abc123").session(session))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/api/queue/list").session(session))
+        mockMvc.perform(get("/api/queues").session(session))
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
@@ -237,7 +236,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -260,19 +259,19 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -294,7 +293,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -317,13 +316,13 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -346,7 +345,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -368,7 +367,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -391,7 +390,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -418,7 +417,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -468,7 +467,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -490,7 +489,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -513,13 +512,13 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(0)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(1)))
-                .andExpect(jsonPath("moderatedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("moderatedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -541,7 +540,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -564,13 +563,13 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(0)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(1)))
-                .andExpect(jsonPath("moderatedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("moderatedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queues").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -588,7 +587,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
                 .andExpect(jsonPath("ownedQueues", hasSize(1)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(0)))
-                .andExpect(jsonPath("ownedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("ownedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -658,7 +657,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("admin", is(false)));
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("owners[0].name", is("testUser")));
+                .andExpect(jsonPath("owners[0]", is("testUser")));
         mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk());
         mockMvc.perform(put("/api/queue/abc123/owner/testUser2").session(session))
@@ -671,7 +670,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("owners", hasSize(1)))
-                .andExpect(jsonPath("owners[0].name", is("testUser2")));
+                .andExpect(jsonPath("owners[0]", is("testUser2")));
     }
 
     /* Test close and open queue as Admin (not Owner) and as Owner (not Admin)*/
@@ -848,7 +847,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("ownedQueues", hasSize(0)))
                 .andExpect(jsonPath("moderatedQueues", hasSize(1)))
-                .andExpect(jsonPath("moderatedQueues[0].name", is("abc123")));
+                .andExpect(jsonPath("moderatedQueues[0]", is("abc123")));
         mockMvc.perform(get("/api/queue/abc123").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("locked", is(false)));
