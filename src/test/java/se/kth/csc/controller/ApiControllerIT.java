@@ -674,4 +674,56 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(jsonPath("owners[0].name", is("testUser2")));
     }
 
+    /* Test close and open queue as Admin (not Owner) and as Owner (not Admin)*/
+    @Test
+    public void testCloseAndOpenQueue() throws Exception {
+        // For Admin (who is not an Owner)
+        MockHttpSession session = signInAs("testUser", "admin");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/queue/abc123/owner/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("owners", hasSize(0)))
+                .andExpect(jsonPath("active", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("active", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("active", is(true)));
+
+        // For Owner (who is not an Admin)
+        mockMvc.perform(get("/api/user/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("owners", hasSize(1)))
+                .andExpect(jsonPath("active", is(true)));
+        mockMvc.perform(put("/api/user/testUser/role/admin").session(session).contentType(MediaType.APPLICATION_JSON).content("false"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("active", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("active", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("active", is(true)));
+    }
+
 }
