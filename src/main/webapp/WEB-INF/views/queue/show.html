@@ -340,9 +340,7 @@
                 <h2>Assistants of {{queue.name}}</h2>
                   <ul>
                     <p ng-hide="queue.moderators.length">No queue assistants.</p>
-                      <li ng-repeat="moderator in queue.moderators">
-                        {{moderator.principalName}}
-                      </li>
+                      <li ng-repeat="moderator in queue.moderators">{{moderator.principalName}}</li>
                   </ul>
                   <a class="close-reveal-modal">×</a>
               </div>
@@ -413,9 +411,7 @@
                 <h2>Owners of {{queue.name}}</h2>
                 <ul>
                   <p ng-hide="queue.owners.length">No queue owners.</p>
-                  <li ng-repeat="owner in queue.owners">
-                    {{owner.principalName}}
-                  </li>
+                  <li ng-repeat="owner in queue.owners">{{owner.principalName}}</li>
                 </ul>
                 <a class="close-reveal-modal">×</a>
               </div>
