@@ -104,19 +104,19 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void clearQueue(Queue queue) {
         queue.getPositions().clear();
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void setActive(Queue queue, boolean active) {
         queue.setActive(active);
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void setLocked(Queue queue, boolean locked) {
         queue.setLocked(locked);
     }
