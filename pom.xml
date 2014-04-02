@@ -427,6 +427,7 @@
                             <jrubyVersion>1.7.2</jrubyVersion>
                             <execArgs>
                                 ${project.build.directory}/rubygems/bin/scss
+                                --compass
                                 --cache-location
                                 ${project.build.directory}/scss-cache
                                 --update
@@ -439,7 +440,13 @@
                     <dependency>
                         <groupId>rubygems</groupId>
                         <artifactId>sass</artifactId>
-                        <version>3.2.5</version>
+                        <version>3.3.4</version>
+                        <type>gem</type>
+                    </dependency>
+                    <dependency>
+                        <groupId>rubygems</groupId>
+                        <artifactId>compass</artifactId>
+                        <version>0.12.4</version>
                         <type>gem</type>
                     </dependency>
                 </dependencies>

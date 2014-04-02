@@ -24,9 +24,9 @@
             });
     }]);
 
-    qwait.factory('user', ['$http', '$cacheFactory', 'messagebus', 'requestInfo', function ($http, $cacheFactory, messagebus, requestInfo) {
+    qwait.factory('users', ['$http', '$cacheFactory', 'messagebus', 'requestInfo', function ($http, $cacheFactory, messagebus, requestInfo) {
         var result = {},
-            cache = $cacheFactory('user');
+            cache = $cacheFactory('users');
 
         messagebus.whenReady(function () {
             messagebus.subscribe('/topic/user/*', function (data) {
@@ -66,7 +66,7 @@
         return result;
     }]);
 
-    qwait.factory('queue', ['$http', 'messagebus', function ($http, messagebus) {
+    qwait.factory('queues', ['$http', 'messagebus', function ($http, messagebus) {
         var result = {};
 
         result.all = {};
@@ -173,6 +173,24 @@
                 result.all[queue.name] = queue;
             });
             return promise;
+        };
+
+        result.setLocked = function (name, locked) {
+            // The "'' + " bit is needed because apparently you can't send "false" as JSON here
+            return $http.put('/api/queue/' + name + '/locked', '' + locked, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.setActive = function (name, active) {
+            // The "'' + " bit is needed because apparently you can't send "false" as JSON here
+            return $http.put('/api/queue/' + name + '/active', '' + active, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         };
 
         return result;
@@ -344,13 +362,13 @@
         }
     }]);
 
-    qwait.controller('TopbarCtrl', ['$scope', '$location', 'user', 'system', 'messagebus', 'broadcaster', function ($scope, $location, user, system, messagebus, broadcaster) {
+    qwait.controller('TopbarCtrl', ['$scope', '$location', 'users', 'system', 'messagebus', 'broadcaster', function ($scope, $location, users, system, messagebus, broadcaster) {
         $scope.location = $location;
-        $scope.user = user;
+        $scope.users = users;
         $scope.system = system;
         $scope.messagebus = messagebus;
 
-        broadcaster.broadcast('User ' + user.current.name + ' visiting home page');
+        broadcaster.broadcast('User ' + users.current.name + ' visiting home page');
     }]);
 
     qwait.controller('TitleCtrl', ['$scope', 'system', 'page', function ($scope, system, page) {
@@ -370,8 +388,10 @@
         page.title = 'About';
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', function ($scope, page) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', function ($scope, page, queues) {
         page.title = 'Queue list';
+
+        $scope.queues = queues;
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {

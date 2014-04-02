@@ -12,6 +12,7 @@
     <link rel="apple-touch-icon" th:href="@{/icons/apple-touch-icon.png}"/>
 
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/foundation-icons/foundation-icons.css}"/>
 
     <script th:src="@{/vendor/js/jquery.js}"></script>
     <script th:src="@{/vendor/js/angular.js}"></script>
@@ -66,10 +67,10 @@
               <span ng-if="!messagebus.ready" class="alert label">Disconnected</span>
             </a>
           </li>
-          <li ng-if="!user.current.anonymous"><a href="#">Logged in as
-            <strong>{{user.current.readableName}}</strong></a></li>
-          <li ng-if="!user.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
-          <li ng-if="user.current.anonymous"><a th:href="@{/login}">Log In</a></li>
+          <li ng-if="!users.current.anonymous"><a href="#">Logged in as
+            <strong>{{users.current.readableName}}</strong></a></li>
+          <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
+          <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
         </ul>
       </section>
     </nav>
