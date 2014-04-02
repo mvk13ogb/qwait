@@ -10,6 +10,19 @@
   background-size: 40px 40px;
 }
 
+.table-row{
+  padding: 0.8rem;
+  margin-bottom: 0px;
+}
+
+.show-panel:nth-child(even) {
+  @include panel(#F9F9F9);
+}
+
+.show-panel:nth-child(odd) {
+  @include panel(#FFFFFF);
+}
+
 .plain-panel {
   @include panel(#FAFAFA);
 }

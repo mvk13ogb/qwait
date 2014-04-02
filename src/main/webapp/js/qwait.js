@@ -505,8 +505,22 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'users', 'page', function ($scope, $route, queues, users, page) {
         page.title = 'View queue';
+
+        $scope.users = users;
+
+        queues.get($route.current.params.queueName).success(function (queue) {
+            $scope.queue = queue;
+
+            for (var i = 0; i < queue.positions.length; i++) {
+                (function (i2) {
+                    users.get(queue.positions[i2].userName).success(function (user) {
+                        queue.positions[i2].user = user;
+                    });
+                })(i);
+            }
+        });
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
