@@ -224,6 +224,22 @@
         };
     });
 
+    qwait.factory('security', function () {
+        var result = {
+            isQueueOwner: function (user, queue) {
+                return queue.owners.indexOf(user.name) != -1;
+            },
+            isQueueModerator: function (user, queue) {
+                return queue.moderators.indexOf(user.name) != -1;
+            },
+            canModerateQueue: function (user, queue) {
+                return result.isQueueOwner(user, queue) || result.isQueueModerator(user, queue) || user.admin;
+            }
+        };
+
+        return result;
+    });
+
     qwait.factory('messagebus', ['$rootScope', '$timeout', '$interval', function ($rootScope, $timeout, $interval) {
         var result = {},
             client = Stomp.over(new SockJS('/bus/client')),
@@ -388,14 +404,12 @@
         page.title = 'About';
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', function ($scope, page, queues, users) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', 'security', function ($scope, page, queues, users, security) {
         page.title = 'Queue list';
         $scope.queues = queues;
         $scope.users = users;
 
-        $scope.canModerateQueue = function(user, queue) {
-            return isOwner(user, queue) || isModerator(user, queue) || user.admin;
-        }
+        $scope.canModerateQueue = security.canModerateQueue;
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {
@@ -576,13 +590,4 @@
             }
         };
     });
-
-    function isOwner(user, queue) {
-        return queue.owners.indexOf(user.name) != -1;
-    }
-
-    function isModerator(user, queue) {
-        return queue.moderators.indexOf(user.name) != -1;
-    }
-
 })();
