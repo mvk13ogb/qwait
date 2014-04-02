@@ -210,10 +210,10 @@
                 { name: 'Christoffer Pettersson' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt' },
-                { name: 'Gustav Zander' },
+                { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84'},
                 { name: 'Jacob Sievers' },
                 { name: 'Michael Håkansson' },
-                { name: 'Robin Engström' }
+                { name: 'Robin Engström', gravatar: 'd3389ec4c8f9a0d7d0500ec982a35099'}
             ]
         }
     });
