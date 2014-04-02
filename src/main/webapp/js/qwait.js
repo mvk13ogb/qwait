@@ -406,6 +406,7 @@
         page.title = 'View queue';
 
         $scope.users = users;
+        $scope.queues = queues;
         $scope.date = moment();
 
         queues.get($route.current.params.queueName).success(function (queue) {
