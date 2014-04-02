@@ -509,9 +509,18 @@
         page.title = 'View queue';
 
         $scope.users = users;
+        $scope.date = moment();
 
         queues.get($route.current.params.queueName).success(function (queue) {
             $scope.queue = queue;
+
+            $scope.queue.changeComment = function (comment) {
+                return $http.put('/api/queue/' + queue.name + '/position/' + $scope.users.current.name + 'comment', comment, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            };
 
             for (var i = 0; i < queue.positions.length; i++) {
                 (function (i2) {
