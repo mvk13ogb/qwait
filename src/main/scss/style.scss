@@ -10,17 +10,27 @@
   background-size: 40px 40px;
 }
 
-.table-row{
-  padding: 0.8rem;
+.bold {
+  font-weight: bold;
+}
+
+.table-border {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #E3E3E3;
+}
+
+.table-panel:nth-child(odd) {
+  @include panel(#F9F9F9, 0.8rem);
+}
+
+.table-panel:nth-child(even) {
+  @include panel(#FFFFFF, 0.8rem);
+}
+
+.table-panel:nth-child(odd), .table-panel:nth-child(even){
+  border-style: none;
   margin-bottom: 0px;
-}
-
-.show-panel:nth-child(even) {
-  @include panel(#F9F9F9);
-}
-
-.show-panel:nth-child(odd) {
-  @include panel(#FFFFFF);
 }
 
 .plain-panel {
@@ -40,4 +50,10 @@
 .lockdown-panel {
   @include panel(mix($alert-color, $secondary-color, 50%));
   @include striped-bg(scale-color(mix($alert-color, $secondary-color, 50%), $lightness: 80%));
+}
+
+button {
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);  
+  box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset, 0px 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 1.2px;
 }
