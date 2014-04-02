@@ -1,6 +1,28 @@
 <div>
   <h2>Queues</h2>
+  <div class="row collapse">
+    <div class="large-4 columns">
+      <form>
+        <label>
+          Add a new queue
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <!--/* Regex do not allow leading whitespace. Length must be inside 1<=length<=30 */-->
+              <input id="queue-name" name="name" type="text" ng-model="queuename" pattern="\S{1}(\S|\s){0,29}" required=""
+                     title="Queue name length must be between 1 and 30 symbols, and can not lead with a space." placeholder="Queue name"/>
 
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" class="button postfix radius" ng-click="queues.putQueue(queuename)" style="margin-bottom: 0;">
+                <i class="fi-plus white-icon size-16"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </label>
+      </form>
+    </div>
+  </div>
   <div class="radius" ng-repeat="queue in queues.all" ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
     <div class="row">
       <div class="large-6 columns">

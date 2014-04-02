@@ -193,6 +193,13 @@
             });
         };
 
+        result.putQueue = function (name) {
+            // The "'' + " bit is needed because apparently you can't send "false" as JSON here
+            return $http.put('/api/queue/' + name, {
+                'title' : name
+            });
+        };
+
         return result;
     }]);
 

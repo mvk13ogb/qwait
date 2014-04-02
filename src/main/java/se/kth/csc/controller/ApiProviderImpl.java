@@ -69,7 +69,7 @@ public class ApiProviderImpl implements ApiProvider {
         queue.getOwners().add(owner);
         queueStore.storeQueue(queue);
 
-        messageBus.convertAndSend("/topic/queues", new QueueCreated(queueName));
+        messageBus.convertAndSend("/topic/queue/", new QueueCreated(queueName));
         messageBus.convertAndSend("/topic/user/" + owner.getPrincipalName(),
                 new QueueOwnerAdded(queueName, owner.getPrincipalName()));
     }
