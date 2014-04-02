@@ -500,14 +500,6 @@
         }
     });
 
-    qwait.factory('isOwner', function () {
-        return function (name, queue) {
-            console.log(name);
-
-            return null;
-        }
-    });
-
     //This function returns the official color of the computer lab. 
     //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
     qwait.filter('getComputerColor', function () {
