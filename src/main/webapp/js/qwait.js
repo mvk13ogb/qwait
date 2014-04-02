@@ -392,14 +392,9 @@
         page.title = 'Queue list';
         $scope.queues = queues;
         $scope.users = users;
-        console.log(queues);
 
         $scope.canModerateQueue = function(user, queue) {
-        console.log(user.admin);
-            if (isOwner(user, queue) || isModerator(user, queue) || user.admin==true) {
-                return true;
-            }
-            return false;
+            return isOwner(user, queue) || isModerator(user, queue) || user.admin;
         }
     }]);
 
