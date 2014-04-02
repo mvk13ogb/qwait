@@ -388,10 +388,19 @@
         page.title = 'About';
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', function ($scope, page, queues) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', function ($scope, page, queues, users) {
         page.title = 'Queue list';
-
         $scope.queues = queues;
+        $scope.users = users;
+        console.log(queues);
+
+        $scope.canModerateQueue = function(user, queue) {
+        console.log(user.admin);
+            if (isOwner(user, queue) || isModerator(user, queue) || user.admin==true) {
+                return true;
+            }
+            return false;
+        }
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {
@@ -491,6 +500,14 @@
         }
     });
 
+    qwait.factory('isOwner', function () {
+        return function (name, queue) {
+            console.log(name);
+
+            return null;
+        }
+    });
+
     //This function returns the official color of the computer lab. 
     //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
     qwait.filter('getComputerColor', function () {
@@ -572,5 +589,13 @@
             }
         };
     });
+
+    function isOwner(user, queue) {
+        return queue.owners.indexOf(user.name) != -1;
+    }
+
+    function isModerator(user, queue) {
+        return queue.moderators.indexOf(user.name) != -1;
+    }
 
 })();

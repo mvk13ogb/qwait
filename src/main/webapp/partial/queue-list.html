@@ -10,7 +10,7 @@
       </div>
       <div class="large-6 columns">
         <div class="button-bar right">
-          <ul class="button-group radius" style="margin-top: 0.5rem">
+          <ul ng-if="canModerateQueue(users.current, queue)" class="button-group radius" style="margin-top: 0.5rem">
             <li>
               <button type="button" class="button small" ng-class="{secondary: !queue.active}"
                       ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
