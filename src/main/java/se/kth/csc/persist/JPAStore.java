@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,18 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     @Override
     public Queue fetchQueueWithId(int id) {
         return entityManager.find(Queue.class, id);
+    }
+
+    @Override
+    public Queue fetchQueueWithName(String name) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
+        Root<Queue> queue = q.from(Queue.class);
+        try {
+            return entityManager.createQuery(q.select(queue).where(cb.equal(queue.get(Queue_.name), name))).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
@@ -58,8 +71,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         q.select(q.from(Queue.class));
         List<Queue> list = entityManager.createQuery(q).getResultList();
         List<Queue> tmpList = new LinkedList<Queue>();
-        for(Queue que : list){
-            if(que.getModerators().contains(account)){
+        for (Queue que : list) {
+            if (que.getModerators().contains(account)) {
                 tmpList.add(que);
             }
         }
@@ -73,8 +86,8 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         q.select(q.from(Queue.class));
         List<Queue> list = entityManager.createQuery(q).getResultList();
         List<Queue> tmpList = new LinkedList<Queue>();
-        for(Queue que : list){
-            if(que.getOwners().contains(account)){
+        for (Queue que : list) {
+            if (que.getOwners().contains(account)) {
                 tmpList.add(que);
             }
         }
@@ -89,10 +102,18 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueue(Queue queue) {
-        for(Account a : queue.getOwners()) {
-           a.getOwnedQueues().remove(queue);
+        for (Account owner : queue.getOwners()) {
+            owner.getOwnedQueues().remove(queue);
         }
-        queue.setOwners(null);
+        for (Account moderator : queue.getModerators()) {
+            moderator.getModeratedQueues().remove(queue);
+        }
+        for (QueuePosition position : queue.getPositions()) {
+            removeQueuePosition(position);
+        }
+        queue.getOwners().clear();
+        queue.getModerators().clear();
+        queue.getPositions().clear();
         entityManager.remove(queue);
         log.info("Removed queue with id {}", queue.getId());
     }
@@ -145,6 +166,26 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     }
 
     @Override
+    public QueuePosition fetchQueuePositionWithQueueAndUser(String queueName, String userName) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<QueuePosition> q = cb.createQuery(QueuePosition.class);
+
+        Root<QueuePosition> queuePosition = q.from(QueuePosition.class);
+        Join<QueuePosition, Queue> queue = queuePosition.join(QueuePosition_.queue);
+        Join<QueuePosition, Account> account = queuePosition.join(QueuePosition_.account);
+
+        try {
+            return entityManager.createQuery(
+                    q.select(queuePosition)
+                            .where(cb.and(cb.equal(queue.get(Queue_.name), queueName),
+                                    cb.equal(account.get(Account_.name), userName)))
+            ).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
     public void storeQueuePosition(QueuePosition queuePosition) {
         entityManager.persist(queuePosition);
         log.info("Created a new queue position with id {}", queuePosition.getId());
@@ -152,6 +193,10 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueuePosition(QueuePosition queuePosition) {
+        queuePosition.getAccount().getPositions().remove(queuePosition);
+        queuePosition.getQueue().getPositions().remove(queuePosition);
+        queuePosition.setQueue(null);
+        queuePosition.setAccount(null);
         entityManager.remove(queuePosition);
         log.info("Removed a queue position with id {}", queuePosition.getId());
     }

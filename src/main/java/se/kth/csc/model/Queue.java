@@ -1,6 +1,7 @@
 package se.kth.csc.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import javax.persistence.*;
@@ -16,6 +17,9 @@ public class Queue {
 
     @Column(name = "name", unique = true)
     private String name;
+
+    @Column(name = "title")
+    private String title;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinTable(name = "account_queue",
@@ -43,19 +47,19 @@ public class Queue {
     @Column(name = "locked")
     private boolean locked;
 
-    public boolean isActive () {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive (boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public boolean isLocked () {
+    public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked (boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 
@@ -71,6 +75,14 @@ public class Queue {
         this.name = name;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @JsonView(Queue.class)
     public Set<Account> getOwners() {
         return owners;
@@ -81,9 +93,23 @@ public class Queue {
     }
 
     @JsonView(Queue.class)
-    public Set<Account> getModerators() { return moderators; }
+    public Set<Account> getModerators() {
+        return moderators;
+    }
 
-    public void setModerators(Set<Account> moderators) { this.moderators = moderators; }
+    public void setModerators(Set<Account> moderators) {
+        this.moderators = moderators;
+    }
+
+    public ImmutableSet<String> getOwnerNames() {
+        ImmutableSet.Builder<String> resultBuilder = ImmutableSet.builder();
+
+        for (Account owner : owners) {
+            resultBuilder.add(owner.getPrincipalName());
+        }
+
+        return resultBuilder.build();
+    }
 
     public void addOwner(Account owner) {
         this.owners.add(owner);
@@ -91,6 +117,16 @@ public class Queue {
 
     public void removeOwner(Account owner) {
         this.owners.remove(owner);
+    }
+
+    public ImmutableSet<String> getModeratorNames() {
+        ImmutableSet.Builder<String> resultBuilder = ImmutableSet.builder();
+
+        for (Account moderator : moderators) {
+            resultBuilder.add(moderator.getPrincipalName());
+        }
+
+        return resultBuilder.build();
     }
 
     public void addModerator(Account moderator) {

@@ -1,8 +1,6 @@
 package se.kth.csc.config;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +16,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
-@ContextConfiguration(classes = {ApplicationConfig.class, EmbeddedDataSourceConfig.class, JpaConfig.class, SecurityConfig.class, WebMvcConfig.class})
+@ContextConfiguration(classes = {ApplicationConfig.class, EmbeddedDataSourceConfig.class, MockAuthConfig.class,
+        JpaConfig.class, SecurityConfig.class, WebMvcConfig.class})
 public abstract class WebAppConfigurationAware {
 
     @Inject
@@ -29,10 +28,4 @@ public abstract class WebAppConfigurationAware {
     public void before() {
         this.mockMvc = webAppContextSetup(this.wac).build();
     }
-
-    @Test
-    public void testTest() {
-        Assert.assertEquals("a", "a");
-    }
-
 }

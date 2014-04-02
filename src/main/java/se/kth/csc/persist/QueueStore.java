@@ -9,6 +9,8 @@ public interface QueueStore {
 
     public Queue fetchQueueWithId(int id);
 
+    public Queue fetchQueueWithName(String name);
+
     public List<Queue> fetchAllQueues();
 
     public List<String> fetchAllQueueNames();

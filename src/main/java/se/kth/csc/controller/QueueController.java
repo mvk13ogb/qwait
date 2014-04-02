@@ -122,9 +122,11 @@ public class QueueController {
             }
 
             // replaceAll("\\s","")) removes all whitespaces
-            if (queueName.trim().length() > 0 && !existingQueueNamesTrimmed.contains(queueName.toLowerCase().replaceAll("\\s",""))) {
+            String queueNormalizedName = queueName.toLowerCase().replaceAll("\\s", "");
+            if (queueName.trim().length() > 0 && !existingQueueNamesTrimmed.contains(queueName)) {
                 Queue queue = new Queue();
-                queue.setName(queueName);
+                queue.setName(queueNormalizedName);
+                queue.setTitle(queueName);
                 queue.addOwner(getCurrentAccount(principal));
 
                 queue.setActive(true);

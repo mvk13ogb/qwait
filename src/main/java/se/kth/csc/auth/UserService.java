@@ -4,11 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import se.kth.csc.persist.AccountStore;
 import java.util.Collection;
 
 @Service
-public class UserService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
+public class UserService implements AuthenticationUserDetailsService<Authentication> {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final AccountStore accountStore;
     private final NameService nameService;
@@ -33,12 +32,18 @@ public class UserService implements AuthenticationUserDetailsService<CasAssertio
 
     @Transactional
     @Override
-    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
+    public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
         Account account = accountStore.fetchAccountWithPrincipalName(token.getName());
 
         if (account == null) {
             account = new Account();
             account.setPrincipalName(token.getName());
+            for (GrantedAuthority grantedAuthority : token.getAuthorities()) {
+                if (Role.ADMIN.getAuthority().equals(grantedAuthority.getAuthority())) {
+                    account.setAdmin(true);
+                    break;
+                }
+            }
             accountStore.storeAccount(account);
 
             log.info("Created user called \"{}\" with id {} and principal {}",
