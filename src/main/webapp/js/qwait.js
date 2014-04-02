@@ -193,6 +193,14 @@
             });
         };
 
+        result.changeComment = function (name, user, comment) {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
         return result;
     }]);
 
@@ -205,7 +213,7 @@
     qwait.factory('contributors', function () {
         return {
             all: [
-                { name: 'Adrian Blanco' },
+                { name: 'Adrian Blanco', gravatar: '5e24f37bda5a846cdaa822e72627fe63', github: 'adrianblp'},
                 { name: 'Casper Winsnes' },
                 { name: 'Christoffer Pettersson' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
@@ -402,14 +410,6 @@
 
         queues.get($route.current.params.queueName).success(function (queue) {
             $scope.queue = queue;
-
-            $scope.queue.changeComment = function (comment) {
-                return $http.put('/api/queue/' + queue.name + '/position/' + $scope.users.current.name + 'comment', comment, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            };
 
             for (var i = 0; i < queue.positions.length; i++) {
                 (function (i2) {

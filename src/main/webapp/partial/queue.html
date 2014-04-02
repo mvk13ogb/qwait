@@ -1,18 +1,21 @@
 <div>
   <h2>{{queue.title}}</h2>
+  /api/queue/{{queue.name}}/position/{{users.current.name}}/comment, {{comment}}
   <div class="row">
     <div class="large-3 columns">
       <label>
         Location
-        <div class="row collapse">
-          <div class="small-9 columns">
-              <input type="text">
+        <form ng-submit="queues.changeComment(queue.name, users.current.name, comment)">
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <input type="text" ng-model="comment">
               </input>
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" class="button postfix" >Save</button>
+            </div>
           </div>
-          <div class="small-3 columns">
-            <button type="submit" class="button postfix">Save</button>
-          </div>
-        </div>
+        </form>
       </label>
       <label>
         Comment
@@ -27,6 +30,7 @@
         </div>
       </label>
     </div>
+
     <div class="large-9 columns">
       <div class="row collapse">
         <div class="table-border">
