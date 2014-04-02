@@ -1,1 +1,41 @@
-<div></div>
+<div>
+  <h2>{{queue.title}}</h2>
+  <div class="show-panel">
+    <div class="row table-row">
+      <div class="medium-1 columns strong">
+        #
+      </div>
+      <div class="medium-3 columns">
+        User
+      </div>
+      <div class="medium-2 columns">
+        Time
+      </div>
+      <div class="medium-3 columns">
+        Location
+      </div>
+      <div class="medium-3 columns">
+        Comment
+      </div>
+    </div>
+  </div>
+  <div class="show-panel" ng-repeat="position in queue.positions">
+    <div class="row table-row">
+      <div class="medium-1 columns">
+        {{$index + 1}}
+      </div>
+      <div class="medium-3 columns">
+        {{position.user.name}}
+      </div>
+      <div class="medium-2 columns">
+        {{position.startTime}}
+      </div>
+      <div class="medium-3 columns">
+        {{position.user.location}}
+      </div>
+      <div class="medium-3 columns">
+        {{position.user.comment}}
+      </div>
+    </div>
+  </div>
+</div>
