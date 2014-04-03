@@ -1,75 +1,74 @@
 <div>
   <h2>{{queue.title}}</h2>
-  /api/queue/{{queue.name}}/position/{{users.current.name}}/comment, {{comment}}
   <div class="row">
     <div class="large-3 columns">
       <label>
         Location
-        <form ng-submit="queues.changeComment(queue.name, users.current.name, comment)">
           <div class="row collapse">
-            <div class="small-9 columns">
-              <input type="text" ng-model="comment">
+            <div class="small-12 columns">
+              <input type="text" maxlength="15" ng-model="location" ng-change="queues.changeLocation(queue.name, users.current.name, location)">
               </input>
             </div>
-            <div class="small-3 columns">
-              <button type="submit" class="button postfix" >Save</button>
-            </div>
           </div>
-        </form>
       </label>
       <label>
         Comment
-        <div class="row collapse">
-          <div class="small-9 columns">
-            <input type="text">
-            </input>
+          <div class="row collapse">
+            <div class="small-12 columns">
+              <input type="text" maxlength="15" ng-model="comment" ng-change="queues.changeComment(queue.name, users.current.name, comment)">
+              </input>
+            </div>
           </div>
-          <div class="small-3 columns">
-            <button type="submit" class="button postfix">Save</button>
-          </div>
-        </div>
       </label>
+      <div class="row collapse">
+        <button class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+          Join queue
+        </button>
+      </div>
+      <div class="row collapse">
+        <div class="small-12 columns">
+        <button class="button secondary expand button-bot-margin dropdown" type="submit">
+          Manage queue
+        </button>
+        </div>
+      </div>
     </div>
 
     <div class="large-9 columns">
-      <div class="row collapse">
-        <div class="table-border">
-          <div class="table-panel no-bot-margin">
-            <div class="row collapse bold">
-              <div class="medium-1 columns">
-                #
-              </div>
-              <div class="medium-3 columns">
-                User
-              </div>
-              <div class="medium-2 columns">
-                Time
-              </div>
-              <div class="medium-3 columns">
-                Location
-              </div>
-              <div class="medium-3 columns">
-                Comment
-              </div>
-            </div>
+      <div class="table-border">
+        <div class="row collapse table-panel bold">
+          <div class="small-1 columns">
+            #
           </div>
-          <div class="table-panel no-bot-margin" ng-repeat="position in queue.positions">
-            <div class="row collapse">
-              <div class="medium-1 columns">
-                {{$index + 1}}
-              </div>
-              <div class="medium-3 columns">
-                {{position.user.name}}
-              </div>
-              <div class="medium-2 columns">
-                {{(date - position.startTime) | duration}}
-              </div>
-              <div class="medium-3 columns">
-                {{position.location}}
-              </div>
-              <div class="medium-3 columns">
-                {{position.comment}}
-              </div>
+          <div class="small-3 columns">
+            User
+          </div>
+          <div class="small-2 columns">
+            Time
+          </div>
+          <div class="small-3 columns">
+            Location
+          </div>
+          <div class="small-3 columns">
+            Comment
+          </div>
+        </div>
+        <div class="table-panel" ng-repeat="position in queue.positions">
+          <div class="row collapse">
+            <div class="small-1 columns">
+              {{$index + 1}}
+            </div>
+            <div class="small-3 columns">
+              {{position.user.name}}
+            </div>
+            <div class="small-2 columns">
+              {{(date - position.startTime) | duration}}
+            </div>
+            <div class="small-3 columns">
+              {{position.location}}
+            </div>
+            <div class="small-3 columns">
+              {{position.comment}}
             </div>
           </div>
         </div>
