@@ -1,7 +1,30 @@
 <div>
   <h2>Queues</h2>
+  <div class="row collapse">
+    <div class="large-4 columns">
+      <form ng-submit="queues.putQueue(queueName)">
+        <label>
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required" placeholder="New queue name"/>
 
-  <div class="radius" ng-repeat="queue in queues.all" ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius" style="margin-bottom: 0;">
+                <i class="fi-plus white-icon size-16"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </label>
+      </form>
+    </div>
+    <div class="large-4 columns pull-right">
+      <input ng-model="search.title" type="text" placeholder="Filter queues"/>
+    </div>
+  </div>
+  <div class="radius" ng-repeat="queue in queues.all | filter:search | orderBy:['-positions.length','title']"
+       ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
     <div class="row">
       <div class="large-6 columns">
         <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>

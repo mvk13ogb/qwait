@@ -66,12 +66,27 @@
         return result;
     }]);
 
-    qwait.factory('queues', ['$http', 'messagebus', function ($http, messagebus) {
+    qwait.factory('queues', ['$http', '$timeout', 'messagebus', function ($http, $timeout, messagebus) {
         var result = {};
 
         result.all = {};
 
         messagebus.whenReady(function () {
+            messagebus.subscribe('/topic/queue', function (data) {
+                switch (data.body['@type']) {
+                    case 'QueueCreated':
+                        // HACK: the message arrives so fast that the database transaction on the server might not have
+                        // ended yet. This delay "ensures" that the transaction has time to end.
+                        $timeout(function () {
+
+                            // This call will store the queue in result.all
+                            result.get(data.body.name);
+                        }, 500);
+                        break;
+                    default:
+                        console.log('Unrecognized queue message', data.body);
+                }
+            });
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
@@ -86,9 +101,6 @@
                         if (queue) {
                             queue.positions = [];
                         }
-                        break;
-                    case 'QueueCreated':
-                        result.get(data.body.name);
                         break;
                     case 'QueueLockedStatusChanged':
                         queue = result.all[data.body.name];
@@ -156,7 +168,7 @@
                     case 'QueuePositionRemoved':
                         break;
                     default:
-                        console.log('Unrecognized user message', data.body);
+                        console.log('Unrecognized queue message', data.body);
                 }
             });
         });
@@ -193,6 +205,13 @@
             });
         };
 
+        result.putQueue = function (title) {
+            var name = title.replace(/\s+/, '-').toLowerCase();
+            return $http.put('/api/queue/' + name, {
+                'title': title
+            });
+        };
+
         return result;
     }]);
 
@@ -211,6 +230,7 @@
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
+                { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', twitter: 'hlilje' },
                 { name: 'Jacob Sievers' },
                 { name: 'Michael Håkansson', gravatar: 'e12d2965870d5054f901b088ab692d3d', twitter: 'michaelhak' },
                 { name: 'Robin Engström', gravatar: 'd3389ec4c8f9a0d7d0500ec982a35099' }
