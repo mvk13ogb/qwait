@@ -66,12 +66,27 @@
         return result;
     }]);
 
-    qwait.factory('queues', ['$http', 'messagebus', function ($http, messagebus) {
+    qwait.factory('queues', ['$http', '$timeout', 'messagebus', function ($http, $timeout, messagebus) {
         var result = {};
 
         result.all = {};
 
         messagebus.whenReady(function () {
+            messagebus.subscribe('/topic/queue', function (data) {
+                switch (data.body['@type']) {
+                    case 'QueueCreated':
+                        // HACK: the message arrives so fast that the database transaction on the server might not have
+                        // ended yet. This delay "ensures" that the transaction has time to end.
+                        $timeout(function () {
+
+                            // This call will store the queue in result.all
+                            result.get(data.body.name);
+                        }, 500);
+                        break;
+                    default:
+                        console.log('Unrecognized queue message', data.body);
+                }
+            });
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
@@ -86,9 +101,6 @@
                         if (queue) {
                             queue.positions = [];
                         }
-                        break;
-                    case 'QueueCreated':
-                        result.get(data.body.name);
                         break;
                     case 'QueueLockedStatusChanged':
                         queue = result.all[data.body.name];
@@ -156,7 +168,7 @@
                     case 'QueuePositionRemoved':
                         break;
                     default:
-                        console.log('Unrecognized user message', data.body);
+                        console.log('Unrecognized queue message', data.body);
                 }
             });
         });
@@ -193,10 +205,10 @@
             });
         };
 
-        result.putQueue = function (name) {
-            // The "'' + " bit is needed because apparently you can't send "false" as JSON here
+        result.putQueue = function (title) {
+            var name = title.replace(/\s+/, '-').toLowerCase();
             return $http.put('/api/queue/' + name, {
-                'title' : name
+                'title': title
             });
         };
 
