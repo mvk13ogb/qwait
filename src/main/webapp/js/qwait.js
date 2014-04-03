@@ -44,7 +44,7 @@
         });
 
         result.get = function (name) {
-            var promise = $http.get('/api/user/' + name);
+            var promise = $http.get('/api/user/' + encodeURIComponent(name));
             promise.success(function (user) {
                 cache.put(name, user);
             });
@@ -52,7 +52,7 @@
         };
 
         result.setAdmin = function (userName, admin) {
-            return $http.put('/api/user/' + userName + '/role/admin', admin);
+            return $http.put('/api/user/' + encodeURIComponent(userName) + '/role/admin', admin);
         };
 
         result.current = requestInfo.currentUser;
@@ -180,7 +180,7 @@
         });
 
         result.get = function (name) {
-            var promise = $http.get('/api/queue/' + name);
+            var promise = $http.get('/api/queue/' + encodeURIComponent(name));
             promise.success(function (queue) {
                 result.all[queue.name] = queue;
             });
@@ -189,7 +189,7 @@
 
         result.setLocked = function (name, locked) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + name + '/locked', '' + locked, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/locked', '' + locked, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -198,7 +198,7 @@
 
         result.setActive = function (name, active) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + name + '/active', '' + active, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/active', '' + active, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -206,8 +206,8 @@
         };
 
         result.putQueue = function (title) {
-            var name = title.replace(/\s+/, '-').toLowerCase();
-            return $http.put('/api/queue/' + name, {
+            var name = title.replace(/[\s\/]+/, '-').toLowerCase();
+            return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
             });
         };
