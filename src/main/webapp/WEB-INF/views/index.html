@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
-    <title ng-controller="TitleCtrl">{{page.title}} &mdash; {{system.product.name}} v{{system.product.version}}</title>
+    <title ng-controller="TitleCtrl" ng-bind="page.title + ' &mdash; ' + system.product.name + ' v' + system.product.version">QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -18,9 +18,10 @@
 
     <script th:src="@{/vendor/js/jquery.js}"></script>
     <script th:src="@{/vendor/js/angular.js}"></script>
+    <script th:src="@{/vendor/js/angular-animate.js}"></script>
+    <script th:src="@{/vendor/js/angular-route.js}"></script>
     <script th:src="@{/vendor/js/sockjs.js}"></script>
     <script th:src="@{/vendor/js/stomp.js}"></script>
-    <script th:src="@{/vendor/js/angular-route.js}"></script>
     <script th:src="@{/vendor/js/moment-with-langs.js}"></script>
     <script th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript"

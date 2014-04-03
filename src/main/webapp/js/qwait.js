@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'request']);
+    var qwait = angular.module('qwait', ['ngRoute', 'ngAnimate', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -440,6 +440,20 @@
         return function (milliseconds) {
             return moment.duration(milliseconds).humanize();
         }
+    });
+
+    qwait.filter('arrayify', function() {
+        return function (object) {
+            var result = [];
+
+            for (var key in object) {
+                if (object.hasOwnProperty(key)) {
+                    result.push(object[key]);
+                }
+            }
+
+            return result;
+        };
     });
 
     //Returns the computer name if we recognize it, otherwise returns empty string

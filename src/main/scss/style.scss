@@ -28,3 +28,40 @@
   @include panel(mix($alert-color, $secondary-color, 50%));
   @include striped-bg(scale-color(mix($alert-color, $secondary-color, 50%), $lightness: 80%));
 }
+
+.queue-row.ng-enter, .queue-row.ng-move {
+  @include transition(0.5s);
+  @include opacity(0);
+}
+
+.queue-row.ng-enter.ng-enter-active,
+.queue-row.ng-move.ng-move-active {
+  @include opacity(1);
+}
+
+.queue-row.ng-leave {
+  -webkit-animation: 0.5s fade-out;
+  -moz-animation: 0.5s fade-out;
+  -o-animation: 0.5s fade-out;
+  animation: 0.5s fade-out;
+}
+
+@keyframes fade-out {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
+@-webkit-keyframes fade-out {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
+@-moz-keyframes fade-out {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
+@-o-keyframes fade-out {
+  from { opacity:1; }
+  to { opacity:0; }
+}
