@@ -206,7 +206,7 @@
         };
 
         result.putQueue = function (title) {
-            var name = title.replace(/[\s\/]+/, '-').toLowerCase();
+            var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
             });
