@@ -1,0 +1,67 @@
+<div>
+  <h2>Queues</h2>
+
+  <div class="row collapse">
+    <div ng-if="users.current.admin" class="large-4 columns">
+      <form ng-submit="queues.putQueue(queueName)">
+        <label>
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
+                     placeholder="New queue name"/>
+
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                      style="margin-bottom: 0;">
+                <i class="fi-plus white-icon size-16"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </label>
+      </form>
+    </div>
+    <div class="large-4 columns pull-right">
+      <input ng-model="search" type="text" placeholder="Filter queues"/>
+    </div>
+  </div>
+  <div class="radius queue-row"
+       ng-repeat="queue in queues.all|arrayify|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
+    <div class="row">
+      <div class="large-6 columns">
+        <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
+
+        <p style="margin-bottom: 0">{{queue.positions.length}} people queueing</p>
+      </div>
+      <div class="large-6 columns">
+        <div class="button-bar right">
+          <ul ng-if="canModerateQueue(users.current, queue)" class="button-group radius" style="margin-top: 0.5rem">
+            <li>
+              <button type="button" class="button small" ng-class="{secondary: !queue.active}"
+                      ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                <i class="fi-check size-16" ng-show="queue.active"></i>
+                <i class="fi-prohibited size-16" ng-show="!queue.active"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button small" ng-class="{alert: queue.locked, success: !queue.locked}"
+                      ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
+                <i class="fi-lock size-16" ng-show="queue.locked"></i>
+                <i class="fi-unlock size-16" ng-show="!queue.locked"></i>
+              </button>
+            </li>
+          </ul>
+          <ul class="button-group radius">
+            <li>
+              <button type="button" class="button large" style="margin-bottom: 0;">
+                Queue
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
