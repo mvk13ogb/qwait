@@ -420,10 +420,11 @@
         page.title = 'About';
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', function ($scope, page, queues) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', function ($scope, page, queues, users) {
         page.title = 'Queue list';
 
         $scope.queues = queues;
+        $scope.users = users;
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'users', 'page', function ($scope, $route, queues, users, page) {
