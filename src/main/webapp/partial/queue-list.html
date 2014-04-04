@@ -2,7 +2,7 @@
   <h2>Queues</h2>
 
   <div class="row collapse">
-    <div class="large-4 columns">
+    <div ng-if="users.current.admin" class="large-4 columns">
       <form ng-submit="queues.putQueue(queueName)">
         <label>
           <div class="row collapse">

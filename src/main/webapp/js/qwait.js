@@ -228,7 +228,7 @@
                 { name: 'Casper Winsnes' },
                 { name: 'Christoffer Pettersson' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
-                { name: 'Eric Schmidt' },
+                { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
                 { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', twitter: 'hlilje' },
                 { name: 'Jacob Sievers' },
