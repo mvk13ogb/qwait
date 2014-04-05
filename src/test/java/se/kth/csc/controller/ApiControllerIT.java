@@ -933,6 +933,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("positions", hasSize(1)))
                 .andExpect(jsonPath("positions[0].userName", is("testUser")));
         mockMvc.perform(delete("/api/queue/abc123/positions/testUser"))
                 .andExpect(status().isOk());
