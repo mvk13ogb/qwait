@@ -10,6 +10,7 @@
     <description>A queuing system for assistance management</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java-version>1.7</java-version>
         <org.springframework-version>4.0.3.RELEASE</org.springframework-version>
         <org.springframework.security-version>3.2.3.RELEASE</org.springframework.security-version>
@@ -516,9 +517,10 @@
                             <preloadSources>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/jquery.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/angular.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-animate.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-route.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/sockjs.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/stomp.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-route.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/moment-with-langs.js</source>
 
                                 <source>${project.basedir}/src/test/webapp/vendor/js/angular-mocks.js</source>
