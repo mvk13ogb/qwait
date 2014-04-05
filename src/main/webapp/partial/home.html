@@ -10,22 +10,4 @@
     <span ng-if="messagebus.protocol">via {{messagebus.describeProtocol(messagebus.protocol)}}</span>
     <span ng-if="messagebus.reconnectInMillis">(will reconnect in {{messagebus.reconnectInMillis|duration}})</span>
   </p>
-
-  <h2>Contributors</h2>
-
-  <div class="row">
-    <div class="large-4 columns" ng-repeat="contributor in contributors.all">
-      <div class="row" style="padding-bottom: 2em;">
-        <div class="large-4 columns">
-          <img class="th"
-               ng-src="//gravatar.com/avatar/{{contributor.gravatar || '00000000000000000000000000000000'}}.png?d=mm"
-               alt="{{contributor.name}}"/>
-        </div>
-        <div class="large-8 columns">
-          <h4>{{contributor.name}}</h4>
-          <a ng-if="contributor.twitter" href="//twitter.com/{{contributor.twitter}}">@{{contributor.twitter}}</a>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>

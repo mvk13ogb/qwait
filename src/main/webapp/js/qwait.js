@@ -412,16 +412,18 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', 'contributors', function ($scope, system, messagebus, page, contributors) {
+    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', function ($scope, system, messagebus, page) {
         page.title = 'Home';
 
         $scope.system = system;
         $scope.messagebus = messagebus;
-        $scope.contributors = contributors;
     }]);
 
-    qwait.controller('AboutCtrl', ['$scope', 'page', function ($scope, page) {
+    qwait.controller('AboutCtrl', ['$scope', 'system', 'page', 'contributors', function ($scope, system, page, contributors) {
         page.title = 'About';
+
+        $scope.system = system;
+        $scope.contributors = contributors;
     }]);
 
     qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', 'security', function ($scope, page, queues, users, security) {
