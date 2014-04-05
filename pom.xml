@@ -24,6 +24,15 @@
         <hibernate.version>4.3.4.Final</hibernate.version>
         <hibernate-validator.version>5.1.0.Final</hibernate-validator.version>
     </properties>
+    <scm>
+        <url>https://github.com/mvk13ogb/qwait</url>
+        <connection>scm:git:git://github.com/mvk13ogb/qwait.git</connection>
+        <developerConnection>scm:git:git@github.com:mvk13ogb/qwait.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/mvk13ogb/qwait/issues</url>
+    </issueManagement>
     <repositories>
         <repository>
             <id>java.net2</id>
