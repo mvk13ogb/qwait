@@ -23,7 +23,7 @@
       </form>
     </div>
     <div class="medium-4 columns pull-right">
-      <input ng-model="search" type="text" placeholder="Filter queues"/>
+      <input ng-model="search.title" type="text" placeholder="Filter queues"/>
     </div>
   </div>
   <div class="radius queue-row"
@@ -34,7 +34,7 @@
         <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
 
         <p style="margin-bottom: 0">
-          <ng-pluralize count="queue.positions.length" when="{'0': 'Noone queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
+          <ng-pluralize count="queue.positions.length" when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
           </ng-pluralize>
           <span ng-if="userQueuePos(users.current, queue.positions)">
             (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}},
