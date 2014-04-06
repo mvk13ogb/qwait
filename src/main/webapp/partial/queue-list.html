@@ -33,7 +33,10 @@
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
         <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
 
-        <p style="margin-bottom: 0">{{queue.positions.length}} people queueing</p>
+        <p style="margin-bottom: 0">
+          <ng-pluralize count="queue.positions.length" when="{'0': 'Noone is queueing.', 'one': 'One person is queueing.', 'other': '{} people queueing.'}">
+          </ng-pluralize>
+        </p>
       </div>
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
         <div class="button-bar right">
