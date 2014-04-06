@@ -28,9 +28,11 @@
           </ul>
           <ul class="button-group radius">
             <li>
-              <button type="button" class="button large" ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
-                Queue
-              </button>
+              <a href="#/queue/{{queue.name}}">
+                <button type="button" class="button large" ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+                  Queue
+                </button>
+              </a>
             </li>
           </ul>
         </div>
