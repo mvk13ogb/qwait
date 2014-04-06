@@ -6,6 +6,8 @@
 @import "compass/css3/text-shadow";
 @import "compass/css3/box-shadow";
 @import "compass/css3/border-radius";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
 
 @mixin striped-bg($bg-color: #ccc, $darken-amount: 5%, $stripe-color: darken($bg-color, $darken-amount)) {
   background-color: $bg-color;
@@ -19,6 +21,14 @@
 
 .bold {
   font-weight: bold;
+}
+
+.red {
+  color: #F00;
+}
+
+.green {
+  color: #0C0;
 }
 
 .no-location {
@@ -63,6 +73,38 @@
 .lockdown-panel {
   @include panel(mix($alert-color, $secondary-color, 50%));
   @include striped-bg(scale-color(mix($alert-color, $secondary-color, 50%), $lightness: 80%));
+}
+
+.top-bar {
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.top-absolute {
+  position: absolute !important;
+  margin-left: -72px !important;
+  left: 50%;
+  top: 4px;
+}
+
+.top-logo {
+  @include opacity(1);
+  @include transition(300ms);
+}
+
+.top-logo:hover {
+  @include opacity(0.5);
+}
+
+.logo-large {
+  width: 144px;
+  height: 38px;
+}
+
+.logo-small {
+  width: 115px;
+  height: 30px;
+  margin: 8px;
 }
 
 button {

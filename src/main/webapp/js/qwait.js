@@ -3,15 +3,15 @@
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/', {
-                templateUrl: 'partial/home.html',
-                controller: 'HomeCtrl'
-            }).
             when('/about', {
-                templateUrl: 'partial/about.html',
+                templateUrl: 'partial/home.html',
                 controller: 'AboutCtrl'
             }).
-            when('/queues', {
+            when('/help', {
+                templateUrl: 'partial/help.html',
+                controller: 'HelpCtrl'
+            }).
+            when('/', {
                 templateUrl: 'partial/queue-list.html',
                 controller: 'QueueListCtrl'
             }).
@@ -416,20 +416,20 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', 'contributors', function ($scope, system, messagebus, page, contributors) {
-        page.title = 'Home';
+    qwait.controller('AboutCtrl', ['$scope', 'system', 'messagebus', 'page', 'contributors', function ($scope, system, messagebus, page, contributors) {
+        page.title = 'About';
 
         $scope.system = system;
         $scope.messagebus = messagebus;
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('AboutCtrl', ['$scope', 'page', function ($scope, page) {
-        page.title = 'About';
+    qwait.controller('HelpCtrl', ['$scope', 'page', function ($scope, page) {
+        page.title = 'Help';
     }]);
 
     qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', function ($scope, page, queues, users) {
-        page.title = 'Queue list';
+        page.title = 'Queues';
 
         $scope.queues = queues;
         $scope.users = users;
