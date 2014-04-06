@@ -244,6 +244,18 @@
         };
     });
 
+    qwait.factory('clock', ['$interval', function ($interval) {
+        var result = {
+            now: moment()
+        };
+
+        $interval(function () {
+            result.now = moment();
+        }, 1000);
+
+        return result;
+    }]);
+
     qwait.factory('security', function () {
         var result = {
             isQueueOwner: function (user, queue) {
@@ -426,12 +438,24 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'queues', 'users', 'security', function ($scope, page, queues, users, security) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', function ($scope, page, clock, queues, users, security) {
         page.title = 'Queue list';
+
         $scope.queues = queues;
         $scope.users = users;
 
         $scope.canModerateQueue = security.canModerateQueue;
+        $scope.userQueuePos = function (user, positions) {
+            for (var i = 0; i < positions.length; i++) {
+                if (positions[i].userName == user.name) {
+                    return positions[i];
+                }
+            }
+            return null;
+        };
+        $scope.timeDiff = function (time) {
+            return moment(time).from(clock.now, true);
+        };
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {
@@ -444,7 +468,7 @@
         }
     });
 
-    qwait.filter('arrayify', function() {
+    qwait.filter('arrayify', function () {
         return function (object) {
             var result = [];
 
