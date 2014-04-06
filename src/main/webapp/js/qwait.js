@@ -19,6 +19,10 @@
                 templateUrl: 'partial/queue.html',
                 controller: 'QueueCtrl'
             }).
+            when('/admin', {
+                templateUrl: 'partial/admin.html',
+                controller: 'AdminCtrl'
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -460,6 +464,10 @@
 
     qwait.controller('QueueCtrl', ['$scope', 'page', function ($scope, page) {
         page.title = 'View queue';
+    }]);
+
+    qwait.controller('AdminCtrl', ['$scope', 'page', function ($scope, page) {
+        page.title = 'Admin tools';
     }]);
 
     qwait.filter('duration', function () {
