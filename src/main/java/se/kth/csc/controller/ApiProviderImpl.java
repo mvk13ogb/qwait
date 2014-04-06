@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.api.QueuePositionSnapshot;
-import se.kth.csc.payload.api.Snapshotters;
+import se.kth.csc.payload.api.AccountSnapshot;
 import se.kth.csc.payload.message.*;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
@@ -39,6 +38,12 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
+    public Iterable<Account> findAccounts(boolean onlyAdmin, String query) {
+        return accountStore.findAccounts(onlyAdmin, query);
+    }
+
+    @Override
     public Account fetchAccount(String userName) throws NotFoundException {
         return accountStore.fetchAccountWithPrincipalName(userName);
     }
@@ -49,7 +54,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    public List<Queue> fetchAllQueues() {
+    public Iterable<Queue> fetchAllQueues() {
         return queueStore.fetchAllQueues();
     }
 
