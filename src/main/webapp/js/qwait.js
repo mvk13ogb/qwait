@@ -193,6 +193,14 @@
             });
         };
 
+        result.clearQueue = function (name) {
+            return $http.post('/api/queue/' + name + '/clear', {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
         result.joinQueue = function (name, user) {
             return $http.put('/api/queue/' + name + '/position/' + user, {
                 headers: {
@@ -427,12 +435,14 @@
         $scope.users = users;
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'users', 'page', function ($scope, $route, queues, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page) {
         page.title = 'View queue';
 
         $scope.users = users;
         $scope.queues = queues;
         $scope.date = moment();
+        //$scope.queuePos = getQueuePos($scope.users.current.name, $scope.queue.positions);
+        //$scope.queuePosNr = getQueuePosNr($scope.users.current.name, $scope.queue.positions);
 
         queues.get($route.current.params.queueName).success(function (queue) {
             $scope.queue = queue;
@@ -441,6 +451,11 @@
                 (function (i2) {
                     users.get(queue.positions[i2].userName).success(function (user) {
                         queue.positions[i2].user = user;
+
+                        if(users.current.name == user.name){
+                            $scope.queuePos = queue.positions[i2];
+                            $scope.queuePosNr = i2;
+                        }
                     });
                 })(i);
             }
