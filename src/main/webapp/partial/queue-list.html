@@ -37,7 +37,8 @@
           <ng-pluralize count="queue.positions.length" when="{'0': 'Noone queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
           </ng-pluralize>
           <span ng-if="userQueuePos(users.current, queue.positions)">
-            (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}})
+            (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}},
+            {{queue.positions.indexOf(userQueuePos(users.current, queue.positions))}} ahead of you)
           </span>
         </p>
       </div>
