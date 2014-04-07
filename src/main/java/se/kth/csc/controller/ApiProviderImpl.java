@@ -112,10 +112,10 @@ public class ApiProviderImpl implements ApiProvider {
     public void deleteQueuePosition(QueuePosition queuePosition) {
         QueuePositionRemoved message = new QueuePositionRemoved(queuePosition.getQueue().getName(),
                 queuePosition.getAccount().getPrincipalName());
-        queuePositionStore.removeQueuePosition(queuePosition);
 
         messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
         messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        queuePositionStore.removeQueuePosition(queuePosition);
     }
 
     @Override
