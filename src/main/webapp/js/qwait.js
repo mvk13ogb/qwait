@@ -39,7 +39,18 @@
                         var user = cache.get(data.body.name);
                         if (user) {
                             user.admin = data.body.admin;
+
+                            var index = result.admins.indexOf(user);
+
+                            if (data.body.admin && index == -1) {
+                                result.admins.push(user);
+                            }
+
+                            if (!data.body.admin && index >= 0) {
+                                result.admins.splice(index, 1);
+                            }
                         }
+
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
@@ -47,16 +58,33 @@
             });
         });
 
+        result.find = function (query) {
+            var promise = $http.get('/api/users?query=' + encodeURIComponent(query));
+            promise.success(function (users) {
+                for (var i = 0; i < users.length; i++) {
+                    var user = cache.get(users[i].name);
+                    if (user) {
+                        users[i] = user;
+                    } else {
+                        cache.put(users[i].name, users[i]);
+                    }
+                }
+            });
+            return promise;
+        };
+
         result.get = function (name) {
             var promise = $http.get('/api/user/' + encodeURIComponent(name));
             promise.success(function (user) {
-                cache.put(name, user);
+                if (!cache.get(name)) {
+                    cache.put(name, user);
+                }
             });
             return promise;
         };
 
         result.setAdmin = function (userName, admin) {
-            return $http.put('/api/user/' + encodeURIComponent(userName) + '/role/admin', admin);
+            return $http.put('/api/user/' + encodeURIComponent(userName) + '/role/admin', '' + admin);
         };
 
         result.current = requestInfo.currentUser;
@@ -66,6 +94,21 @@
                 result.current = user;
             });
         }
+
+        result.admins = [];
+
+        $http.get('/api/users?role=admin').success(function (admins) {
+            for (var i = 0; i < admins.length; i++) {
+                var user = cache.get(admins[i].name);
+                if (user) {
+                    admins[i] = user;
+                } else {
+                    cache.put(admins[i].name, admins[i]);
+                }
+            }
+
+            result.admins = admins;
+        });
 
         return result;
     }]);
@@ -466,8 +509,10 @@
         page.title = 'View queue';
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', 'page', function ($scope, page) {
+    qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
         page.title = 'Admin tools';
+
+        $scope.users = users;
     }]);
 
     qwait.filter('duration', function () {
