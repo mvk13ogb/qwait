@@ -307,22 +307,6 @@
             });
         };
 
-        result.joinQueue = function (name, user) {
-            return $http.put('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.leaveQueue = function (name, user) {
-            return $http.delete('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
         result.changeComment = function (name, user, comment) {
             return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
                 headers: {
