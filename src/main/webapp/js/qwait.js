@@ -273,7 +273,7 @@
             all: [
                 { name: 'Adrian Blanco' },
                 { name: 'Casper Winsnes' },
-                { name: 'Christoffer Pettersson' },
+                { name: 'Christoffer Pettersson', gravatar: '5ba6cca11f93ea6d22f458700ac8a506' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
