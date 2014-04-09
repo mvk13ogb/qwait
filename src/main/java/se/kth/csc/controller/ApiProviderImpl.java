@@ -107,9 +107,11 @@ public class ApiProviderImpl implements ApiProvider {
 
         queuePositionStore.storeQueuePosition(queuePosition);
 
-        QueuePositionCreated message = new QueuePositionCreated(queue.getName(), account.getPrincipalName());
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
-        messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(), message);
+        QueuePositionCreatedInQueue message1 = new QueuePositionCreatedInQueue(queuePosition, queue.getName());
+        QueuePositionCreatedInAccount message2 = new QueuePositionCreatedInAccount(queuePosition, queue.getName());
+        messageBus.convertAndSend("/topic/queue/" + queue.getName(), message1);
+
+        messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(), message2);
     }
 
     @Override
