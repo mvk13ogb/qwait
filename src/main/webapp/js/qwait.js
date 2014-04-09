@@ -50,6 +50,15 @@
                                 result.admins.splice(index, 1);
                             }
                         }
+                        break;
+                    case 'QueueOwnerAdded':
+                        break;
+                    case 'QueuePositionCreatedInAccount':
+                        queue = result.all[data.body.queueName];
+                        console.log(data.body);
+                        if (queue) {
+                            queue.positions.push(data.body.queuePosition);
+                        }
 
                         break;
                     default:
@@ -197,10 +206,11 @@
                             }
                         }
                         break;
-                    case 'QueuePositionCreated':
+                    case 'QueuePositionCreatedInQueue':
                         queue = result.all[data.body.queueName];
+                        console.log(data.body);
                         if (queue) {
-
+                            queue.positions.push(data.body.queuePosition);
                         }
                         break;
                     case 'QueuePositionLocationChanged':
