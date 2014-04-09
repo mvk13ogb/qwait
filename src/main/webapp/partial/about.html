@@ -1,0 +1,29 @@
+<div>
+  <h1>{{system.product.name}}
+    <small>v{{system.product.version}}</small>
+  </h1>
+  <p>
+    Welcome to QWait [kuːˈwaɪt], the new web based queueing manager developed for KTH CSC. Since the last millennium,
+    the mere mention of the queueing manager which must not be named has brought terror into the hearts of even the most
+    fearless students, but we say: no more. We have built QWait with a robust backend that will never give up on you,
+    and a lightweight web interface which can be used with your desktop, laptop, mobile device or toaster (given that it
+    supports HTML). Best of all: it makes queueing simple, just as it should be.
+  </p>
+
+  <h2>Contributors</h2>
+  <ul class="medium-block-grid-3">
+    <li ng-repeat="contributor in contributors.all">
+      <div class="row">
+        <div class="medium-4 columns">
+          <img class="th"
+               ng-src="//gravatar.com/avatar/{{contributor.gravatar || '00000000000000000000000000000000'}}.png?d=mm"
+               alt="{{contributor.name}}"/>
+        </div>
+        <div class="medium-8 columns">
+          <h4>{{contributor.name}}</h4>
+          <a ng-if="contributor.twitter" href="//twitter.com/{{contributor.twitter}}">@{{contributor.twitter}}</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
