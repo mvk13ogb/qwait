@@ -1,9 +1,14 @@
 <div>
   <h2>{{queue.title}}</h2>
+  <p ng-show="queue.positions == ''">This queue is empty</p>
   <div class="row">
     <div class="large-3 columns">
       <div ng-show="users.current.anonymous">
-        Not logged in
+        <a href="/login">
+          <button class="button expand">
+            Log in
+          </button>
+        </a>
       </div>
       <div ng-show="!users.current.anonymous">
         <label>
@@ -90,7 +95,7 @@
       </div>
     </div>
 
-    <div class="large-9 columns">
+    <div class="large-9 columns" ng-show="queue.positions">
       <div class="row collapse">
         <div class="large-8 columns">
         </div>

@@ -33,11 +33,11 @@
 }
 
 .table-panel:nth-child(odd) {
-  @include panel(#F9F9F9, 0.8rem);
+  @include panel(#F9F9F9, 0.7rem);
 }
 
 .table-panel:nth-child(even) {
-  @include panel(#FFFFFF, 0.8rem);
+  @include panel(#FFFFFF, 0.7rem);
 }
 
 .table-panel:nth-child(odd), .table-panel:nth-child(even){
