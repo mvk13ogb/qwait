@@ -1,8 +1,9 @@
 <div>
   <h2>{{queue.title}}</h2>
+  <p ng-show="queue.positions == ''">This queue is empty</p>
 
   <div class="row collapse">
-    <div class="large-4 large-offset-8 columns">
+    <div class="large-3 large-offset-9 columns">
       <input type="text" ng-model="search" placeholder="Find users"/>
     </div>
   </div>
@@ -10,7 +11,11 @@
   <div class="row">
     <div class="large-3 columns">
       <div ng-show="users.current.anonymous">
-        Not logged in
+        <a href="/login">
+          <button class="button expand">
+            Log in
+          </button>
+        </a>
       </div>
       <div ng-show="!users.current.anonymous">
         <div class="row collapse">
@@ -76,7 +81,7 @@
       </div>
     </div>
 
-    <div class="large-9 columns">
+    <div class="large-9 columns" ng-show="queue.positions">
       <div class="row collapse">
         <table class="small-12 columns">
           <thead>
