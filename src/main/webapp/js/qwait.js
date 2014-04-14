@@ -54,12 +54,10 @@
                     case 'QueueOwnerAdded':
                         break;
                     case 'QueuePositionCreatedInAccount':
-                        queue = result.all[data.body.queueName];
-                        console.log(data.body);
-                        if (queue) {
-                            queue.positions.push(data.body.queuePosition);
-                        }
-
+                        // Not yet implemented
+                        break;
+                    case 'QueuePositionRemoved':
+                        // Not yet implemented
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
@@ -208,7 +206,6 @@
                         break;
                     case 'QueuePositionCreatedInQueue':
                         queue = result.all[data.body.queueName];
-                        console.log(data.body);
                         if (queue) {
                             queue.positions.push(data.body.queuePosition);
                         }
@@ -223,6 +220,14 @@
                             }
                         }
                     case 'QueuePositionRemoved':
+                        queue = result.all[data.body.queueName];
+                        if(queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if(queue.positions[i].userName = data.body.userName) {
+                                    queue.positions.splice(i, 1);
+                                }
+                            }
+                        }
                         break;
                     default:
                         console.log('Unrecognized queue message', data.body);
