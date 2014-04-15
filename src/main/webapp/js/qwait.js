@@ -191,7 +191,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].comment = data.body.comment;
                                 }
                             }
@@ -207,7 +207,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].location = data.body.location;
                                 }
                             }
@@ -298,31 +298,6 @@
                 }
             });
         };
-
-        result.clearQueue = function (name) {
-            return $http.post('/api/queue/' + name + '/clear', {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
         return result;
     }]);
 
