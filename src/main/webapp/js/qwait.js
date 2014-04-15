@@ -50,7 +50,14 @@
                                 result.admins.splice(index, 1);
                             }
                         }
-
+                        break;
+                    case 'QueueOwnerAdded':
+                        break;
+                    case 'QueuePositionCreatedInAccount':
+                        // Not yet implemented
+                        break;
+                    case 'QueuePositionRemoved':
+                        // Not yet implemented
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
@@ -197,10 +204,10 @@
                             }
                         }
                         break;
-                    case 'QueuePositionCreated':
+                    case 'QueuePositionCreatedInQueue':
                         queue = result.all[data.body.queueName];
                         if (queue) {
-
+                            queue.positions.push(data.body.queuePosition);
                         }
                         break;
                     case 'QueuePositionLocationChanged':
@@ -213,6 +220,14 @@
                             }
                         }
                     case 'QueuePositionRemoved':
+                        queue = result.all[data.body.queueName];
+                        if(queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if (queue.positions[i].userName == data.body.userName) {
+                                    queue.positions.splice(i, 1);
+                                }
+                            }
+                        }
                         break;
                     default:
                         console.log('Unrecognized queue message', data.body);
@@ -352,6 +367,26 @@
             },
             canModerateQueue: function (user, queue) {
                 return result.isQueueOwner(user, queue) || result.isQueueModerator(user, queue) || user.admin;
+            }
+        };
+
+        return result;
+    });
+
+    qwait.factory('queuePositions', function () {
+        var result = {
+            getUserQueuePos: function (user, positions) {
+                if(!(user && positions)) {
+                    return undefined;
+                }
+
+                for (var i = 0; i < positions.length; i++) {
+                    if (positions[i].userName == user.name) {
+                        return positions[i];
+                    }
+                }
+
+                return null;
             }
         };
 
@@ -524,32 +559,26 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', function ($scope, page, clock, queues, users, security) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
-        $scope.queues = queues;
         $scope.users = users;
+        $scope.queues = queues;
 
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = function (user, positions) {
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
-                }
-            }
-            return null;
-        };
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', 'queuePositions', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.users = users;
         $scope.queues = queues;
         $scope.date = moment();
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         //$scope.queuePos = getQueuePos($scope.users.current.name, $scope.queue.positions);
         //$scope.queuePosNr = getQueuePosNr($scope.users.current.name, $scope.queue.positions);
 

@@ -27,10 +27,10 @@
             </div>
         </label>
         <div class="row collapse">
-          <button ng-show="!queuePos" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+          <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
-          <button ng-show="queuePos" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
             Leave queue
           </button>
         </div>
@@ -117,13 +117,13 @@
             Comment
           </div>
         </div>
-        <div class="table-panel" ng-repeat="position in queue.positions | filter:search">
+        <div class="table-panel" ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
           <div class="row collapse">
             <div class="small-1 columns">
               {{$index + 1}}
             </div>
             <div class="small-3 columns">
-              {{position.user.readableName}}
+              {{position.userName}}
             </div>
             <div class="small-2 columns">
               {{(date - position.startTime) | duration}}
