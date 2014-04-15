@@ -392,6 +392,17 @@
         return result;
     });
 
+    qwait.factory('getUserQueuePos', function () {
+        return function (user, positions) {
+            for (var i = 0; i < positions.length; i++) {
+                if (positions[i].userName == user.name) {
+                    return positions[i];
+                }
+            }
+            return null;
+        }
+    });
+
     qwait.factory('messagebus', ['$rootScope', '$timeout', '$interval', function ($rootScope, $timeout, $interval) {
         var result = {},
             client = Stomp.over(new SockJS('/bus/client')),
@@ -558,21 +569,14 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', function ($scope, page, clock, queues, users, security) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'getUserQueuePos', function ($scope, page, clock, queues, users, security, getUserQueuePos) {
         page.title = 'Queue list';
 
         $scope.queues = queues;
         $scope.users = users;
 
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = function (user, positions) {
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
-                }
-            }
-            return null;
-        };
+        $scope.userQueuePos = getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
