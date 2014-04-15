@@ -398,20 +398,24 @@
         return result;
     });
 
-    qwait.factory('getUserQueuePos', function () {
-        return function (user, positions) {
-            if(!(user && positions)) {
-                return undefined;
-            }
-
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
+    qwait.factory('queuePositions', function () {
+        var result = {
+            getUserQueuePos: function (user, positions) {
+                if(!(user && positions)) {
+                    return undefined;
                 }
-            }
 
-            return null;
-        }
+                for (var i = 0; i < positions.length; i++) {
+                    if (positions[i].userName == user.name) {
+                        return positions[i];
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        return result;
     });
 
     qwait.factory('messagebus', ['$rootScope', '$timeout', '$interval', function ($rootScope, $timeout, $interval) {
@@ -580,26 +584,26 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'getUserQueuePos', function ($scope, page, clock, queues, users, security, getUserQueuePos) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
         $scope.users = users;
         $scope.queues = queues;
 
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = getUserQueuePos;
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', 'getUserQueuePos', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page, getUserQueuePos) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', 'queuePositions', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.users = users;
         $scope.queues = queues;
         $scope.date = moment();
-        $scope.userQueuePos = getUserQueuePos;
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         //$scope.queuePos = getQueuePos($scope.users.current.name, $scope.queue.positions);
         //$scope.queuePosNr = getQueuePosNr($scope.users.current.name, $scope.queue.positions);
 
