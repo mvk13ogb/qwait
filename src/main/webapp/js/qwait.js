@@ -400,16 +400,16 @@
 
     qwait.factory('getUserQueuePos', function () {
         return function (user, positions) {
-            try {
-                for (var i = 0; i < positions.length; i++) {
-                    if (positions[i].userName == user.name) {
-                        return positions[i];
-                    }
+            if(!(user && positions)) {
+                return undefined;
+            }
+
+            for (var i = 0; i < positions.length; i++) {
+                if (positions[i].userName == user.name) {
+                    return positions[i];
                 }
             }
-            catch(err){
-                // This is here to catch the errors when the positions-object hasn't been loaded yet.
-            }
+
             return null;
         }
     });
