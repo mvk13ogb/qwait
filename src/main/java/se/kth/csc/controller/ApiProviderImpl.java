@@ -115,7 +115,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name) or #queuePosition.owner.principalName == authentication.name")
+    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name) or #queuePosition.account.principalName == authentication.name")
     public void deleteQueuePosition(QueuePosition queuePosition) {
         QueuePositionRemoved message = new QueuePositionRemoved(queuePosition.getQueue().getName(),
                 queuePosition.getAccount().getPrincipalName());

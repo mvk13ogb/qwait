@@ -117,7 +117,7 @@
             Comment
           </div>
         </div>
-        <div class="table-panel" ng-repeat="position in queue.positions | filter:search">
+        <div class="table-panel" ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
           <div class="row collapse">
             <div class="small-1 columns">
               {{$index + 1}}
