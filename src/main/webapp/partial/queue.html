@@ -1,0 +1,150 @@
+<div>
+  <h2>{{queue.title}}</h2>
+  <p ng-show="queue.positions == ''">This queue is empty</p>
+  <div class="row">
+    <div class="large-3 columns">
+      <div ng-show="users.current.anonymous">
+        <a href="/login">
+          <button class="button expand">
+            Log in
+          </button>
+        </a>
+      </div>
+      <div ng-show="!users.current.anonymous">
+        <label>
+          Location
+            <div class="row collapse">
+              <div class="small-12 columns">
+                <input type="text" value="{{queuePos.location}}" maxlength="15" ng-model="location" 
+                      ng-change="queues.changeLocation(queue.name, users.current.name, location)" ng-class="{'no-location' : !queuePos.location}">
+                </input>
+              </div>
+            </div>
+        </label>
+        <label>
+          Comment
+            <div class="row collapse">
+              <div class="small-12 columns">
+                <input type="text" value="{{queuePos.comment}}" maxlength="15" ng-model="comment" 
+                      ng-change="queues.changeComment(queue.name, users.current.name, comment)">
+                </input>
+              </div>
+            </div>
+        </label>
+        <div class="row collapse">
+          <button ng-show="!queuePos" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+            Join queue
+          </button>
+          <button ng-show="queuePos" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
+            Leave queue
+          </button>
+        </div>
+        <div ng-show="users.current.admin" class="row collapse">
+          <div class="small-12 columns">
+            <a href="" data-dropdown="manage-queue">
+              <button class="button secondary expand dropdown" type="submit">
+                Manage queue
+              </button>
+            </a>
+            <div id="manage-queue" data-dropdown-content="" class="medium f-dropdown content">
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14" ng-show="queue.locked">Unlock</span>
+                  <span class="size-14" ng-show="!queue.locked">Lock&nbsp;</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small" ng-class="{alert: !queue.locked, success: queue.locked}"
+                        ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
+                  <i class="fi-unlock size-14" ng-show="queue.locked"></i>
+                  <i class="fi-lock size-14" ng-show="!queue.locked"></i>
+                </button>
+              </li>
+            </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
+                  <span class="size-14" ng-show="!queue.active">Unhide</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
+                        ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                  <i class="fi-eye size-14"></i>
+                </button>
+              </li>
+            </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14">Clear</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" style="margin-bottom: 0;">
+                  <i class="fi-x size-14"></i>
+                </button>
+              </li>
+            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="large-9 columns" ng-show="queue.positions">
+      <div class="row collapse">
+        <div class="large-8 columns">
+        </div>
+        <div class="large-4 columns">
+          <input type="text" ng-model="search" placeholder="Find users">
+          </input>
+        </div>
+      </div>
+      <div class="table-border">
+        <div class="row collapse table-panel bold">
+          <div class="small-1 columns">
+            #
+          </div>
+          <div class="small-3 columns">
+            User
+          </div>
+          <div class="small-2 columns">
+            Time
+          </div>
+          <div class="small-3 columns">
+            Location
+          </div>
+          <div class="small-3 columns">
+            Comment
+          </div>
+        </div>
+        <div class="table-panel" ng-repeat="position in queue.positions | filter:search">
+          <div class="row collapse">
+            <div class="small-1 columns">
+              {{$index + 1}}
+            </div>
+            <div class="small-3 columns">
+              {{position.user.readableName}}
+            </div>
+            <div class="small-2 columns">
+              {{(date - position.startTime) | duration}}
+            </div>
+            <div class="small-3 columns">
+              {{position.location}}
+            </div>
+            <div class="small-3 columns">
+              {{position.comment}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../vendor/js/foundation.dropdown.js"></script>
+<script>$(document).foundation();</script>

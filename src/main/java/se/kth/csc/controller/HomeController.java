@@ -35,35 +35,15 @@ public class HomeController {
      * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String welcome(Principal principal){
-        if (principal != null) {
-            return "redirect:/queue";
-        } else {
-            return "welcome";
-        }
-    }
-
-    /**
-     * The about page of the web application.
-     */
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
     public String index() {
-        return "home";
-    }
-
-    /**
-     * The help page of the web application
-     */
-    @RequestMapping(value = "/help", method = RequestMethod.GET)
-    public String help(){
-        return "help";
+        return "index";
     }
 
     /**
      * The debug page of the web application
      */
     @RequestMapping(value = "/debug", method = RequestMethod.GET)
-    public String debug(){
+    public String debug() {
         return "debug";
     }
 
@@ -107,7 +87,7 @@ public class HomeController {
 
     // Used to enforce authentication when logging in from welcome page
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
-    public String loginRedirect() {
-        return "redirect:/queue";
+    public String login() {
+        return "redirect:/";
     }
 }

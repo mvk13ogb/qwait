@@ -3,15 +3,18 @@ package se.kth.csc.controller;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
+import se.kth.csc.payload.api.AccountSnapshot;
 
 import java.util.List;
 
 public interface ApiProvider {
+    Iterable<Account> findAccounts(boolean onlyAdmin, String query);
+
     Account fetchAccount(String userName) throws NotFoundException;
 
     Queue fetchQueue(String queueName) throws NotFoundException;
 
-    List<Queue> fetchAllQueues();
+    Iterable<Queue> fetchAllQueues();
 
     QueuePosition fetchQueuePosition(String queueName, String userName);
 
