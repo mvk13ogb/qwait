@@ -198,7 +198,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].comment = data.body.comment;
                                 }
                             }
@@ -214,7 +214,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].location = data.body.location;
                                 }
                             }
@@ -223,7 +223,7 @@
                         queue = result.all[data.body.queueName];
                         if(queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if(queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions.splice(i, 1);
                                 }
                             }
