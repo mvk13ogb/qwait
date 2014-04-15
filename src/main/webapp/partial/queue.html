@@ -41,12 +41,12 @@
         </div>
         <div ng-show="users.current.admin" class="row collapse">
           <div class="small-12 columns">
-            <a href="" data-dropdown="drop1">
+            <a href="" data-dropdown="manage-queue">
               <button class="button secondary expand dropdown" type="submit">
                 Manage queue
               </button>
             </a>
-
+            <div id="manage-queue" data-dropdown-content="" class="medium f-dropdown content">
             <ul class="button-group radius" style="margin-top: 0.5rem">
               <li>
                 <button type="button" class="button secondary small" style="margin-bottom: 0;">
@@ -90,6 +90,7 @@
                 </button>
               </li>
             </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -145,3 +146,5 @@
     </div>
   </div>
 </div>
+<script src="../vendor/js/foundation.dropdown.js"></script>
+<script>$(document).foundation();</script>
