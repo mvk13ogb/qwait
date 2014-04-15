@@ -84,8 +84,8 @@
         <ul class="right">
           <li>
             <a>
-              <span ng-if="messagebus.ready" class="green size-24">&#9679;</span>
-              <span ng-if="!messagebus.ready" class="red size-24">&#9679;</span>
+              <span ng-if="messagebus.ready" class="green size-24" label="Connected">&#9679;</span>
+              <span ng-if="!messagebus.ready" class="red size-24" label="Disconnected">&#9679;</span>
             </a>
           </li>
           <li ng-if="!users.current.anonymous"><a href="#">Logged in as
