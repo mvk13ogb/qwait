@@ -10,6 +10,7 @@ import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
 import se.kth.csc.payload.api.AccountSnapshot;
+import se.kth.csc.payload.api.Snapshotters;
 import se.kth.csc.payload.message.*;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
@@ -107,8 +108,10 @@ public class ApiProviderImpl implements ApiProvider {
 
         queuePositionStore.storeQueuePosition(queuePosition);
 
-        QueuePositionCreatedInQueue message1 = new QueuePositionCreatedInQueue(queuePosition, queue.getName());
-        QueuePositionCreatedInAccount message2 = new QueuePositionCreatedInAccount(queuePosition, queue.getName());
+        QueuePositionCreatedInQueue message1 = new QueuePositionCreatedInQueue(
+                Snapshotters.QueuePositionInQueueSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
+        QueuePositionCreatedInAccount message2 = new QueuePositionCreatedInAccount(
+                Snapshotters.QueuePositionInAccountSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message1);
 
         messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(), message2);
