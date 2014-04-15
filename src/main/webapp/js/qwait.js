@@ -394,10 +394,15 @@
 
     qwait.factory('getUserQueuePos', function () {
         return function (user, positions) {
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
+            try {
+                for (var i = 0; i < positions.length; i++) {
+                    if (positions[i].userName == user.name) {
+                        return positions[i];
+                    }
                 }
+            }
+            catch(err){
+                // This is here to catch the errors when the positions-object hasn't been loaded yet.
             }
             return null;
         }
@@ -569,11 +574,11 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'getUserQueuePos', function ($scope, page, clock, queues, users, security, getUserQueuePos) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'getUserQueuePos', 'queuePositions', function ($scope, page, clock, queues, users, security, getUserQueuePos, queuePositions) {
         page.title = 'Queue list';
 
-        $scope.queues = queues;
         $scope.users = users;
+        $scope.queues = queues;
 
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.userQueuePos = getUserQueuePos;
@@ -582,16 +587,16 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', function ($scope, $route, clock, queues, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
         $scope.users = users;
-
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
