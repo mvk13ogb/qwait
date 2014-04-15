@@ -10,8 +10,8 @@ public class QueuePositionCreatedInQueue {
     private final QueuePositionInQueueSnapshot position;
     private final String queueName;
 
-    public QueuePositionCreatedInQueue(QueuePosition queuePosition, String queueName) {
-        this.position = Snapshotters.QueuePositionInQueueSnapshotter.INSTANCE.apply(queuePosition);
+    public QueuePositionCreatedInQueue(QueuePositionInQueueSnapshot queuePosition, String queueName) {
+        this.position = queuePosition;
         this.queueName = queueName;
     }
 
