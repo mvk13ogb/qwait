@@ -47,49 +47,49 @@
               </button>
             </a>
             <div id="manage-queue" data-dropdown-content="" class="medium f-dropdown content">
-            <ul class="button-group radius" style="margin-top: 0.5rem">
-              <li>
-                <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                  <span class="size-14" ng-show="queue.locked">Unlock</span>
-                  <span class="size-14" ng-show="!queue.locked">Lock&nbsp;</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button small" ng-class="{alert: !queue.locked, success: queue.locked}"
-                        ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
-                  <i class="fi-unlock size-14" ng-show="queue.locked"></i>
-                  <i class="fi-lock size-14" ng-show="!queue.locked"></i>
-                </button>
-              </li>
-            </ul>
+              <ul class="button-group radius" style="margin-top: 0.5rem">
+                <li>
+                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                    <span class="size-14" ng-show="queue.locked">Unlock</span>
+                    <span class="size-14" ng-show="!queue.locked">Lock&nbsp;</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="button small" ng-class="{alert: !queue.locked, success: queue.locked}"
+                          ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
+                    <i class="fi-unlock size-14" ng-show="queue.locked"></i>
+                    <i class="fi-lock size-14" ng-show="!queue.locked"></i>
+                  </button>
+                </li>
+              </ul>
 
-            <ul class="button-group radius" style="margin-top: 0.5rem">
-              <li>
-                <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                  <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
-                  <span class="size-14" ng-show="!queue.active">Unhide</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
-                        ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
-                  <i class="fi-eye size-14"></i>
-                </button>
-              </li>
-            </ul>
+              <ul class="button-group radius" style="margin-top: 0.5rem">
+                <li>
+                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                    <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
+                    <span class="size-14" ng-show="!queue.active">Unhide</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
+                          ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                    <i class="fi-eye size-14"></i>
+                  </button>
+                </li>
+              </ul>
 
-            <ul class="button-group radius" style="margin-top: 0.5rem">
-              <li>
-                <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                  <span class="size-14">Clear</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" style="margin-bottom: 0;">
-                  <i class="fi-x size-14"></i>
-                </button>
-              </li>
-            </ul>
+              <ul class="button-group radius" style="margin-top: 0.5rem">
+                <li>
+                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                    <span class="size-14">Clear</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" style="margin-bottom: 0;">
+                    <i class="fi-x size-14"></i>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
