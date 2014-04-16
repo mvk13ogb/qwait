@@ -271,8 +271,8 @@
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
-	});
-	};
+            });
+        };
 
         result.clearQueue = function (name) {
             return $http.post('/api/queue/' + name + '/clear', {
@@ -292,30 +292,6 @@
 
         result.leaveQueue = function (name, user) {
             return $http.delete('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.clearQueue = function (name) {
-            return $http.post('/api/queue/' + name + '/clear', {
                 headers: {
                     'Content-Type': 'application/json'
                 }
