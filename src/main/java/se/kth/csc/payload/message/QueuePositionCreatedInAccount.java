@@ -18,5 +18,7 @@ public class QueuePositionCreatedInAccount {
     public QueuePositionInAccountSnapshot getQueuePosition() {
         return position;
     }
-    public String getQueueName() { return queueName; }
+    public String getQueueName() {
+        return queueName;
+    }
 }

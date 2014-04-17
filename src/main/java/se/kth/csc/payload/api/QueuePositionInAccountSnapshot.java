@@ -3,14 +3,14 @@ package se.kth.csc.payload.api;
 import org.joda.time.DateTime;
 
 public class QueuePositionInAccountSnapshot extends NormalizedQueuePositionSnapshot {
-    private final String queueName;
+    private final String userName;
 
-    public QueuePositionInAccountSnapshot(DateTime startTime, String location, String comment, String queueName) {
+    public QueuePositionInAccountSnapshot(DateTime startTime, String location, String comment, String userName) {
         super(startTime, location, comment);
-        this.queueName = queueName;
+        this.userName = userName;
     }
 
-    public String getQueueName() {
-        return queueName;
+    public String getUserName() {
+        return userName;
     }
 }

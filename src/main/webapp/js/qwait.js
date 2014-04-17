@@ -54,10 +54,20 @@
                     case 'QueueOwnerAdded':
                         break;
                     case 'QueuePositionCreatedInAccount':
-                        // Not yet implemented
+                        var user = cache.get(data.body.queuePosition.userName);
+                        if(user) {
+                            user.queuePositions.push(data.body.queuePosition);
+                        }
                         break;
                     case 'QueuePositionRemoved':
-                        // Not yet implemented
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions.splice(i, 1);
+                                }
+                            }
+                        }
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
