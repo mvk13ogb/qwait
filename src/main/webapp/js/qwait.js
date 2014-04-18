@@ -191,7 +191,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].comment = data.body.comment;
                                 }
                             }
@@ -207,7 +207,7 @@
                         queue = result.all[data.body.queueName];
                         if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
-                                if (queue.positions[i].userName = data.body.userName) {
+                                if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions[i].location = data.body.location;
                                 }
                             }
@@ -298,47 +298,6 @@
                 }
             });
         };
-
-        result.clearQueue = function (name) {
-            return $http.post('/api/queue/' + name + '/clear', {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.joinQueue = function (name, user) {
-            return $http.put('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.leaveQueue = function (name, user) {
-            return $http.delete('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
-        result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
-
         return result;
     }]);
 
@@ -353,12 +312,12 @@
             all: [
                 { name: 'Adrian Blanco', gravatar: '5e24f37bda5a846cdaa822e72627fe63', github: 'adrianblp'},
                 { name: 'Casper Winsnes' },
-                { name: 'Christoffer Pettersson' },
+                { name: 'Christoffer Pettersson', gravatar: '5ba6cca11f93ea6d22f458700ac8a506' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
                 { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', twitter: 'hlilje' },
-                { name: 'Jacob Sievers' },
+                { name: 'Jacob Sievers', gravatar: '00c2d95911a8ccf7e5200257f03ffb34' },
                 { name: 'Michael Håkansson', gravatar: 'e12d2965870d5054f901b088ab692d3d', twitter: 'michaelhak' },
                 { name: 'Robin Engström', gravatar: 'd3389ec4c8f9a0d7d0500ec982a35099' }
             ]
