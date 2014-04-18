@@ -229,6 +229,7 @@
                                 }
                             }
                         }
+                        break;
                     case 'QueuePositionRemoved':
                         queue = result.all[data.body.queueName];
                         if(queue) {
