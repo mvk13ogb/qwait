@@ -69,6 +69,26 @@
                             }
                         }
                         break;
+                    case 'QueuePositionCommentChanged':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions[i].comment = data.body.comment;
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionLocationChanged':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions[i].location = data.body.location;
+                                }
+                            }
+                        }
+                        break;
                     default:
                         console.log('Unrecognized user message', data.body);
                 }
