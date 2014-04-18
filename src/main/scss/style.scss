@@ -13,39 +13,6 @@
   background-size: 40px 40px;
 }
 
-.no-bot-margin {
-  margin-bottom: 0px; 
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.no-location {
-  border-color: rgba(255, 0, 0, 0.4) !important;
-  border-width: 2px !important;
-}
-
-.table-border {
-  border-style: solid;
-  border-width: 1px;
-  border-color: #E3E3E3;
-}
-
-.table-panel:nth-child(odd) {
-  @include panel(#F9F9F9, 0.8rem);
-}
-
-.table-panel:nth-child(even) {
-  @include panel(#FFFFFF, 0.8rem);
-}
-
-.table-panel:nth-child(odd), .table-panel:nth-child(even){
-  border-style: none;
-  word-wrap: break-word;
-  margin-bottom: 0px;
-}
-
 .plain-panel {
   @include panel(#FAFAFA);
 }
@@ -65,11 +32,10 @@
   @include striped-bg(scale-color(mix($alert-color, $secondary-color, 50%), $lightness: 80%));
 }
 
-button {
-  @include text-shadow(0px 1px 1px rgba(0, 0, 0, 0.3));
-  @include box-shadow(rgba(0, 0, 0, 0.12) 1px 1px 0px);
-  @include border-radius(1.2px 1.2px);
+button.itsy, .button.itsy {
+  @include button-size($padding: $button-tny/2);
 }
+
 .queue-row.ng-enter, .queue-row.ng-move {
   @include transition(0.5s);
   @include opacity(0);
@@ -88,21 +54,37 @@ button {
 }
 
 @keyframes fade-out {
-  from { opacity:1; }
-  to { opacity:0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @-webkit-keyframes fade-out {
-  from { opacity:1; }
-  to { opacity:0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @-moz-keyframes fade-out {
-  from { opacity:1; }
-  to { opacity:0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @-o-keyframes fade-out {
-  from { opacity:1; }
-  to { opacity:0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
