@@ -10,7 +10,7 @@ public class QueuePositionInAccountSnapshot extends NormalizedQueuePositionSnaps
         this.queueName = queueName;
     }
 
-    public String getUserName() {
+    public String getQueueName() {
         return queueName;
     }
 }
