@@ -28,7 +28,7 @@
             });
     }]);
 
-    qwait.factory('users', ['$http', '$cacheFactory', 'messagebus', 'requestInfo', function ($http, $cacheFactory, messagebus, requestInfo) {
+    qwait.factory('users', ['$q', '$http', '$cacheFactory', 'messagebus', 'requestInfo', function ($q, $http, $cacheFactory, messagebus, requestInfo) {
         var result = {},
             cache = $cacheFactory('users');
 
@@ -73,14 +73,23 @@
             return promise;
         };
 
+        result.doGet = function (name) {
+            return $http.get('/api/user/' + encodeURIComponent(name));
+        };
+
         result.get = function (name) {
-            var promise = $http.get('/api/user/' + encodeURIComponent(name));
-            promise.success(function (user) {
-                if (!cache.get(name)) {
-                    cache.put(name, user);
-                }
-            });
-            return promise;
+            var cached = cache.get(name);
+
+            if (!cached) {
+                cached = {};
+                cache.put(name, cached);
+
+                result.doGet(name).success(function (user) {
+                    angular.extend(cached, user);
+                });
+            }
+
+            return cached;
         };
 
         result.setAdmin = function (userName, admin) {
@@ -90,8 +99,9 @@
         result.current = requestInfo.currentUser;
 
         if (result.current.name) {
-            result.get(result.current.name).success(function (user) {
-                result.current = user;
+            cache.put(result.current.name, result.current);
+            result.doGet(result.current.name).success(function (user) {
+                angular.extend(result.current, user);
             });
         }
 
@@ -197,12 +207,6 @@
                             }
                         }
                         break;
-                    case 'QueuePositionCreated':
-                        queue = result.all[data.body.queueName];
-                        if (queue) {
-
-                        }
-                        break;
                     case 'QueuePositionLocationChanged':
                         queue = result.all[data.body.queueName];
                         if (queue) {
@@ -212,8 +216,6 @@
                                 }
                             }
                         }
-                    case 'QueuePositionRemoved':
-                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -226,12 +228,21 @@
             }
         });
 
+        result.doGet = function (name) {
+            return $http.get('/api/queue/' + encodeURIComponent(name));
+        };
+
         result.get = function (name) {
-            var promise = $http.get('/api/queue/' + encodeURIComponent(name));
-            promise.success(function (queue) {
-                result.all[queue.name] = queue;
-            });
-            return promise;
+            var cached = result.all[name];
+
+            if (!cached) {
+                cached = {};
+                result.all[name] = cached;
+                result.doGet(name).success(function (queue) {
+                    angular.extend(cached, queue);
+                });
+            }
+            return cached;
         };
 
         result.setLocked = function (name, locked) {
@@ -256,8 +267,8 @@
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
-	});
-	};
+            });
+        };
 
         result.clearQueue = function (name) {
             return $http.post('/api/queue/' + name + '/clear', {
@@ -544,31 +555,19 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'queues', 'getQueuePos', 'getQueuePosNr', 'users', 'page', function ($scope, $route, queues, getQueuePos, getQueuePosNr, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', function ($scope, $route, clock, queues, users, page) {
         page.title = 'View queue';
 
-        $scope.users = users;
         $scope.queues = queues;
-        $scope.date = moment();
-        //$scope.queuePos = getQueuePos($scope.users.current.name, $scope.queue.positions);
-        //$scope.queuePosNr = getQueuePosNr($scope.users.current.name, $scope.queue.positions);
+        $scope.users = users;
 
-        queues.get($route.current.params.queueName).success(function (queue) {
-            $scope.queue = queue;
-
-            for (var i = 0; i < queue.positions.length; i++) {
-                (function (i2) {
-                    users.get(queue.positions[i2].userName).success(function (user) {
-                        queue.positions[i2].user = user;
-
-                        if(users.current.name == user.name){
-                            $scope.queuePos = queue.positions[i2];
-                            $scope.queuePosNr = i2;
-                        }
-                    });
-                })(i);
-            }
-        });
+        $scope.queue = queues.get($route.current.params.queueName);
+        $scope.getUser = function (userName) {
+            return users.get(userName);
+        };
+        $scope.timeDiff = function (time) {
+            return moment(time).from(clock.now, true);
+        };
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
