@@ -28,7 +28,7 @@
         </div>
         <div ng-show="users.current.admin" class="row collapse">
           <div class="small-12 columns">
-            <a onclick="Foundation.libs.dropdown.toggle" class="button secondary expand dropdown" data-dropdown="manage-queue">
+            <a ng-click="Foundation.libs.dropdown.toggle" class="button secondary expand dropdown" data-dropdown="manage-queue">
               Manage queue
             </a>
             <div id="manage-queue" data-dropdown-content="" class="medium f-dropdown content">
@@ -130,7 +130,7 @@
                 </form>
               </td>
               <td ng-show="users.current.admin" width="1">
-                <a onclick="Foundation.libs.dropdown.toggle" data-dropdown="remove-user" class="size-18">&#9662;</a>
+                <a ng-click="Foundation.libs.dropdown.toggle" data-dropdown="remove-user" class="size-18">&#9662;</a>
                 <ul id="remove-user" class="button-group radius f-dropdown content tiny" data-dropdown-content="" 
                       style="margin-top: 0.5rem">
                 <li>
