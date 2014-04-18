@@ -54,7 +54,7 @@
                     case 'QueueOwnerAdded':
                         break;
                     case 'QueuePositionCreatedInAccount':
-                        var user = cache.get(data.body.queuePosition.userName);
+                        var user = cache.get(data.body.userName);
                         if(user) {
                             user.queuePositions.push(data.body.queuePosition);
                         }
