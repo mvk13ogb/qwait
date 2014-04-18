@@ -8,17 +8,17 @@ import se.kth.csc.payload.api.Snapshotters;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public class QueuePositionCreatedInAccount {
     private final QueuePositionInAccountSnapshot position;
-    private final String queueName;
+    private final String userName;
 
-    public QueuePositionCreatedInAccount(QueuePositionInAccountSnapshot queuePosition, String queueName) {
+    public QueuePositionCreatedInAccount(QueuePositionInAccountSnapshot queuePosition, String userName) {
         this.position = queuePosition;
-        this.queueName = queueName;
+        this.userName = userName;
     }
 
     public QueuePositionInAccountSnapshot getQueuePosition() {
         return position;
     }
     public String getQueueName() {
-        return queueName;
+        return userName;
     }
 }

@@ -98,7 +98,7 @@ public final class Snapshotters {
         public QueuePositionInAccountSnapshot apply(QueuePosition queuePosition) {
             return queuePosition == null ? null : new QueuePositionInAccountSnapshot(
                     queuePosition.getStartTime(), queuePosition.getLocation(),
-                    queuePosition.getComment(), AccountNamer.INSTANCE.apply(queuePosition.getAccount()));
+                    queuePosition.getComment(), QueueNamer.INSTANCE.apply(queuePosition.getQueue()));
         }
     }
 }
