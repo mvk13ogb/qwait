@@ -410,9 +410,15 @@
     qwait.factory('security', function () {
         var result = {
             isQueueOwner: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.owners.indexOf(user.name) != -1;
             },
             isQueueModerator: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.moderators.indexOf(user.name) != -1;
             },
             canModerateQueue: function (user, queue) {
