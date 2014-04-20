@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.api.QueuePositionSnapshot;
-import se.kth.csc.payload.api.Snapshotters;
+import se.kth.csc.payload.api.AccountSnapshot;
 import se.kth.csc.payload.message.*;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
@@ -39,6 +38,12 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
+    public Iterable<Account> findAccounts(boolean onlyAdmin, String query) {
+        return accountStore.findAccounts(onlyAdmin, query);
+    }
+
+    @Override
     public Account fetchAccount(String userName) throws NotFoundException {
         return accountStore.fetchAccountWithPrincipalName(userName);
     }
@@ -49,7 +54,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    public List<Queue> fetchAllQueues() {
+    public Iterable<Queue> fetchAllQueues() {
         return queueStore.fetchAllQueues();
     }
 
@@ -69,7 +74,7 @@ public class ApiProviderImpl implements ApiProvider {
         queue.getOwners().add(owner);
         queueStore.storeQueue(queue);
 
-        messageBus.convertAndSend("/topic/queues", new QueueCreated(queueName));
+        messageBus.convertAndSend("/topic/queue", new QueueCreated(queueName));
         messageBus.convertAndSend("/topic/user/" + owner.getPrincipalName(),
                 new QueueOwnerAdded(queueName, owner.getPrincipalName()));
     }
@@ -108,14 +113,14 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name) or #queuePosition.owner.principalName == authentication.name")
+    @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name) or #queuePosition.account.principalName == authentication.name")
     public void deleteQueuePosition(QueuePosition queuePosition) {
         QueuePositionRemoved message = new QueuePositionRemoved(queuePosition.getQueue().getName(),
                 queuePosition.getAccount().getPrincipalName());
-        queuePositionStore.removeQueuePosition(queuePosition);
 
         messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
         messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        queuePositionStore.removeQueuePosition(queuePosition);
     }
 
     @Override

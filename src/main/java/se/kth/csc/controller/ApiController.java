@@ -29,6 +29,7 @@ public class ApiController {
     }
 
     /* API:
+     * /users?role=admin&query=abc123 GET
      * /user/{userName} GET
      * /user/{userName}/role/admin GET PUT DELETE
      * /queues GET
@@ -42,6 +43,23 @@ public class ApiController {
      * /queue/{queueName}/owner/{userName} PUT GET DELETE
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
      */
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<AccountSnapshot> getUsers(@RequestParam(value = "role", required = false) String role,
+                                              @RequestParam(value = "query", required = false) String query) {
+        final boolean onlyAdmin;
+
+        if ("admin".equalsIgnoreCase(role)) {
+            onlyAdmin = true;
+        } else if (role == null) {
+            onlyAdmin = false;
+        } else {
+            return ImmutableSet.of();
+        }
+
+        return transformSet(apiProvider.findAccounts(onlyAdmin, query), Snapshotters.AccountSnapshotter.INSTANCE);
+    }
 
     @RequestMapping(value = "/user/{userName}", method = RequestMethod.GET)
     @ResponseBody

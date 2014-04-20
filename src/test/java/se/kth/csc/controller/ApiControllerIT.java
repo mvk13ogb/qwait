@@ -919,4 +919,25 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(delete("/api/queue/abc123/position/testAdmin/location").session(session2))
                 .andExpect(status().isForbidden());
     }
+
+    /* Test if a user can join, then leave a queue */
+    @Test
+    public void testJoinLeaveQueue() throws Exception {
+        MockHttpSession session = signInAs("testUser", "admin");
+        mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/position/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("positions", hasSize(1)))
+                .andExpect(jsonPath("positions[0].userName", is("testUser")));
+        mockMvc.perform(delete("/api/queue/abc123/positions/testUser"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/queue/abc123").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("positions", hasSize(0)));
+    }
 }

@@ -1,16 +1,50 @@
 <div>
-  <h2>Queues</h2>
+  <h1>Queues</h1>
 
-  <div class="radius" ng-repeat="queue in queues.all" ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
+  <div class="row collapse">
+    <div ng-if="users.current.admin" class="medium-4 columns">
+      <form ng-submit="queues.putQueue(queueName)">
+        <label>
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
+                     placeholder="New queue name"/>
+
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                      style="margin-bottom: 0;">
+                <i class="fi-plus white-icon size-16"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </label>
+      </form>
+    </div>
+    <div class="medium-4 columns pull-right">
+      <input ng-model="search.title" type="text" placeholder="Filter queues"/>
+    </div>
+  </div>
+  <div class="radius queue-row"
+       ng-repeat="queue in queues.all|arrayify|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
     <div class="row">
-      <div class="large-6 columns">
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
         <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
 
-        <p style="margin-bottom: 0">{{queue.positions.length}} people queueing</p>
+        <p style="margin-bottom: 0">
+          <ng-pluralize count="queue.positions.length" when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
+          </ng-pluralize>
+          <span ng-if="userQueuePos(users.current, queue.positions)">
+            (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}},
+            {{queue.positions.indexOf(userQueuePos(users.current, queue.positions))}} ahead of you)
+          </span>
+        </p>
       </div>
-      <div class="large-6 columns">
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
         <div class="button-bar right">
-          <ul class="button-group radius" style="margin-top: 0.5rem">
+          <ul ng-if="canModerateQueue(users.current, queue)" class="button-group radius" style="margin-top: 0.5rem">
             <li>
               <button type="button" class="button small" ng-class="{secondary: !queue.active}"
                       ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">

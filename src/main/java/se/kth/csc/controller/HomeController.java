@@ -40,22 +40,6 @@ public class HomeController {
     }
 
     /**
-     * The about page of the web application.
-     */
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String about() {
-        return "home";
-    }
-
-    /**
-     * The help page of the web application
-     */
-    @RequestMapping(value = "/help", method = RequestMethod.GET)
-    public String help() {
-        return "help";
-    }
-
-    /**
      * The debug page of the web application
      */
     @RequestMapping(value = "/debug", method = RequestMethod.GET)
