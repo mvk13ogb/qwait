@@ -50,7 +50,44 @@
                                 result.admins.splice(index, 1);
                             }
                         }
-
+                        break;
+                    case 'QueueOwnerAdded':
+                        break;
+                    case 'QueuePositionCreatedInAccount':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            user.queuePositions.push(data.body.queuePosition);
+                        }
+                        break;
+                    case 'QueuePositionRemoved':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions.splice(i, 1);
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionCommentChanged':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions[i].comment = data.body.comment;
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionLocationChanged':
+                        var user = cache.get(data.body.userName);
+                        if(user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].userName == data.body.userName) {
+                                    user.queuePositions[i].location = data.body.location;
+                                }
+                            }
+                        }
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
@@ -207,6 +244,12 @@
                             }
                         }
                         break;
+                    case 'QueuePositionCreatedInQueue':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            queue.positions.push(data.body.queuePosition);
+                        }
+                        break;
                     case 'QueuePositionLocationChanged':
                         queue = result.all[data.body.queueName];
                         if (queue) {
@@ -216,6 +259,17 @@
                                 }
                             }
                         }
+                        break;
+                    case 'QueuePositionRemoved':
+                        queue = result.all[data.body.queueName];
+                        if(queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if (queue.positions[i].userName == data.body.userName) {
+                                    queue.positions.splice(i, 1);
+                                }
+                            }
+                        }
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -356,13 +410,39 @@
     qwait.factory('security', function () {
         var result = {
             isQueueOwner: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.owners.indexOf(user.name) != -1;
             },
             isQueueModerator: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.moderators.indexOf(user.name) != -1;
             },
             canModerateQueue: function (user, queue) {
                 return result.isQueueOwner(user, queue) || result.isQueueModerator(user, queue) || user.admin;
+            }
+        };
+
+        return result;
+    });
+
+    qwait.factory('queuePositions', function () {
+        var result = {
+            getUserQueuePos: function (user, positions) {
+                if(!(user && positions)) {
+                    return undefined;
+                }
+
+                for (var i = 0; i < positions.length; i++) {
+                    if (positions[i].userName == user.name) {
+                        return positions[i];
+                    }
+                }
+
+                return null;
             }
         };
 
@@ -535,36 +615,29 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', function ($scope, page, clock, queues, users, security) {
+    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
-        $scope.queues = queues;
         $scope.users = users;
+        $scope.queues = queues;
 
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = function (user, positions) {
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
-                }
-            }
-            return null;
-        };
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', function ($scope, $route, clock, queues, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
         $scope.users = users;
-
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };

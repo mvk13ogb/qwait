@@ -14,12 +14,10 @@
       </div>
       <div ng-show="!users.current.anonymous">
         <div class="row collapse">
-          <button ng-show="!queuePos" class="button expand button-bot-margin"
-                  ng-click="queues.joinQueue(queue.name, users.current.name)">
+          <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
-          <button ng-show="queuePos" class="button expand button-bot-margin"
-                  ng-click="queues.leaveQueue(queue.name, users.current.name)">
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
             Leave queue
           </button>
         </div>
@@ -91,7 +89,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | filter:search">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
               <td>{{$index + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
