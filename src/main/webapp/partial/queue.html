@@ -19,13 +19,14 @@
               <div class="small-12 columns">
                 <div ng-show="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="userQueuePos(users.current, queue.positions).location"
-                          ng-change="queues.changeLocation(queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)" ng-class="{'no-location' : !userQueuePos(users.current, queue.positions).location}" maxlength="15" >
+                          ng-change="queues.changeLocation(queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)" 
+                          ng-class="{'no-location' : !userQueuePos(users.current, queue.positions).location}" maxlength="15">
                   </input>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="locationplaceholder"
-                          ng-change="queues.changeLocation(queue.name, users.current.name,locationplaceholder"
-                          ng-class="{'no-location' : !location}" maxlength="15" >
+                          ng-change="queues.changeLocation(queue.name, users.current.name, locationplaceholder"
+                          ng-class="{'no-location' : !location}" maxlength="15">
                   </input>
                 </div>
               </div>
@@ -37,12 +38,13 @@
               <div class="small-12 columns">
                 <div ng-show="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="userQueuePos(users.current, queue.positions).comment"
-                          ng-change="queues.changeComment(queue.name, users.current.name, userQueuePos(users.current, queue.positions).comment)" maxlength="15">
+                          ng-change="queues.changeComment(queue.name, users.current.name, userQueuePos(users.current, queue.positions).comment)" 
+                          maxlength="15">
                   </input>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="commentplaceholder"
-                          ng-change="queues.changeLocation(queue.name, users.current.name, comment" maxlength="15" >
+                          ng-change="queues.changeLocation(queue.name, users.current.name, comment" maxlength="15">
                   </input>
                 </div>
               </div>
