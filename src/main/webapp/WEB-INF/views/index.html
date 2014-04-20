@@ -48,6 +48,15 @@
   <body>
     <nav class="top-bar" data-topbar="topbar" ng-controller="TopbarCtrl">
 
+      <!--This logo is shown on the large view-->   
+      <ul class="title-area show-for-large-up">
+        <li class="name">
+          <a href="#/queues">
+          <span class="top-logo logo-large"></span>
+          </a>
+        </li>
+      </ul>
+
       <!-- When the size reaches medium (or below) this topbar is shown-->
       <ul class="title-area hide-for-large-up">
         <li class="name">
@@ -58,46 +67,32 @@
       </ul>
 
       <section class="top-bar-section">
-        <div style="float: left; width: 50%;">
-          <ul class="left">
-            <li ng-class="{active: location.path() == '/'}">
-              <a href="#/queues">Queues</a>
-            </li>
-            <li ng-class="{active: location.path() == '/about'}">
-              <a href="#/about">About</a>
-            </li>
-            <li ng-class="{active: location.path() == '/help'}">
-              <a href="#/help">Help</a>
-            </li>
-            <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
-              <a href="#/admin">Admin</a>
-            </li>
-          </ul>
-        </div>
-        <div style="float: left; width: 0;">
-          <!--This logo is shown on the logo view-->   
-          <ul class="title-area show-for-large-up">
-          <li class="name">
-            <a href="#/queues">
-              <span class="top-logo logo-large"></span>
+        <ul class="left">
+          <li ng-class="{active: location.path() == '/'}">
+            <a href="#/queues">Queues</a>
+          </li>
+          <li ng-class="{active: location.path() == '/about'}">
+            <a href="#/about">About</a>
+          </li>
+          <li ng-class="{active: location.path() == '/help'}">
+            <a href="#/help">Help</a>
+          </li>
+          <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
+            <a href="#/admin">Admin</a>
+          </li>
+        </ul>
+        <ul class="right">
+          <li>
+            <a>
+              <span ng-if="messagebus.ready" class="green size-24" label="Connected">&#9679;</span>
+              <span ng-if="!messagebus.ready" class="red size-24" label="Disconnected">&#9679;</span>
             </a>
           </li>
-          </ul>
-        </div>
-        <div style="float:right; width: 50%;">
-          <ul class="right">
-            <li>
-              <a>
-                <span ng-if="messagebus.ready" class="green size-24" label="Connected">&#9679;</span>
-                <span ng-if="!messagebus.ready" class="red size-24" label="Disconnected">&#9679;</span>
-              </a>
-            </li>
-            <li ng-if="!users.current.anonymous"><a href="#">Logged in as
-              <strong>{{users.current.readableName}}</strong></a></li>
-            <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
-            <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
-          </ul>
-        </div>
+          <li ng-if="!users.current.anonymous"><a href="#">Logged in as
+            <strong>{{users.current.readableName}}</strong></a></li>
+          <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
+          <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
+        </ul>
       </section>
     </nav>
 
