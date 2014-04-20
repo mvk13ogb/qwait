@@ -24,11 +24,11 @@
   @include striped-bg(scale-color($alert-color, $lightness: 80%));
 }
 
-red {
+.red {
   color: #F00;
 }
 
-green {
+.green {
   color: #0C0;
 }
 
@@ -67,12 +67,6 @@ button.itsy, .button.itsy {
   overflow: hidden;
 }
 
-.top-absolute {
-  position: absolute !important;
-  margin-left: -72px !important;
-  left: 50%;
-}
-
 .top-logo {
   @include opacity(1);
   @include transition(300ms);
@@ -89,7 +83,7 @@ button.itsy, .button.itsy {
   background-size: 144px 38px;
   width: 144px;
   height: 38px;
-  margin: 4px 0px;
+  margin: 4px 0px 4px -82px;
   
 }
 
