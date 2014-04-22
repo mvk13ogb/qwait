@@ -626,11 +626,6 @@
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
-
-        $scope.submitQueue = function(){
-            $scope.queues.putQueue($scope.$$childHead.queueName)
-            $scope.$$childHead.queueName = "";
-        };
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
