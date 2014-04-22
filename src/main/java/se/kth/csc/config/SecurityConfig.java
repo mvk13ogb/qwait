@@ -12,9 +12,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import se.kth.csc.auth.FilteredCasAuthEntryPoint;
 
 @Configuration
 @ImportResource("classpath:spring-security-context.xml")
@@ -46,9 +47,9 @@ public class SecurityConfig {
 
     @Autowired
     @Bean
-    public CasAuthenticationEntryPoint casAuthenticationEntryPoint(@Value("${security.cas.loginUrl}") String loginUrl,
-                                                                   ServiceProperties serviceProperties) {
-        CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
+    public AuthenticationEntryPoint casAuthenticationEntryPoint(@Value("${security.cas.loginUrl}") String loginUrl,
+                                                                ServiceProperties serviceProperties) {
+        FilteredCasAuthEntryPoint casAuthenticationEntryPoint = new FilteredCasAuthEntryPoint();
 
         casAuthenticationEntryPoint.setLoginUrl(loginUrl);
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties);
