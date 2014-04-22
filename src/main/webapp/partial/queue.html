@@ -17,11 +17,9 @@
           <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
-          <a href="#/queues">
-            <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
-              Leave queue
-            </button>
-          </a>
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
+            Leave queue
+          </button>
         </div>
         <div ng-show="users.current.admin" class="row collapse">
           <div class="small-12 columns">
