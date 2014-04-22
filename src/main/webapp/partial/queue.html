@@ -24,9 +24,7 @@
                   </input>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="locationplaceholder"
-                          ng-change="queues.changeLocation(queue.name, users.current.name, locationplaceholder"
-                          ng-class="{'no-location' : !location}" maxlength="20">
+                  <input type="text" ng-model="locationplaceholder" ng-class="{'no-location' : !location}" maxlength="20">
                   </input>
                 </div>
               </div>
@@ -43,8 +41,7 @@
                   </input>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="commentplaceholder"
-                          ng-change="queues.changeLocation(queue.name, users.current.name, comment" maxlength="20">
+                  <input type="text" ng-model="commentplaceholder" maxlength="20">
                   </input>
                 </div>
               </div>
