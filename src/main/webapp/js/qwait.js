@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'ngAnimate', 'request']);
+    var qwait = angular.module('qwait', ['mm.foundation', 'ngRoute', 'ngAnimate', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
