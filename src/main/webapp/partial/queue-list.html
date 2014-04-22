@@ -2,8 +2,8 @@
   <h1>Queues</h1>
 
   <div class="row collapse">
-    <div ng-if="users.current.admin" class="medium-4 columns">
-      <form ng-submit="queues.putQueue(queueName)">
+    <div ng-if="users.current.admin" class="medium-4 columns"  ng-controller="QueueNameController">
+      <form ng-submit="submitQueue(queueName)">
         <label>
           <div class="row collapse">
             <div class="small-9 columns">
@@ -77,3 +77,12 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    function QueueNameController($scope) {
+        $scope.submitQueue = function(){
+            $scope.queues.putQueue($scope.queueName)
+            $scope.queueName = "";
+        };
+    }
+</script>
