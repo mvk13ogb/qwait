@@ -313,12 +313,6 @@
             return false;
         }
 
-        result.validateForm = function (queueName, queues) {
-        if (!result.contains(queueName, queues)) {
-            queues.putQueue(queueName, queues);
-            }
-        }
-
         result.setLocked = function (name, locked) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
             return $http.put('/api/queue/' + encodeURIComponent(name) + '/locked', '' + locked, {
@@ -339,10 +333,6 @@
 
         result.putQueue = function (title, queues) {
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
-            if (result.contains(title, queues)) {
-                alert('Queue with title ' + title + ' already exists!');
-                return;
-            }
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
             });
