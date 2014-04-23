@@ -157,6 +157,21 @@
             result.admins = admins;
         });
 
+        result.allUsers = [];
+
+        $http.get('/api/users').success(function (allUsers) {
+            for (var i = 0; i < allUsers.length; i++) {
+                var user = cache.get(allUsers[i].name);
+                if (user) {
+                    allUsers[i] = user;
+                } else {
+                    cache.put(allUsers[i].name, allUsers[i]);
+                }
+            }
+
+            result.allUsers = allUsers;
+        });
+
         return result;
     }]);
 
@@ -643,15 +658,23 @@
         };
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
         page.title = 'Admin tools';
 
         $scope.users = users;
+        $scope.allUsers = users.allUsers;
+        $scope.allUsers = [];
+        $timeout(function () {
+            $scope.allUsers = users.allUsers;
+            //for (i = 0; i < users.allUsers.length; i++) {
+                //$scope.allUsers[i] = users.allUsers[i].name;
+                //$scope.allUsers = users.allUsers;
+            //}
+        }, 500);
     }]);
 
-    qwait.controller('TypeaheadCtrl', ['$scope', 'users', function ($scope, users) {
+    qwait.controller('TypeaheadCtrl', ['$scope', function ($scope) {
         $scope.adminName = undefined;
-        $scope.users = users;
     }]);
 
     qwait.filter('duration', function () {
