@@ -13,8 +13,16 @@
   background-size: 40px 40px;
 }
 
+.white {
+  color: white;
+}
+
 .plain-panel {
   @include panel(#FAFAFA);
+}
+
+.grey-panel{
+  @include panel(#333, 0.85rem);
 }
 
 .alert-panel {
