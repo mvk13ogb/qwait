@@ -649,6 +649,11 @@
         $scope.users = users;
     }]);
 
+    qwait.controller('TypeaheadCtrl', ['$scope', 'users', function ($scope, users) {
+        $scope.adminName = undefined;
+        $scope.users = users;
+    }]);
+
     qwait.filter('duration', function () {
         return function (milliseconds) {
             return moment.duration(milliseconds).humanize();
