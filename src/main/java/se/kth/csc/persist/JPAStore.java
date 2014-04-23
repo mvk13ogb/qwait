@@ -8,10 +8,7 @@ import se.kth.csc.model.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -158,6 +155,37 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     public void storeAccount(Account account) {
         entityManager.persist(account);
         log.info("Created a new account with id {}", account.getId());
+    }
+
+    @Override
+    public Iterable<Account> findAccounts(boolean onlyAdmin, String query) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Account> q = cb.createQuery(Account.class);
+        Root<Account> account = q.from(Account.class);
+
+        Expression<Boolean> expression = null;
+
+        if (onlyAdmin) {
+            // This looks like it could be replaced with account.get(Account_.admin), but it can't because of syntax
+            expression = cb.equal(account.get(Account_.admin), true);
+        }
+
+        if (query != null) {
+            Expression<Boolean> queryExpression =
+                    cb.like(cb.lower(account.get(Account_.name)), "%" + query.toLowerCase() + "%");
+
+            if (expression == null) {
+                expression = queryExpression;
+            } else {
+                expression = cb.and(expression, queryExpression);
+            }
+        }
+
+        if (expression != null) {
+            q.where(expression);
+        }
+
+        return entityManager.createQuery(q.select(account)).getResultList();
     }
 
     @Override

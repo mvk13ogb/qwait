@@ -1,0 +1,132 @@
+<div>
+  <h2>{{queue.title}}</h2>
+
+  <div class="row collapse">
+    <div class="large-4 large-offset-8 columns">
+      <input type="text" ng-model="search" placeholder="Find users"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="large-3 columns">
+      <div ng-show="users.current.anonymous">
+        Not logged in
+      </div>
+      <div ng-show="!users.current.anonymous">
+        <div class="row collapse">
+          <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+            Join queue
+          </button>
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
+            Leave queue
+          </button>
+        </div>
+        <div ng-show="users.current.admin" class="row collapse">
+          <div class="small-12 columns">
+            <a href="#" class="button secondary expand dropdown" data-dropdown="drop1">
+              Manage queue
+            </a>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14" ng-show="queue.locked">Unlock</span>
+                  <span class="size-14" ng-show="!queue.locked">Lock&nbsp;</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small" ng-class="{alert: !queue.locked, success: queue.locked}"
+                        ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
+                  <i class="fi-unlock size-14" ng-show="queue.locked"></i>
+                  <i class="fi-lock size-14" ng-show="!queue.locked"></i>
+                </button>
+              </li>
+            </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
+                  <span class="size-14" ng-show="!queue.active">Unhide</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
+                        ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                  <i class="fi-eye size-14"></i>
+                </button>
+              </li>
+            </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14">Clear</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)"
+                        style="margin-bottom: 0;">
+                  <i class="fi-x size-14"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="large-9 columns">
+      <div class="row collapse">
+        <table class="small-12 columns">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Time</th>
+              <th>Location</th>
+              <th>Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
+              <td>{{$index + 1}}</td>
+              <td>{{getUser(position.userName).readableName}}</td>
+              <td>{{timeDiff(position.startTime)}}</td>
+              <td ng-hide="editingLocation">
+                {{position.location}}
+                <button type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
+                  <i class="fi-pencil"></i>
+                </button>
+              </td>
+              <td ng-show="editingLocation">
+                <form
+                    ng-submit="queues.changeLocation(queue.name, users.current.name, position.location); editingLocation = false">
+                  <input type="text" maxlength="15" style="margin-bottom: 0;"
+                         ng-model="position.location"
+                         ng-change=""/>
+                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                </form>
+              </td>
+              <td ng-hide="editingComment">
+                {{position.comment}}
+                <button type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingComment = true">
+                  <i class="fi-pencil"></i>
+                </button>
+              </td>
+              <td ng-show="editingComment">
+                <form
+                    ng-submit="queues.changeComment(queue.name, users.current.name, position.comment); editingComment = false">
+                  <input type="text" maxlength="15" style="margin-bottom: 0;"
+                         ng-model="position.comment"
+                         ng-change="queues.changeComment(queue.name, users.current.name, position.comment)"/>
+                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

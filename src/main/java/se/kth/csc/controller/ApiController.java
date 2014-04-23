@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.*;
+import se.kth.csc.payload.api.*;
 
 import java.security.Principal;
 
@@ -29,9 +29,10 @@ public class ApiController {
     }
 
     /* API:
+     * /users?role=admin&query=abc123 GET
      * /user/{userName} GET
-     * /user/{userName}/role/admin GET PUT
-     * /queue/list GET
+     * /user/{userName}/role/admin GET PUT DELETE
+     * /queues GET
      * /queue/{queueName} GET PUT DELETE
      * /queue/{queueName}/position/{userName} GET PUT DELETE
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
@@ -43,10 +44,27 @@ public class ApiController {
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
      */
 
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<AccountSnapshot> getUsers(@RequestParam(value = "role", required = false) String role,
+                                              @RequestParam(value = "query", required = false) String query) {
+        final boolean onlyAdmin;
+
+        if ("admin".equalsIgnoreCase(role)) {
+            onlyAdmin = true;
+        } else if (role == null) {
+            onlyAdmin = false;
+        } else {
+            return ImmutableSet.of();
+        }
+
+        return transformSet(apiProvider.findAccounts(onlyAdmin, query), Snapshotters.AccountSnapshotter.INSTANCE);
+    }
+
     @RequestMapping(value = "/user/{userName}", method = RequestMethod.GET)
     @ResponseBody
     public AccountSnapshot getUser(@PathVariable("userName") String userName) throws NotFoundException {
-        return AccountSnapshotter.INSTANCE.apply(fetchAccountOr404(userName));
+        return Snapshotters.AccountSnapshotter.INSTANCE.apply(fetchAccountOr404(userName));
     }
 
     @RequestMapping(value = "/user/{userName}/role/admin", method = RequestMethod.GET)
@@ -62,16 +80,16 @@ public class ApiController {
         apiProvider.setAdmin(fetchAccountOr404(userName), admin);
     }
 
-    @RequestMapping(value = "/queue/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/queues", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<QueueSnapshot> getQueueList() {
-        return transformSet(apiProvider.fetchAllQueues(), QueueSnapshotter.INSTANCE);
+        return transformSet(apiProvider.fetchAllQueues(), Snapshotters.QueueSnapshotter.INSTANCE);
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.GET)
     @ResponseBody
     public QueueSnapshot getQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
-        return QueueSnapshotter.INSTANCE.apply(fetchQueueOr404(queueName));
+        return Snapshotters.QueueSnapshotter.INSTANCE.apply(fetchQueueOr404(queueName));
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.PUT)
@@ -95,7 +113,7 @@ public class ApiController {
     @ResponseBody
     public QueuePositionSnapshot getQueuePosition(@PathVariable("queueName") String queueName,
                                                   @PathVariable("userName") String userName) throws NotFoundException {
-        return QueuePositionSnapshotter.INSTANCE.apply(fetchQueuePositionOr404(queueName, userName));
+        return Snapshotters.QueuePositionSnapshotter.INSTANCE.apply(fetchQueuePositionOr404(queueName, userName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.PUT)
@@ -205,7 +223,7 @@ public class ApiController {
         Account account = fetchAccountOr404(userName);
 
         if (queue.getOwners().contains(account)) {
-            return AccountSnapshotter.INSTANCE.apply(account);
+            return Snapshotters.AccountSnapshotter.INSTANCE.apply(account);
         } else {
             throw new NotFoundException(String.format("Not an owner for queue %s: %s", queueName, userName));
         }
@@ -238,7 +256,7 @@ public class ApiController {
         Account account = fetchAccountOr404(userName);
 
         if (queue.getModerators().contains(account)) {
-            return AccountSnapshotter.INSTANCE.apply(account);
+            return Snapshotters.AccountSnapshotter.INSTANCE.apply(account);
         } else {
             throw new NotFoundException(String.format("Not a moderator for queue %s: %s", queueName, userName));
         }
@@ -297,68 +315,5 @@ public class ApiController {
 
     private static <A, B> ImmutableSet<B> transformSet(Iterable<A> iterable, Function<? super A, ? extends B> function) {
         return ImmutableSet.copyOf(Iterables.transform(iterable, function));
-    }
-
-    private enum AccountSnapshotter implements Function<Account, AccountSnapshot> {
-        INSTANCE;
-
-        @Override
-        public AccountSnapshot apply(Account account) {
-            return account == null ? null : new AccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin(),
-                    transformSet(account.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE),
-                    transformSet(account.getOwnedQueues(), NormalizedQueueSnapshotter.INSTANCE),
-                    transformSet(account.getModeratedQueues(), NormalizedQueueSnapshotter.INSTANCE));
-        }
-    }
-
-    private enum QueueSnapshotter implements Function<Queue, QueueSnapshot> {
-        INSTANCE;
-
-        @Override
-        public QueueSnapshot apply(Queue queue) {
-            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.getTitle(), queue.isActive(), queue.isLocked(),
-                    transformSet(queue.getOwners(), NormalizedAccountSnapshotter.INSTANCE),
-                    transformSet(queue.getModerators(), NormalizedAccountSnapshotter.INSTANCE),
-                    transformSet(queue.getPositions(), NormalizedQueuePositionSnapshotter.INSTANCE));
-        }
-    }
-
-    private enum QueuePositionSnapshotter implements Function<QueuePosition, QueuePositionSnapshot> {
-        INSTANCE;
-
-        @Override
-        public QueuePositionSnapshot apply(QueuePosition queuePosition) {
-            return queuePosition == null ? null : new QueuePositionSnapshot(queuePosition.getStartTime(), queuePosition.getLocation(),
-                    queuePosition.getComment(),
-                    NormalizedQueueSnapshotter.INSTANCE.apply(queuePosition.getQueue()),
-                    NormalizedAccountSnapshotter.INSTANCE.apply(queuePosition.getAccount()));
-        }
-    }
-
-    private enum NormalizedAccountSnapshotter implements Function<Account, NormalizedAccountSnapshot> {
-        INSTANCE;
-
-        @Override
-        public NormalizedAccountSnapshot apply(Account account) {
-            return account == null ? null : new NormalizedAccountSnapshot(account.getPrincipalName(), account.getName(), account.isAdmin());
-        }
-    }
-
-    private enum NormalizedQueueSnapshotter implements Function<Queue, NormalizedQueueSnapshot> {
-        INSTANCE;
-
-        @Override
-        public NormalizedQueueSnapshot apply(Queue queue) {
-            return queue == null ? null : new NormalizedQueueSnapshot(queue.getName(), queue.getTitle(), queue.isActive(), queue.isLocked());
-        }
-    }
-
-    private enum NormalizedQueuePositionSnapshotter implements Function<QueuePosition, NormalizedQueuePositionSnapshot> {
-        INSTANCE;
-
-        @Override
-        public NormalizedQueuePositionSnapshot apply(QueuePosition queuePosition) {
-            return queuePosition == null ? null : new NormalizedQueuePositionSnapshot(queuePosition.getStartTime(), queuePosition.getLocation(), queuePosition.getComment());
-        }
     }
 }
