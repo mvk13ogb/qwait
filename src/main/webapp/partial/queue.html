@@ -10,7 +10,11 @@
 
   <div class="row">
     <div class="large-3 columns">
-      <div ng-show="users.current.anonymous">
+      <div class="plain-panel" ng-show="users.current.anonymous">
+        <div class="text-center">
+          <i class="fi-alert size-48"></i>
+          <p>In order to queue, you must first log in.</p>
+        </div>
         <a href="/login" class="button expand">
           Log in
         </a>
