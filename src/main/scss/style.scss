@@ -13,23 +13,24 @@
   background-size: 40px 40px;
 }
 
+.red {
+  color: #F00;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
 .plain-panel {
   @include panel(#FAFAFA);
 }
 
-.alert-panel {
-  @include panel($alert-color);
-  @include striped-bg(scale-color($alert-color, $lightness: 80%));
+.active-panel {
+  @include panel(rgba(0, 128, 218, 0.2));
 }
 
-.secondary-panel {
-  @include panel($secondary-color);
-  @include striped-bg(scale-color($secondary-color, $lightness: 80%));
-}
-
-.lockdown-panel {
-  @include panel(mix($alert-color, $secondary-color, 50%));
-  @include striped-bg(scale-color(mix($alert-color, $secondary-color, 50%), $lightness: 80%));
+.active {
+  background: rgba(0, 128, 218, 0.2);
 }
 
 button.itsy, .button.itsy {

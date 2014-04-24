@@ -1,5 +1,9 @@
 <div>
-  <h2>{{queue.title}}</h2>
+  <h2>
+    <span ng-class="{'strike': !queue.active, 'red': queue.locked}">
+      {{queue.title}}
+    </span>
+  </h2>
 
   <div class="row collapse">
     <div class="large-4 large-offset-8 columns">

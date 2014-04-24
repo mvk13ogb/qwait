@@ -28,10 +28,14 @@
   </div>
   <div class="radius queue-row"
        ng-repeat="queue in queues.all|arrayify|filter:search|orderBy:['locked','-positions.length','title']"
-       ng-class="{'plain-panel': queue.active && !queue.locked, 'alert-panel': queue.active && queue.locked, 'secondary-panel': !queue.active && !queue.locked, 'lockdown-panel': !queue.active && queue.locked}">
+       ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
-        <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
+        <h3><a href="#/queue/{{queue.name}}">
+          <span ng-class="{'strike': !queue.active, 'red': queue.locked}">
+            {{queue.title}}
+          </span>
+        </a></h3>
 
         <p style="margin-bottom: 0">
           <ng-pluralize count="queue.positions.length" when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
