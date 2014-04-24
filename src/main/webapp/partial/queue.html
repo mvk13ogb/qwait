@@ -93,7 +93,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
               <td>{{$index + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>

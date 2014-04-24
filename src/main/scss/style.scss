@@ -17,6 +17,10 @@
   color: #F00;
 }
 
+.green {
+  color: #0C0;
+}
+
 .strike {
   text-decoration: line-through;
 }
@@ -29,7 +33,7 @@
   @include panel(rgba(0, 128, 218, 0.2));
 }
 
-.active {
+tr.active > td{
   background: rgba(0, 128, 218, 0.2);
 }
 

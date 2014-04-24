@@ -47,11 +47,11 @@
       </div>
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
         <div class=" right">
-          <span ng-if="canModerateQueue(users.current, queue)">
-            <i class="fi-eye size-36" ng-show="queue.active" style="vertical-align: middle;"></i>
-            <i class="fi-eye size-36" ng-show="!queue.active" style="vertical-align: middle;"></i>
-            <i class="fi-lock size-36" ng-show="queue.locked" style="vertical-align: middle;"></i>
-            <i class="fi-unlock size-36" ng-show="!queue.locked" style="vertical-align: middle;"></i>
+          <span class="size-36" ng-if="canModerateQueue(users.current, queue)" style="vertical-align: middle">
+            <i class="fi-unlock green" ng-show="!queue.locked"></i>
+            <i class="fi-lock red" ng-show="queue.locked"></i>
+            <i class="fi-eye green" ng-show="queue.active"></i>
+            <i class="fi-eye red" ng-show="!queue.active"></i>
           </span>
           <a href="#/queue/{{queue.name}}">
             <button ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
