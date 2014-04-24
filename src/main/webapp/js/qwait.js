@@ -663,7 +663,6 @@
 
         $scope.users = users;
         $scope.allUsers = users.allUsers;
-        $scope.allUsers = [];
         $timeout(function () {
             $scope.allUsers = users.allUsers;
         }, 500);
