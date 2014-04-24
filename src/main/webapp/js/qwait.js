@@ -666,10 +666,6 @@
         $scope.allUsers = [];
         $timeout(function () {
             $scope.allUsers = users.allUsers;
-            //for (i = 0; i < users.allUsers.length; i++) {
-                //$scope.allUsers[i] = users.allUsers[i].name;
-                //$scope.allUsers = users.allUsers;
-            //}
         }, 500);
     }]);
 

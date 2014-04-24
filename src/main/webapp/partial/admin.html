@@ -9,10 +9,9 @@
 
   <div class="row collapse" ng-controller="TypeaheadCtrl">
     <div class="small-9 columns">
-      {{ allUsers }}
       <input type="text" ng-model="adminName" required="required"
              placeholder="New administrator"
-             typeahead="user for user in allUsers | filter:{readableName: $viewValue} | limitTo:8"
+             typeahead="user as user.name for user in allUsers | filter:{readableName: $viewValue} | limitTo:8"
              class="form-control"/>
     </div>
     <div class="small-3 columns">
@@ -43,22 +42,6 @@
                 Remove
               </button>
             </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="small-6 columns">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Readable name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="user in users.admins | orderBy:['readableName', 'name'] | filter:adminName">
-            <td>{{user.name}}</td>
-            <td>{{user.readableName}}</td>
           </tr>
         </tbody>
       </table>
