@@ -104,7 +104,7 @@
                     ng-submit="queues.changeLocation(queue.name, users.current.name, position.location); editingLocation = false">
                   <input type="text" maxlength="20" style="margin-bottom: 0;"
                          ng-model="position.location"
-                         ng-change=""/>
+                         ng-change="queues.changeLocation(queue.name, users.current.name, position.location)"/>
                   <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 </form>
               </td>

@@ -30,7 +30,7 @@ public interface ApiProvider {
 
     void setComment(QueuePosition queuePosition, String comment) throws TextLimitExceededException;
 
-    void setLocation(QueuePosition queuePosition, String location);
+    void setLocation(QueuePosition queuePosition, String location) throws TextLimitExceededException;
 
     void clearQueue(Queue queue);
 
