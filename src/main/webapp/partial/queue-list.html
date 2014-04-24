@@ -9,7 +9,6 @@
             <div class="small-9 columns">
               <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
                      placeholder="New queue name"/>
-
             </div>
             <div class="small-3 columns">
               <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
@@ -43,35 +42,21 @@
         </p>
       </div>
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
-        <div class="button-bar right">
-          <ul ng-if="canModerateQueue(users.current, queue)" class="button-group radius" style="margin-top: 0.5rem">
-            <li>
-              <button type="button" class="button small" ng-class="{secondary: !queue.active}"
-                      ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
-                <i class="fi-check size-16" ng-show="queue.active"></i>
-                <i class="fi-prohibited size-16" ng-show="!queue.active"></i>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button small" ng-class="{alert: queue.locked, success: !queue.locked}"
-                      ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
-                <i class="fi-lock size-16" ng-show="queue.locked"></i>
-                <i class="fi-unlock size-16" ng-show="!queue.locked"></i>
-              </button>
-            </li>
-          </ul>
-          <ul class="button-group radius">
-            <li>
-              <a href="#/queue/{{queue.name}}">
-                <button ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
-                  Join
-                </button>
-              </a>
-              <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
-                Leave
-              </button>
-            </li>
-          </ul>
+        <div class=" right">
+          <span ng-if="canModerateQueue(users.current, queue)">
+            <i class="fi-eye size-36" ng-show="queue.active" style="vertical-align: middle;"></i>
+            <i class="fi-eye size-36" ng-show="!queue.active" style="vertical-align: middle;"></i>
+            <i class="fi-lock size-36" ng-show="queue.locked" style="vertical-align: middle;"></i>
+            <i class="fi-unlock size-36" ng-show="!queue.locked" style="vertical-align: middle;"></i>
+          </span>
+          <a href="#/queue/{{queue.name}}">
+            <button ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+              Join
+            </button>
+          </a>
+          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+            Leave
+          </button>
         </div>
       </div>
     </div>
