@@ -129,20 +129,22 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
-    public void setComment(QueuePosition queuePosition, String comment) {
+    public void setComment(QueuePosition queuePosition, String comment) throws TextLimitExceededException {
         queuePosition.setComment(comment);
-
-        QueuePositionCommentChanged message = new QueuePositionCommentChanged(queuePosition.getQueue().getName(),
-                queuePosition.getAccount().getPrincipalName(), comment);
-        messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
-        messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        if (comment.length() > 20) {
+            throw new TextLimitExceededException();
+        } else {
+            QueuePositionCommentChanged message = new QueuePositionCommentChanged(queuePosition.getQueue().getName(),
+                    queuePosition.getAccount().getPrincipalName(), comment);
+            messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
+            messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        }
     }
 
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setLocation(QueuePosition queuePosition, String location) {
         queuePosition.setLocation(location);
-
         QueuePositionLocationChanged message = new QueuePositionLocationChanged(queuePosition.getQueue().getName(),
                 queuePosition.getAccount().getPrincipalName(), location);
         messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
