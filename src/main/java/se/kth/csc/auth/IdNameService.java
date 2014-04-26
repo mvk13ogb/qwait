@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class IdNameService implements NameService {
     @Override
     public String nameUser(String userName) {
-        return userName; // Do nothing
+            return userName; // Do nothing
     }
 }

@@ -157,21 +157,6 @@
             result.admins = admins;
         });
 
-        result.allUsers = [];
-
-        $http.get('/api/users').success(function (allUsers) {
-            for (var i = 0; i < allUsers.length; i++) {
-                var user = cache.get(allUsers[i].name);
-                if (user) {
-                    allUsers[i] = user;
-                } else {
-                    cache.put(allUsers[i].name, allUsers[i]);
-                }
-            }
-
-            result.allUsers = allUsers;
-        });
-
         return result;
     }]);
 
@@ -662,10 +647,12 @@
         page.title = 'Admin tools';
 
         $scope.users = users;
-        $scope.allUsers = users.allUsers;
-        $timeout(function () {
-            $scope.allUsers = users.allUsers;
-        }, 500);
+
+        $scope.find = function (user) {
+            return users.find(user).then(function (res) {
+                return res.data;
+            });
+        };
     }]);
 
     qwait.controller('TypeaheadCtrl', ['$scope', function ($scope) {
