@@ -771,6 +771,7 @@
         page.title = 'Admin tools';
 
         $scope.users = users;
+        $scope.queues = queues;
 
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
@@ -790,7 +791,12 @@
 
         $scope.selectQueue = function (queue) {
             $scope.selectedQueue = queue;
-            console.log($scope.selectedQueue);
+
+            $scope.selectedModerators = [];
+            for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+                console.log($scope.selectedQueue.moderators[i]);
+            }
         }
     }]);
 

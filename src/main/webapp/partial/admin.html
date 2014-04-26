@@ -12,9 +12,7 @@
       <input type="text" ng-model="admin" required="required"
              placeholder="New administrator"
              typeahead="user as user.readableName + '(' + user.name + ')' for user in find($viewValue) | limitTo:8"
-             class="form-control" typeahead-loading="loadingUsers"/>
-
-             <i ng-show="loadingUsers" class="fi-clock black-icon size-24"></i>
+             class="form-control"/>
     </div>
     <div class="small-3 columns">
       <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
@@ -52,14 +50,12 @@
 
   <h2>Moderator Administration</h2>
 
-  <form class="row collapse" name="addModeratorForm" ng-submit="addModerator(,)">
+  <form class="row collapse" name="addModeratorForm" ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
     <div class="small-9 columns">
       <input type="text" ng-model="moderator" required="required"
-             placeholder="Add moderator"
+             placeholder="Add moderator to selected queue"
              typeahead="user as user.readableName + '(' + user.name + ')' for user in find($viewValue) | limitTo:8"
-             class="form-control" typeahead-loading="loadingUsers"/>
-
-             <i ng-show="loadingUsers" class="fi-clock black-icon size-24"></i>
+             class="form-control"/>
     </div>
     <div class="small-3 columns">
       <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
@@ -108,12 +104,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="user in selectedQueue.owners">
+          <tr ng-repeat="user in selectedModerators">
             <td>{{user.name}}</td>
             <td>{{user.readableName}}</td>
             <td>
-              <button ng-click="" type="button" class="tiny alert"
-                      style="margin-bottom: 0;">
+              <button ng-click="queues.removeModerator(selectedQueue.name, user.name)"
+                type="button" class="tiny alert" style="margin-bottom: 0;">
                 Remove
               </button>
             </td>
