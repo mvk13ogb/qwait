@@ -13,25 +13,20 @@
         Not logged in
       </div>
       <div ng-show="!users.current.anonymous">
-        <label>
-          Location
-            <div class="row collapse">
-              <div class="small-12 columns">
-                <div ng-show="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="userQueuePos(users.current, queue.positions).location"
-                          ng-change="queues.changeLocation(queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)" 
-                          ng-class="{'error' : !userQueuePos(users.current, queue.positions).location}" maxlength="20">
-                  </input>
-                  <small ng-show="!userQueuePos(users.current, queue.positions).location" class="error">Required</small>
-                </div>
-                <div ng-hide="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="locationplaceholder" ng-class="{'error' : !locationplaceholder}" maxlength="20">
-                  </input>
-                  <small ng-show="!locationplaceholder" class="error">Required</small>
+        <form name="locationform" ng-submit="queues.changeLocation(queue.name, users.current.name, text)">
+          <label>
+            Location
+              <div class="row collapse">
+                <div class="small-12 columns">
+                  <input type="text" name="text" ng-model="text"
+                         ng-required="true"
+                         maxlength="20" ng-class="{error: locationform.text.$error.required}"/>
+                  <small ng-show="locationform.text.$error.required" class="error">Required</small>
                 </div>
               </div>
-            </div>
-        </label>
+          </label>
+          <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+        </form>
         <label>
           Comment
             <div class="row collapse">
@@ -39,12 +34,10 @@
                 <div ng-show="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="userQueuePos(users.current, queue.positions).comment"
                           ng-change="queues.changeComment(queue.name, users.current.name, userQueuePos(users.current, queue.positions).comment)"
-                          maxlength="20">
-                  </input>
+                          maxlength="20"/>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="commentplaceholder" maxlength="20">
-                  </input>
+                  <input type="text" ng-model="commentplaceholder" maxlength="20"/>
                 </div>
               </div>
             </div>
