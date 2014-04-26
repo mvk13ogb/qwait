@@ -795,7 +795,6 @@
             $scope.selectedModerators = [];
             for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
                 $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-                console.log($scope.selectedQueue.moderators[i]);
             }
         }
     }]);
