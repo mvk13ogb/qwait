@@ -3,7 +3,7 @@
 
   <div class="row collapse">
     <div ng-if="users.current.admin" class="medium-4 columns">
-      <form ng-submit="queues.putQueue(queueName); queueName = ''">
+      <form ng-submit="queues.validateForm(queueName, queues); queueName = ''">
         <label>
           <div class="row collapse">
             <div class="small-9 columns">
@@ -12,7 +12,7 @@
 
             </div>
             <div class="small-3 columns">
-              <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+              <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
                       style="margin-bottom: 0;">
                 <i class="fi-plus white-icon size-16"></i>
                 Add

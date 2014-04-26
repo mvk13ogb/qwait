@@ -299,6 +299,26 @@
             return cached;
         };
 
+        result.contains = function (queueName, queues) {
+            if (queueName===undefined) {
+                return false;
+            }
+            var title = queueName.replace(/[\s\/]+/g, '-').toLowerCase();
+
+            for (var o in queues.all) {
+                if (o == title) {
+                   return true;
+               }
+            }
+            return false;
+        }
+
+        result.validateForm = function (queueName, queues) {
+            if (!result.contains(queueName, queues)) {
+                result.putQueue(queueName, queues);
+            }
+        }
+
         result.setLocked = function (name, locked) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
             return $http.put('/api/queue/' + encodeURIComponent(name) + '/locked', '' + locked, {
@@ -317,7 +337,7 @@
             });
         };
 
-        result.putQueue = function (title) {
+        result.putQueue = function (title, queues) {
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
