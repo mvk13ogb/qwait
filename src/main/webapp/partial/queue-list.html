@@ -3,7 +3,7 @@
 
   <div class="row collapse">
     <div ng-if="users.current.admin" class="medium-4 columns">
-      <form ng-submit="queues.validateForm(queueName); queueName = ''">
+      <form ng-submit="queues.validateForm(queueName, queues); queueName = ''">
         <div class="row collapse">
           <div class="small-9 columns">
             <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
