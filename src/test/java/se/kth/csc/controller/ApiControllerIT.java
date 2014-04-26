@@ -160,7 +160,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
                 .andExpect(jsonPath("name", is("abc123")))
-                .andExpect(jsonPath("active", is(true)))
+                .andExpect(jsonPath("hidden", is(false)))
                 .andExpect(jsonPath("locked", is(false)))
                 .andExpect(jsonPath("owners", hasSize(1)))
                 .andExpect(jsonPath("owners[0]", is("testUser")))
@@ -712,17 +712,17 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(jsonPath("hidden", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(false)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(jsonPath("hidden", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
     }
 
     /**
