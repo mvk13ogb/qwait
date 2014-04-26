@@ -55,13 +55,13 @@
                         break;
                     case 'QueuePositionCreatedInAccount':
                         var user = cache.get(data.body.userName);
-                        if(user) {
+                        if (user) {
                             user.queuePositions.push(data.body.queuePosition);
                         }
                         break;
                     case 'QueuePositionRemoved':
                         var user = cache.get(data.body.userName);
-                        if(user) {
+                        if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].userName == data.body.userName) {
                                     user.queuePositions.splice(i, 1);
@@ -71,7 +71,7 @@
                         break;
                     case 'QueuePositionCommentChanged':
                         var user = cache.get(data.body.userName);
-                        if(user) {
+                        if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].userName == data.body.userName) {
                                     user.queuePositions[i].comment = data.body.comment;
@@ -81,7 +81,7 @@
                         break;
                     case 'QueuePositionLocationChanged':
                         var user = cache.get(data.body.userName);
-                        if(user) {
+                        if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].userName == data.body.userName) {
                                     user.queuePositions[i].location = data.body.location;
@@ -262,7 +262,7 @@
                         break;
                     case 'QueuePositionRemoved':
                         queue = result.all[data.body.queueName];
-                        if(queue) {
+                        if (queue) {
                             for (i = 0; i < queue.positions.length; i++) {
                                 if (queue.positions[i].userName == data.body.userName) {
                                     queue.positions.splice(i, 1);
@@ -278,7 +278,12 @@
 
         $http.get('/api/queues').success(function (queues) {
             for (var i = 0; i < queues.length; i++) {
-                result.all[queues[i].name] = queues[i];
+                var name = queues[i].name;
+                if (result.all[name]) {
+                    angular.extend(result.all[name], queues[i]);
+                } else {
+                    result.all[name] = queues[i];
+                }
             }
         });
 
@@ -300,15 +305,15 @@
         };
 
         result.contains = function (queueName, queues) {
-            if (queueName===undefined) {
+            if (queueName === undefined) {
                 return false;
             }
             var title = queueName.replace(/[\s\/]+/g, '-').toLowerCase();
 
             for (var o in queues.all) {
                 if (o == title) {
-                   return true;
-               }
+                    return true;
+                }
             }
             return false;
         }
@@ -452,7 +457,7 @@
     qwait.factory('queuePositions', function () {
         var result = {
             getUserQueuePos: function (user, positions) {
-                if(!(user && positions)) {
+                if (!(user && positions)) {
                     return undefined;
                 }
 
