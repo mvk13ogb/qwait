@@ -3,22 +3,20 @@
 
   <div class="row collapse">
     <div ng-if="users.current.admin" class="medium-4 columns">
-      <form ng-submit="queues.validateForm(queueName, queues); queueName = ''">
-        <label>
-          <div class="row collapse">
-            <div class="small-9 columns">
-              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
-                     placeholder="New queue name"/>
-            </div>
-            <div class="small-3 columns">
-              <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
-                      style="margin-bottom: 0;">
-                <i class="fi-plus white-icon size-16"></i>
-                Add
-              </button>
-            </div>
+      <form ng-submit="queues.validateForm(queueName); queueName = ''">
+        <div class="row collapse">
+          <div class="small-9 columns">
+            <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
+                   placeholder="New queue name"/>
           </div>
-        </label>
+          <div class="small-3 columns">
+            <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
+                    style="margin-bottom: 0;">
+              <i class="fi-plus white-icon size-16"></i>
+              Add
+            </button>
+          </div>
+        </div>
       </form>
     </div>
     <div class="medium-4 columns pull-right">
@@ -56,7 +54,8 @@
           <a href="#/queue/{{queue.name}}" ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large"       ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
             Join
           </a>
-          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large" ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large" 
+                ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
             Leave
           </button>
         </div>
