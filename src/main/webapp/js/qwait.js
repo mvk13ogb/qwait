@@ -399,6 +399,22 @@
                 }
             });
         };
+
+        result.addModerator = function (name, user) {
+            return $http.put('/api/queue/' + name + '/moderator/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.removeModerator = function (name, user) {
+            return $http.delete('/api/queue/' + name + '/moderator/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
         return result;
     }]);
 
