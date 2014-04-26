@@ -374,7 +374,7 @@
         };
 
         result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', {comment: comment}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -382,7 +382,7 @@
         };
 
         result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/location', {location: location}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
