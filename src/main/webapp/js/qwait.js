@@ -612,6 +612,33 @@
         }
     }]);
 
+    qwait.factory('debounce', function($timeout, $q) {
+        return function(func, wait, immediate) {
+            var timeout;
+            var deferred = $q.defer();
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if(!immediate) {
+                      deferred.resolve(func.apply(context, args));
+                      deferred = $q.defer();
+                    }
+                };
+                var callNow = immediate && !timeout;
+                if ( timeout ) {
+                    $timeout.cancel(timeout);
+                }
+                timeout = $timeout(later, wait);
+                if (callNow) {
+                    deferred.resolve(func.apply(context,args));
+                    deferred = $q.defer();
+                }
+                return deferred.promise;
+            };
+        };
+    });
+
     qwait.controller('TopbarCtrl', ['$scope', '$location', 'users', 'system', 'messagebus', 'broadcaster', function ($scope, $location, users, system, messagebus, broadcaster) {
         $scope.location = $location;
         $scope.users = users;
@@ -653,7 +680,7 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
+    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $route, clock, queues, users, page, queuePositions, debounce) {
         page.title = 'View queue';
 
         $scope.queues = queues;
@@ -666,6 +693,38 @@
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
+
+        var wait = 2000;
+
+        $scope.changeLocationDebounced = debounce(function (form, queueName, userName, location) {
+            if (form.$valid) {
+                queues.changeLocation(queueName, userName, location);
+            }
+        }, wait, false);
+
+        $scope.changeCommentDebounced = debounce(function (form, queueName, userName, comment) {
+            if (form.$valid) {
+                queues.changeComment(queueName, userName, comment);
+            }
+        }, wait, false);
+
+        $scope.joinQueueFull = function (name, user, location, locationform, comment, commentform){
+            queues.joinQueue(name, user);
+
+            //HACK, places a timeout so we have time to join the queue
+            setTimeout(function() {
+
+                if(locationform.$valid){
+                    queues.changeLocation(name, user, location);
+                }
+
+                if(commentform.$valid){
+                    queues.changeComment(name, user, comment);
+                }
+            }, 500);
+        };
+
+
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
