@@ -59,11 +59,6 @@ button.itsy, .button.itsy {
   animation: 0.5s fade-out;
 }
 
-.no-location {
-  border-color: rgba(255, 0, 0, 0.4) !important;
-  border-width: 2px !important;
-}
-
 @keyframes fade-out {
   from {
     opacity: 1;

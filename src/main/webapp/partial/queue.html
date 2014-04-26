@@ -20,12 +20,14 @@
                 <div ng-show="userQueuePos(users.current, queue.positions)">
                   <input type="text" ng-model="userQueuePos(users.current, queue.positions).location"
                           ng-change="queues.changeLocation(queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)" 
-                          ng-class="{'no-location' : !userQueuePos(users.current, queue.positions).location}" maxlength="20">
+                          ng-class="{'error' : !userQueuePos(users.current, queue.positions).location}" maxlength="20">
                   </input>
+                  <small ng-show="!userQueuePos(users.current, queue.positions).location" class="error">Required</small>
                 </div>
                 <div ng-hide="userQueuePos(users.current, queue.positions)">
-                  <input type="text" ng-model="locationplaceholder" ng-class="{'no-location' : !location}" maxlength="20">
+                  <input type="text" ng-model="locationplaceholder" ng-class="{'error' : !locationplaceholder}" maxlength="20">
                   </input>
+                  <small ng-show="!locationplaceholder" class="error">Required</small>
                 </div>
               </div>
             </div>
