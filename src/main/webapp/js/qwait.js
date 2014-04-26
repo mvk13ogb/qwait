@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'ngAnimate', 'request']);
+    var qwait = angular.module('qwait', ['mm.foundation', 'ngRoute', 'ngAnimate', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -668,10 +668,16 @@
         };
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
         page.title = 'Admin tools';
 
         $scope.users = users;
+
+        $scope.find = function (user) {
+            return users.find(user).then(function (res) {
+                return res.data;
+            });
+        };
     }]);
 
     qwait.filter('duration', function () {
