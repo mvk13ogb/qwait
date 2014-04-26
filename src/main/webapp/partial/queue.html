@@ -160,7 +160,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | orderBy:'startTime' filter:search">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
               <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
