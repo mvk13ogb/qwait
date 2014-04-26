@@ -3,9 +3,6 @@ package se.kth.csc.controller;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.api.AccountSnapshot;
-
-import java.util.List;
 
 public interface ApiProvider {
     Iterable<Account> findAccounts(boolean onlyAdmin, String query);
@@ -28,9 +25,9 @@ public interface ApiProvider {
 
     void deleteQueuePosition(QueuePosition queuePosition);
 
-    void setComment(QueuePosition queuePosition, String comment) throws TextLimitExceededException;
+    void setComment(QueuePosition queuePosition, String comment) throws BadRequestException;
 
-    void setLocation(QueuePosition queuePosition, String location) throws TextLimitExceededException;
+    void setLocation(QueuePosition queuePosition, String location) throws BadRequestException;
 
     void clearQueue(Queue queue);
 
