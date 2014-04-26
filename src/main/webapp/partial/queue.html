@@ -90,7 +90,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
-              <td>{{$index + 1}}</td>
+              <td>{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
               <td ng-hide="editingLocation">
