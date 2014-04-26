@@ -9,14 +9,11 @@ import org.springframework.stereotype.Component;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.api.AccountSnapshot;
 import se.kth.csc.payload.api.Snapshotters;
 import se.kth.csc.payload.message.*;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
-
-import java.util.List;
 
 /**
  * An implementation of all the actions that can be performed via the API. These are collected into a single class to
@@ -129,24 +126,30 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
-    public void setComment(QueuePosition queuePosition, String comment) {
-        queuePosition.setComment(comment);
-
-        QueuePositionCommentChanged message = new QueuePositionCommentChanged(queuePosition.getQueue().getName(),
-                queuePosition.getAccount().getPrincipalName(), comment);
-        messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
-        messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+    public void setComment(QueuePosition queuePosition, String comment) throws BadRequestException {
+        if (comment.length() > 20) {
+            throw new BadRequestException("Comment length cannot exceed 20 characters");
+        } else {
+            queuePosition.setComment(comment);
+            QueuePositionCommentChanged message = new QueuePositionCommentChanged(queuePosition.getQueue().getName(),
+                    queuePosition.getAccount().getPrincipalName(), comment);
+            messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
+            messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        }
     }
 
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
-    public void setLocation(QueuePosition queuePosition, String location) {
-        queuePosition.setLocation(location);
-
-        QueuePositionLocationChanged message = new QueuePositionLocationChanged(queuePosition.getQueue().getName(),
-                queuePosition.getAccount().getPrincipalName(), location);
-        messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
-        messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+    public void setLocation(QueuePosition queuePosition, String location) throws BadRequestException {
+        if (location.length() > 20) {
+            throw new BadRequestException("Location length cannot exceed 20 characters");
+        } else {
+            queuePosition.setLocation(location);
+            QueuePositionLocationChanged message = new QueuePositionLocationChanged(queuePosition.getQueue().getName(),
+                    queuePosition.getAccount().getPrincipalName(), location);
+            messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
+            messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        }
     }
 
     @Override
