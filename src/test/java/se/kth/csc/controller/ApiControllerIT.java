@@ -727,6 +727,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove a comment for a user.
+     *
      * @throws Exception
      */
     @Test
@@ -758,6 +759,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove a comment for another user.
+     *
      * @throws Exception
      */
     @Test
@@ -865,6 +867,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove the location for a user.
+     *
      * @throws Exception
      */
     @Test
@@ -896,6 +899,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove a location for another user.
+     *
      * @throws Exception
      */
     @Test
@@ -934,7 +938,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("positions", hasSize(1)))
                 .andExpect(jsonPath("positions[0].userName", is("testUser")));
-        mockMvc.perform(delete("/api/queue/abc123/positions/testUser"))
+        mockMvc.perform(delete("/api/queue/abc123/position/testUser").session(session))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())

@@ -127,7 +127,7 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setComment(QueuePosition queuePosition, String comment) throws BadRequestException {
-        if (comment.length() > 20) {
+        if (comment != null && comment.length() > 20) {
             throw new BadRequestException("Comment length cannot exceed 20 characters");
         } else {
             queuePosition.setComment(comment);
@@ -141,7 +141,7 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setLocation(QueuePosition queuePosition, String location) throws BadRequestException {
-        if (location.length() > 20) {
+        if (location != null && location.length() > 20) {
             throw new BadRequestException("Location length cannot exceed 20 characters");
         } else {
             queuePosition.setLocation(location);
