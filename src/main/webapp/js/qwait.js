@@ -655,10 +655,6 @@
         };
     }]);
 
-    qwait.controller('TypeaheadCtrl', ['$scope', function ($scope) {
-        $scope.adminName = undefined;
-    }]);
-
     qwait.filter('duration', function () {
         return function (milliseconds) {
             return moment.duration(milliseconds).humanize();
