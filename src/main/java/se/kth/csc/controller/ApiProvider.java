@@ -34,7 +34,7 @@ public interface ApiProvider {
 
     void clearQueue(Queue queue);
 
-    void setActive(Queue queue, boolean active);
+    void setHidden(Queue queue, boolean hidden);
 
     void setLocked(Queue queue, boolean locked);
 

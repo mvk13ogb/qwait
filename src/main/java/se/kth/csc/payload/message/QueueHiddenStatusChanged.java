@@ -3,20 +3,20 @@ package se.kth.csc.payload.message;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-public class QueueActiveStatusChanged {
+public class QueueHiddenStatusChanged {
     private final String name;
-    private final boolean active;
+    private final boolean hidden;
 
-    public QueueActiveStatusChanged(String name, boolean active) {
+    public QueueHiddenStatusChanged(String name, boolean hidden) {
         this.name = name;
-        this.active = active;
+        this.hidden = hidden;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean isHidden() {
+        return hidden;
     }
 }

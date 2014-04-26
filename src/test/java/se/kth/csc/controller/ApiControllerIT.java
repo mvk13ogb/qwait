@@ -687,17 +687,17 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("owners", hasSize(0)))
-                .andExpect(jsonPath("active", is(true)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(jsonPath("hidden", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(false)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(jsonPath("hidden", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
 
         // For Owner (who is not an Admin)
         mockMvc.perform(get("/api/user/testUser").session(session))
@@ -707,7 +707,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("owners", hasSize(1)))
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
         mockMvc.perform(put("/api/user/testUser/role/admin").session(session).contentType(MediaType.APPLICATION_JSON).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
