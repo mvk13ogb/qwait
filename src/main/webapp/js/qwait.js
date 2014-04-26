@@ -751,7 +751,7 @@
         }, 200, true);
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', 'queues', function ($scope, $timeout, page, users, queues) {
         page.title = 'Admin tools';
 
         $scope.users = users;
@@ -761,6 +761,21 @@
                 return res.data;
             });
         };
+
+        var ownedQueues = users.current.ownedQueues;
+
+        $scope.ownedQueues = [];
+        for (i=0; i<ownedQueues.length; i++) {
+            // Fetch the queues of the current user
+            $scope.ownedQueues.push(queues.get(ownedQueues[i]));
+        }
+
+        $scope.selectedQueue = undefined;
+
+        $scope.selectQueue = function (queue) {
+            $scope.selectedQueue = queue;
+            console.log($scope.selectedQueue);
+        }
     }]);
 
     qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
