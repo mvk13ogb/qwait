@@ -1,10 +1,25 @@
 <div>
   <h2>{{queue.title}}</h2>
-  {{queue}}
   <h5 ng-show="userQueuePos(users.current, queue.positions)">
     Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
   </h5>
   <p ng-hide="queue.positions">This queue is empty</p>
+
+
+
+<div ng-controller="ModalDemoCtrl">
+  <script type="text/ng-template" id="myModalContent.html">
+    <h3>Lock queue {{queue.title}}</h3>
+    <p>This is most likely a terrible decision<p>
+    <button class="button alert" ng-click="ok()">Lock</button>
+    <button class="button secondary" ng-click="cancel()">Back</button>
+    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+  </script>
+
+  <button class="button" ng-click="open()">Open me!</button>
+</div>
+
+
 
   <div ng-show="queue.positions" class="row collapse">
     <div class="large-3 large-offset-9 columns">

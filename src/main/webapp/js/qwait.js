@@ -680,15 +680,29 @@
         };
     }]);
 
-    qwait.controller('DropdownCtrl', ['$scope', function($scope) {
-      
-        $scope.items = [
-        "The first choice!",
-        "And another choice for you.",
-        "but wait! A third!"
-      ];
+    qwait.controller('ModalDemoCtrl', ['$scope', '$modal', function($scope, $modal) {
 
+        $scope.open = function () {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'myModalContent.html',
+                controller: ModalInstanceCtrl
+            });
+        };
     }]);
+
+    var ModalInstanceCtrl = function ($scope, $modalInstance) {
+
+
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
