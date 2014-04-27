@@ -1,5 +1,9 @@
 <div>
   <h2>{{queue.title}}</h2>
+  {{queue}}
+  <h5 ng-show="userQueuePos(users.current, queue.positions)">
+    Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
+  </h5>
   <p ng-hide="queue.positions">This queue is empty</p>
 
   <div ng-show="queue.positions" class="row collapse">
@@ -216,6 +220,3 @@
     </div>
   </div>
 </div>
-<script src="../vendor/js/foundation.dropdown.js"></script>
-<script src="../vendor/js/foundation.reveal.js"></script>
-<script>$(document).foundation();</script>
