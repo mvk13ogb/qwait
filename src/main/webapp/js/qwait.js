@@ -178,7 +178,7 @@
                         }, 500);
                         break;
                     case 'QueueRemoved':
-                        result.all[data.body.name] = [];
+                        delete result.all[data.body.name];
                         break;
                     default:
                         console.log('Unrecognized queue message', data.body);
