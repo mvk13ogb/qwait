@@ -177,6 +177,9 @@
                             result.get(data.body.name);
                         }, 500);
                         break;
+                    case 'QueueRemoved':
+                        result.all[data.body.name] = [];
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -346,6 +349,14 @@
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
+            });
+        };
+
+        result.deleteQueue = function (name) {
+            return $http.delete('/api/queue/' + encodeURIComponent(name), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         };
 

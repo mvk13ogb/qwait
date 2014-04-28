@@ -71,6 +71,22 @@
                 </button>
               </li>
             </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14">Delete</span>
+                </button>
+              </li>
+              <li>
+                <a href="#/queues">
+                  <button type="button" class="button small alert" ng-click="queues.deleteQueue(queue.name)"
+                        style="margin-bottom: 0;">
+                    <i class="fi-trash size-14"></i>
+                  </button>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
