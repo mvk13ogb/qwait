@@ -57,173 +57,95 @@
 
   <div class="row collapse">
     <div class="large-6 columns">
+      <h3>Owners</h3>
 
-  <p>Owners</p>
-  <form class="row collapse" name="addModeratorForm"
-        ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
-    <div class="small-9 columns">
-      <input type="text" ng-model="owner" required="required"
-             placeholder="Add owner to selected queue"
-             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-             class="form-control"/>
-    </div>
-    <div class="small-3 columns">
-      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-              style="margin-bottom: 0;">
-        <i class="fi-plus white-icon size-16"></i>
-        Add
-      </button>
-    </div>
-  </form>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Readable name</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="owner in selectedOwners">
-        <td>{{owner.name}}</td>
-        <td>{{owner.readableName}}</td>
-        <td>
-          <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
-                  type="button" class="tiny alert" style="margin-bottom: 0;">
-            Remove
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-    </div>
-
-  <div class="large-6 columns">
-    <p>Moderators</p>
-  <form class="row collapse" name="addModeratorForm"
-        ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
-    <div class="small-9 columns">
-      <input type="text" ng-model="moderator" required="required"
-             placeholder="Add moderator to selected queue"
-             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-             class="form-control"/>
-    </div>
-    <div class="small-3 columns">
-      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-              style="margin-bottom: 0;">
-        <i class="fi-plus white-icon size-16"></i>
-        Add
-      </button>
-    </div>
-  </form>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Readable name</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="moderator in selectedModerators">
-        <td>{{moderator.name}}</td>
-        <td>{{moderator.readableName}}</td>
-        <td>
-          <button ng-click="queues.removeModerator(selectedQueue.name, moderator.name)"
-                  type="button" class="tiny alert" style="margin-bottom: 0;">
-            Remove
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!--div ng-show="selectedQueue">
-    <p>Selected queue: <strong>{{selectedQueue.title}}</strong></p>
-
-    <form class="row collapse" name="addModeratorForm"
-      ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
-      <div class="small-9 columns">
-        <input type="text" ng-model="moderator" required="required"
-               placeholder="Add moderator to selected queue"
-               typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-               class="form-control"/>
-      </div>
-      <div class="small-3 columns">
-        <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-                style="margin-bottom: 0;">
-          <i class="fi-plus white-icon size-16"></i>
-          Add
-        </button>
-      </div>
-    </form>
-  </div-->
-
-  </div>
-
-  <!--div class="row">
-    <div class="large-6 columns">
-      <h3>Owned Queues</h3>
-
-      <div ng-show="ownedQueues.length">
-        <table>
-          <thead>
-            <tr>
-              <th>Queue Name</th>
-              <th>Queue Title</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="queue in ownedQueues">
-              <td>{{queue.name}}</td>
-              <td>{{queue.title}}</td>
-              <td>
-                <button ng-click="selectQueue(queue)" type="button" class="tiny"
+      <form class="row collapse" name="addModeratorForm"
+            ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
+        <div class="small-9 columns">
+          <input type="text" ng-model="owner" required="required"
+                 placeholder="Add owner to selected queue"
+                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                 class="form-control"/>
+        </div>
+        <div class="small-3 columns">
+          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
                   style="margin-bottom: 0;">
-                  Select
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div ng-hide="ownedQueues.length">
-        <p>(No queues)</p>
+            <i class="fi-plus white-icon size-16"></i>
+            Add
+          </button>
+        </div>
+      </form>
+
+      <table ng-show="selectedQueue.owners.length">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Readable name</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="owner in selectedOwners">
+            <td>{{owner.name}}</td>
+            <td>{{owner.readableName}}</td>
+            <td>
+              <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
+                      type="button" class="tiny alert" style="margin-bottom: 0;">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-hide="selectedQueue.owners.length">
+        <p>(No owners)</p>
       </div>
     </div>
 
     <div class="large-6 columns">
       <h3>Moderators</h3>
 
-      {{selectedQueue.moderators.length}}
-      <div ng-show="selectedQueue.moderators.length">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Readable Name</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="user in selectedModerators">
-              <td>{{user.name}}</td>
-              <td>{{user.readableName}}</td>
-              <td>
-                <button ng-click="queues.removeModerator(selectedQueue.name, user.name)"
-                  type="button" class="tiny alert" style="margin-bottom: 0;">
-                  Remove
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <form class="row collapse" name="addModeratorForm"
+            ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
+        <div class="small-9 columns">
+          <input type="text" ng-model="moderator" required="required"
+                 placeholder="Add moderator to selected queue"
+                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                 class="form-control"/>
+        </div>
+        <div class="small-3 columns">
+          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                  style="margin-bottom: 0;">
+            <i class="fi-plus white-icon size-16"></i>
+            Add
+          </button>
+        </div>
+      </form>
+
+      <table ng-show="selectedQueue.moderators.length">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Readable name</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="moderator in selectedModerators">
+            <td>{{moderator.name}}</td>
+            <td>{{moderator.readableName}}</td>
+            <td>
+              <button ng-click="queues.removeModerator(selectedQueue.name, moderator.name)"
+                      type="button" class="tiny alert" style="margin-bottom: 0;">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div ng-hide="selectedQueue.moderators.length">
         <p>(No moderators)</p>
       </div>
     </div>
-  </div-->
+  </div>
 </div>
