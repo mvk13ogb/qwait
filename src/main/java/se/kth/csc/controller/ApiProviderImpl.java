@@ -67,7 +67,7 @@ public class ApiProviderImpl implements ApiProvider {
         Queue queue = new Queue();
         queue.setName(queueName);
         queue.setTitle(title);
-        queue.setActive(true);
+        queue.setHidden(false);
         queue.setLocked(false);
         queue.getOwners().add(owner);
         queueStore.storeQueue(queue);
@@ -96,7 +96,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("!#queue.locked and #queue.active")
+    @PreAuthorize("!#queue.locked and !#queue.hidden")
     public void addQueuePosition(Queue queue, Account account) {
         QueuePosition queuePosition = new QueuePosition();
         queuePosition.setQueue(queue);
@@ -127,7 +127,7 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setComment(QueuePosition queuePosition, String comment) throws BadRequestException {
-        if (comment.length() > 20) {
+        if (comment != null && comment.length() > 20) {
             throw new BadRequestException("Comment length cannot exceed 20 characters");
         } else {
             queuePosition.setComment(comment);
@@ -141,7 +141,7 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.account.principalName == authentication.name")
     public void setLocation(QueuePosition queuePosition, String location) throws BadRequestException {
-        if (location.length() > 20) {
+        if (location != null && location.length() > 20) {
             throw new BadRequestException("Location length cannot exceed 20 characters");
         } else {
             queuePosition.setLocation(location);
@@ -165,10 +165,13 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
-    public void setActive(Queue queue, boolean active) {
-        queue.setActive(active);
-
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueActiveStatusChanged(queue.getName(), active));
+    public void setHidden(Queue queue, boolean hidden) {
+        queue.setHidden(hidden);
+        if (hidden) {
+            clearQueue(queue);
+            setLocked(queue, true);
+        }
+        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueHiddenStatusChanged(queue.getName(), hidden));
     }
 
     @Override

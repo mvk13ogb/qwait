@@ -20,11 +20,6 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     private EntityManager entityManager;
 
     @Override
-    public Queue fetchQueueWithId(int id) {
-        return entityManager.find(Queue.class, id);
-    }
-
-    @Override
     public Queue fetchQueueWithName(String name) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
@@ -41,54 +36,6 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
         return entityManager.createQuery(q.select(q.from(Queue.class))).getResultList();
-    }
-
-    @Override
-    public List<String> fetchAllQueueNames() {
-        List<String> queueNames = new LinkedList<String>();
-        for (Queue queue : fetchAllQueues()) {
-            queueNames.add(queue.getName());
-        }
-        return queueNames;
-    }
-
-    @Override
-    public List<Queue> fetchAllActiveQueues() {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        Root<Queue> queueRoot = q.from(Queue.class);
-        q.select(queueRoot).where(queueRoot.get(Queue_.active));
-        return entityManager.createQuery(q).getResultList();
-    }
-
-    @Override
-    public List<Queue> fetchAllModeratedQueues(Account account) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        q.select(q.from(Queue.class));
-        List<Queue> list = entityManager.createQuery(q).getResultList();
-        List<Queue> tmpList = new LinkedList<Queue>();
-        for (Queue que : list) {
-            if (que.getModerators().contains(account)) {
-                tmpList.add(que);
-            }
-        }
-        return tmpList;
-    }
-
-    @Override
-    public List<Queue> fetchAllOwnedQueues(Account account) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        q.select(q.from(Queue.class));
-        List<Queue> list = entityManager.createQuery(q).getResultList();
-        List<Queue> tmpList = new LinkedList<Queue>();
-        for (Queue que : list) {
-            if (que.getOwners().contains(account)) {
-                tmpList.add(que);
-            }
-        }
-        return tmpList;
     }
 
     @Override

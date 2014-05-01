@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'ngAnimate', 'request']);
+    var qwait = angular.module('qwait', ['mm.foundation', 'ngRoute', 'ngAnimate', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -184,10 +184,10 @@
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
-                    case 'QueueActiveStatusChanged':
+                    case 'QueueHiddenStatusChanged':
                         queue = result.all[data.body.name];
                         if (queue) {
-                            queue.active = data.body.active;
+                            queue.hidden = data.body.hidden;
                         }
                         break;
                     case 'QueueCleared':
@@ -333,9 +333,9 @@
             });
         };
 
-        result.setActive = function (name, active) {
+        result.setHidden = function (name, hidden) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + encodeURIComponent(name) + '/active', '' + active, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/hidden', '' + hidden, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -374,7 +374,7 @@
         };
 
         result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', {comment: comment}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -382,7 +382,7 @@
         };
 
         result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/location', {location: location}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -667,7 +667,7 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
+    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
         $scope.users = users;
@@ -675,6 +675,10 @@
 
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.userQueuePos = queuePositions.getUserQueuePos;
+        $scope.joinQueue = function (queueName, userName) {
+            queues.joinQueue(queueName, userName);
+            $location.path('/queue/' + queueName)
+        }
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
@@ -727,10 +731,16 @@
 
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
         page.title = 'Admin tools';
 
         $scope.users = users;
+
+        $scope.find = function (user) {
+            return users.find(user).then(function (res) {
+                return res.data;
+            });
+        };
     }]);
 
     qwait.filter('duration', function () {
@@ -806,6 +816,22 @@
                 }
             }
 
+            return result;
+        };
+    });
+
+    qwait.filter('queuesSeenBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (queue && !queue.hidden) {
+                    result.push(queue);
+                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                    result.push(queue);
+                }
+            }
             return result;
         };
     });
