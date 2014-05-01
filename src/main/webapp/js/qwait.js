@@ -672,7 +672,6 @@
         $scope.system = system;
         $scope.messagebus = messagebus;
 
-        broadcaster.broadcast('User ' + users.current.name + ' visiting home page');
     }]);
 
     qwait.controller('TitleCtrl', ['$scope', 'system', 'page', function ($scope, system, page) {
@@ -779,26 +778,33 @@
             });
         };
 
-        var ownedQueues = users.current.ownedQueues;
-
-        $scope.ownedQueues = [];
-        console.log(ownedQueues);
-        for (i=0; i<ownedQueues.length; i++) {
-            // Fetch the queues of the current user
-            $scope.ownedQueues.push(queues.get(ownedQueues[i]));
-        }
-
         $scope.selectedQueue = undefined;
         $scope.dropdown = undefined;
 
-        $scope.selectQueue = function (queue) {
-            $scope.selectedQueue = queue;
+        // The current user may not have been loaded yet
+        $timeout(function () {
+            var ownedQueues = users.current.ownedQueues;
 
-            $scope.selectedModerators = [];
-            for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
-                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+            $scope.ownedQueues = [];
+            if (ownedQueues) {
+                for (i=0; i<ownedQueues.length; i++) {
+                    // Fetch the queues of the current user
+                    $scope.ownedQueues.push(queues.get(ownedQueues[i]));
+
+
+                    $scope.selectQueue = function (queue) {
+                        $scope.selectedQueue = queue;
+
+                        $scope.selectedModerators = [];
+                        for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                            $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+                        }
+                    }
+                }
+            } else {
+                console.log("Current user was not loaded");
             }
-        }
+        }, 500);
     }]);
 
     qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
