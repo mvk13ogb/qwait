@@ -93,6 +93,24 @@
                             }
                         }
                         break;
+                    case 'QueueModeratorAdded':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            if (i == -1) {
+                                user.moderatedQueues.push(data.body.queueName);
+                            }
+                        }
+                        break;
+                    case 'QueueModeratorRemoved':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            if (i != -1) {
+                                user.moderatedQueues.splice(i, 1);
+                            }
+                        }
+                        break;
                     default:
                         console.log('Unrecognized user message', data.body);
                 }
@@ -212,7 +230,11 @@
                     case 'QueueModeratorAdded':
                         queue = result.all[data.body.queueName];
                         if (queue) {
-                            queue.moderators.push(data.body.userName);
+                            i = queue.moderators.indexOf(data.body.userName);
+
+                            if (i == -1) {
+                                queue.moderators.push(data.body.userName);
+                            }
                         }
                         break;
                     case 'QueueModeratorRemoved':
@@ -424,7 +446,7 @@
             return $http.put('/api/queue/' + name + '/owner/' + user, {
                 headers: {
                     'Content-Type': 'application/json'
-                    }
+                }
             });
         };
 
@@ -811,20 +833,20 @@
                 for (i=0; i<ownedQueues.length; i++) {
                     // Fetch the queues of the current user
                     $scope.ownedQueues.push(queues.get(ownedQueues[i]));
-
-                    $scope.selectQueue = function (queue) {
-                        $scope.selectedQueue = queue;
-
-                        $scope.selectedModerators = [];
-                        for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
-                            $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-                        }
-                        $scope.selectedOwners = [];
-                        for (i=0; i<$scope.selectedQueue.owners.length; i++) {
-                            $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
-                        }
-                    }
                 }
+
+                $scope.selectQueue = function (queue) {
+                    $scope.selectedQueue = queue;
+
+                    $scope.selectedModerators = [];
+                    for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                        $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+                    }
+                    $scope.selectedOwners = [];
+                    for (i=0; i<$scope.selectedQueue.owners.length; i++) {
+                        $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+                    }
+                };
             } else {
                 console.log("Current user was not loaded");
             }

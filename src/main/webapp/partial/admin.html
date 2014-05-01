@@ -166,7 +166,7 @@
     <div class="large-6 columns">
       <h3>Owned Queues</h3>
 
-      <div ng-show="ownedQueues">
+      <div ng-show="ownedQueues.length">
         <table>
           <thead>
             <tr>
@@ -189,7 +189,7 @@
           </tbody>
         </table>
       </div>
-      <div ng-hide="ownedQueues">
+      <div ng-hide="ownedQueues.length">
         <p>(No queues)</p>
       </div>
     </div>
@@ -197,7 +197,8 @@
     <div class="large-6 columns">
       <h3>Moderators</h3>
 
-      <div ng-show="selectedQueue.moderators">
+      {{selectedQueue.moderators.length}}
+      <div ng-show="selectedQueue.moderators.length">
         <table>
           <thead>
             <tr>
@@ -220,7 +221,7 @@
           </tbody>
         </table>
       </div>
-      <div ng-hide="selectedQueue.moderators">
+      <div ng-hide="selectedQueue.moderators.length">
         <p>(No moderators)</p>
       </div>
     </div>
