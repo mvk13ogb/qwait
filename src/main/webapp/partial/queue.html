@@ -5,22 +5,6 @@
   </h5>
   <p ng-hide="queue.positions">This queue is empty</p>
 
-
-
-<div ng-controller="ModalDemoCtrl">
-  <script type="text/ng-template" id="myModalContent.html">
-    <h3>Lock queue {{queue.title}}</h3>
-    <p>This is most likely a terrible decision<p>
-    <button class="button alert" ng-click="ok()">Lock</button>
-    <button class="button secondary" ng-click="cancel()">Back</button>
-    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
-  </script>
-
-  <button class="button" ng-click="open()">Open me!</button>
-</div>
-
-
-
   <div ng-show="queue.positions" class="row collapse">
     <div class="large-3 large-offset-9 columns">
       <input type="text" ng-model="search" placeholder="Find users"/>
@@ -60,18 +44,33 @@
               Manage queue
             </a>
             <div id="manage-queue" class="medium f-dropdown content">
-              <ul ng-show="!queue.locked" ng-click="Foundation.libs.reveal.open" data-reveal-id="lockModal" class="button-group radius" style="margin-top: 0.5rem">
-                <li>
-                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                    <span class="size-14">Lock&nbsp;</span>
+
+              <div ng-show="!queue.locked" ng-controller="lockQueueModalCtrl">
+                <script type="text/ng-template" id="lockQueueModalContent.html">
+                  <h2>Lock queue {{queue.title}}</h2>
+                  <p>This will make users unable to join the queue.</p>
+
+                  <button class="alert" ng-click="queues.setLocked(queue.name, true); ok()">
+                    <i class="fi-lock"></i>
+                    Lock
                   </button>
-                </li>
-                <li>
-                  <button type="button" class="button small alert" style="margin-bottom: 0;">
-                    <i class="fi-lock size-14"></i>
-                  </button>
-                </li>
-              </ul>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Lock&nbsp;</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
+                      <i class="fi-lock size-14"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
               <ul ng-show="queue.locked" ng-click="queues.setLocked(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button secondary small" style="margin-bottom: 0;">
@@ -85,30 +84,33 @@
                 </li>
               </ul>
 
-              <div id="lockModal" class="reveal-modal" data-reveal="">
-                <h2>Lock queue {{queue.title}}</h2>
-                <p>This will make users unable to join the queue. Are you sure?</p>
+              <div ng-show="queue.active" ng-controller="hideQueueModalCtrl">
+                <script type="text/ng-template" id="hideQueueModalContent.html">
+                  <h2>Hide queue {{queue.title}}</h2>
+                  <p>This will hide the queue from the queue list.</p>
 
-                <a class="button radius alert" ng-click="queues.setLocked(queue.name, true)">
-                  <i class="fi-lock"></i>
-                  Lock
-                </a>
-                <a class="button radius secondary">Back</a>
-                <a class="close-reveal-modal">&#215;</a>
+                  <button class="alert" ng-click="queues.setActive(queue.name, false); ok()">
+                    <i class="fi-eye"></i>
+                    Hide
+                  </button>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Hide&nbsp;</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
+                      <i class="fi-eye size-14"></i>
+                    </button>
+                  </li>
+                </ul>
               </div>
 
-              <ul ng-show="queue.active" ng-click="Foundation.libs.reveal.open" data-reveal-id="hideModal" class="button-group radius" style="margin-top: 0.5rem">
-                <li>
-                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                    <span class="size-14">Hide&nbsp;</span>
-                  </button>
-                </li>
-                <li>
-                  <button type="button" class="button small alert" style="margin-bottom: 0;">
-                    <i class="fi-eye size-14"></i>
-                  </button>
-                </li>
-              </ul>
               <ul ng-show="!queue.active" ng-click="queues.setActive(queue.name, true)" class="button-group radius" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button secondary small" style="margin-bottom: 0;">
@@ -122,42 +124,31 @@
                 </li>
               </ul>
 
-              <div id="hideModal" class="reveal-modal" data-reveal="">
-                <h2>Hide queue {{queue.title}}</h2>
-                <p>This will hide the queue from the queue list. Are you sure?</p>
+              <div ng-show="queue.active" ng-controller="clearQueueModalCtrl">
+                <script type="text/ng-template" id="clearQueueModalContent.html">
+                  <h2>Clear queue {{queue.title}}</h2>
+                  <p>This will remove all users from the queue.</p>
 
-                <a class="button radius alert" ng-click="queues.setActive(queue.name, false)">
-                  <i class="fi-eye"></i>
-                  Hide
-                </a>
-                <a class="button radius secondary">Back</a>
-                <a class="close-reveal-modal">&#215;</a>
-              </div>
-
-              <ul ng-click="Foundation.libs.reveal.open" data-reveal-id="clearModal" class="button-group radius" style="margin-top: 0.5rem">
-                <li>
-                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                    <span class="size-14">Clear</span>
+                  <button class="alert" ng-click="queues.clearQueue(queue.name, false); ok()">
+                    <i class="fi-x"></i>
+                    Clear
                   </button>
-                </li>
-                <li>
-                  <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" 
-                          style="margin-bottom: 0;">
-                    <i class="fi-x size-14"></i>
-                  </button>
-                </li>
-              </ul>
-
-              <div id="clearModal" class="reveal-modal" data-reveal="">
-                <h2>Clear queue {{queue.title}}</h2>
-                <p>This will remove all users from the queue. Are you sure?</p>
-
-                <a class="button radius alert" ng-click="queues.clearQueue(queue.name)">
-                  <i class="fi-x"></i>
-                  Clear
-                </a>
-                <a class="button radius secondary">Back</a>
-                <a class="close-reveal-modal">&#215;</a>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Clear</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" 
+                            style="margin-bottom: 0;">
+                      <i class="fi-x size-14"></i>
+                    </button>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -214,18 +205,27 @@
                 </form>
               </td>
               <td ng-show="users.current.admin" width="1">
-                <div ng-controller="ModalDemoCtrl">
-                  <script type="text/ng-template" id="removeUserModal.html">
-                    <h3>Remove {{position.userName}} from {{queue.name}}</h3>
-                    <button class="button alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">Remove</button>
-                    <button class="button secondary" ng-click="cancel()">Back</button>
+                <div ng-controller="removeUserModalCtrl">
+                  <script type="text/ng-template" id="removeUserModalContent.html">
+                    <h3>Remove {{position.userName}} from {{queue.title}}</h3>
+                    <p>This will remove the user from the queue.</p>
+                    <button class="alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">
+                      <i class="fi-x"></i>
+                      Remove
+                    </button>
+                    <button class="secondary" ng-click="cancel()">Back</button>
                     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                   </script>
-                  <a dropdown-toggle="#remove-user" class="size-18">&#9662;</a>
-                  <ul id="remove-user" ng-click="open()" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
+                  <!-- TODO remove this button -->
+                  <button ng-click="open(position)">{{position.userName}}</button>
+
+                  <a dropdown-toggle="#remove-user_{{ position.userName }}" class="size-18">&#9662;</a>
+                  <ul id="remove-user_{{ position.userName }}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
                     <li>
                       <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
-                        <span class="size-14">Remove</span>
+                        <span class="size-14">
+                          Remove
+                        </span>
                       </button>
                     </li>
                     <li>

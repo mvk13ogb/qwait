@@ -680,16 +680,64 @@
         };
     }]);
 
-    qwait.controller('removeUserModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'removeUserModal.html',
-                controller: ModalInstanceCtrl,
+                templateUrl: 'lockQueueModalContent.html',
+                controller: queueModalInstanceCtrl,
                 resolve: {
                     data: function () {
-                        return ([$scope.position, $scope.queue, $scope.queues]);
+                        return ([$scope.queue, $scope.queues]);
+                    }
+                }
+            });
+        };
+    }]);
+
+    qwait.controller('hideQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function () {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'hideQueueModalContent.html',
+                controller: queueModalInstanceCtrl,
+                resolve: {
+                    data: function () {
+                        return ([$scope.queue, $scope.queues]);
+                    }
+                }
+            });
+        };
+    }]);
+
+    qwait.controller('clearQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function () {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'clearQueueModalContent.html',
+                controller: queueModalInstanceCtrl,
+                resolve: {
+                    data: function () {
+                        return ([$scope.queue, $scope.queues]);
+                    }
+                }
+            });
+        };
+    }]);
+
+    qwait.controller('removeUserModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function (position) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'removeUserModalContent.html',
+                controller: 'removeUserModalInstanceCtrl',
+                resolve: {
+                    data: function () {
+                        return [position, $scope.queue, $scope.queues];
                     }
                 }
             });
@@ -707,9 +755,10 @@
         };
     };
 
-    var queueModalInstanceCtrl = function ($scope, $modalInstance, queue) {
+    var queueModalInstanceCtrl = function ($scope, $modalInstance, data) {
 
-        $scope.queue = queue;
+        $scope.queue = data[0];
+        $scope.queues = data[1];
 
         $scope.ok = function () {
             $modalInstance.close();
@@ -720,7 +769,7 @@
         };
     };
 
-    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, data) {
+    qwait.controller('removeUserModalInstanceCtrl', ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
 
         $scope.position = data[0];
         $scope.queue = data[1];
@@ -733,8 +782,7 @@
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    };
-
+    }]);
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
