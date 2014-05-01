@@ -664,7 +664,7 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
@@ -673,6 +673,10 @@
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
         $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
