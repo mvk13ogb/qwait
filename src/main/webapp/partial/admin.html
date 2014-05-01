@@ -96,36 +96,41 @@
   </div>
 
   <div class="row">
-    <div class="large-6 columns" ng-show="ownedQueues.length">
+    <div class="large-6 columns">
       <h3>Owned Queues</h3>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Queue Name</th>
-            <th>Queue Title</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="queue in ownedQueues">
-            <td>{{queue.name}}</td>
-            <td>{{queue.title}}</td>
-            <td>
-              <button ng-click="selectQueue(queue)" type="button" class="tiny"
-                style="margin-bottom: 0;">
-                Select
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div ng-show="ownedQueues">
+        <table>
+          <thead>
+            <tr>
+              <th>Queue Name</th>
+              <th>Queue Title</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="queue in ownedQueues">
+              <td>{{queue.name}}</td>
+              <td>{{queue.title}}</td>
+              <td>
+                <button ng-click="selectQueue(queue)" type="button" class="tiny"
+                  style="margin-bottom: 0;">
+                  Select
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div ng-hide="ownedQueues">
+        <p>(No queues)</p>
+      </div>
     </div>
 
-    <div class="large-6 columns" >
+    <div class="large-6 columns">
       <h3>Moderators</h3>
 
-      <div ng-show="selectedQueue.moderators.length">
+      <div ng-show="selectedQueue.moderators">
         <table>
           <thead>
             <tr>
@@ -148,8 +153,8 @@
           </tbody>
         </table>
       </div>
-      <div ng-show="selectedQueue.moderators.length == 0">
-        <p>(No moderators of selected queue)</p>
+      <div ng-hide="selectedQueue.moderators">
+        <p>(No moderators)</p>
       </div>
     </div>
   </div>

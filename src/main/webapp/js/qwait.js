@@ -782,13 +782,14 @@
         var ownedQueues = users.current.ownedQueues;
 
         $scope.ownedQueues = [];
+        console.log(ownedQueues);
         for (i=0; i<ownedQueues.length; i++) {
             // Fetch the queues of the current user
             $scope.ownedQueues.push(queues.get(ownedQueues[i]));
         }
 
         $scope.selectedQueue = undefined;
-        $scope.dropdown = ownedQueues[0]; //To get an initial value for the dropdowns
+        $scope.dropdown = undefined;
 
         $scope.selectQueue = function (queue) {
             $scope.selectedQueue = queue;
