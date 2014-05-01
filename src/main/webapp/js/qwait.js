@@ -788,6 +788,7 @@
         }
 
         $scope.selectedQueue = undefined;
+        $scope.dropdown = ownedQueues[0]; //To get an initial value for the dropdowns
 
         $scope.selectQueue = function (queue) {
             $scope.selectedQueue = queue;

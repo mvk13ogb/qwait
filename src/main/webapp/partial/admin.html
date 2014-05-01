@@ -48,6 +48,30 @@
     </div>
   </div>
 
+  <h2>Owner Administration</h2>
+  Choose queue to administrate
+  <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+    <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
+  </select>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Readable name</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="owner in selectedQueue.owners">
+        <td>{{owner.name}}</td>
+        <td>{{owner.readableName}}</td>
+        <td>
+          bl
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <h2>Moderator Administration</h2>
 
   <div ng-show="selectedQueue">
