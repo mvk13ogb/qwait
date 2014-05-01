@@ -51,11 +51,15 @@
             <i class="fi-eye green" ng-show="!queue.hidden"></i>
             <i class="fi-eye red" ng-show="queue.hidden"></i>
           </span>
-          <a href="#/queue/{{queue.name}}" ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large"       ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
+                  class="button large"
+                  ng-click="joinQueue(queue.name, users.current.name)"
+                  style="margin-bottom: 0;">
             Join
-          </a>
-          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large" 
-                ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+          </button>
+
+          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large"
+                  ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
             Leave
           </button>
         </div>
