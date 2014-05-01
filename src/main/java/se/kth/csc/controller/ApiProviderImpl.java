@@ -108,7 +108,7 @@ public class ApiProviderImpl implements ApiProvider {
         QueuePositionCreatedInQueue message1 = new QueuePositionCreatedInQueue(
                 Snapshotters.QueuePositionInQueueSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
         QueuePositionCreatedInAccount message2 = new QueuePositionCreatedInAccount(
-                Snapshotters.QueuePositionInAccountSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
+                Snapshotters.QueuePositionInAccountSnapshotter.INSTANCE.apply(queuePosition), account.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message1);
         messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(), message2);
     }

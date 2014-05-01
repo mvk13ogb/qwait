@@ -63,7 +63,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions.splice(i, 1);
                                 }
                             }
@@ -73,7 +73,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions[i].comment = data.body.comment;
                                 }
                             }
@@ -83,7 +83,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions[i].location = data.body.location;
                                 }
                             }
