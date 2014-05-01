@@ -1,5 +1,9 @@
 <div>
-  <h2>{{queue.title}}</h2>
+  <h2>
+    <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+      {{queue.title}}
+    </span>
+  </h2>
 
   <div class="row collapse">
     <div class="large-4 large-offset-8 columns">
@@ -14,7 +18,7 @@
       </div>
       <div ng-show="!users.current.anonymous">
         <div class="row collapse">
-          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
           <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
@@ -103,7 +107,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
               <td>{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>

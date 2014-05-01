@@ -4,22 +4,19 @@
   <div class="row collapse">
     <div ng-if="users.current.admin" class="medium-4 columns">
       <form ng-submit="queues.validateForm(queueName, queues); queueName = ''">
-        <label>
-          <div class="row collapse">
-            <div class="small-9 columns">
-              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
-                     placeholder="New queue name"/>
-
-            </div>
-            <div class="small-3 columns">
-              <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
-                      style="margin-bottom: 0;">
-                <i class="fi-plus white-icon size-16"></i>
-                Add
-              </button>
-            </div>
+        <div class="row collapse">
+          <div class="small-9 columns">
+            <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
+                   placeholder="New queue name"/>
           </div>
-        </label>
+          <div class="small-3 columns">
+            <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
+                    style="margin-bottom: 0;">
+              <i class="fi-plus white-icon size-16"></i>
+              Add
+            </button>
+          </div>
+        </div>
       </form>
     </div>
     <div class="medium-4 columns pull-right">
@@ -28,12 +25,14 @@
   </div>
   <div class="radius queue-row"
        ng-repeat="queue in queues.all|arrayify|queuesSeenBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
-       ng-class="{'plain-panel': !queue.hidden && !queue.locked, 'alert-panel': !queue.hidden && queue.locked, 'secondary-panel': queue.hidden && !queue.locked, 'lockdown-panel': queue.hidden && queue.locked}">
+       ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
-      <div class="columns"
-           ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
-        <h3><a href="#/queue/{{queue.name}}">{{queue.title}}</a></h3>
-
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
+        <h3><a href="#/queue/{{queue.name}}">
+          <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+            {{queue.title}}
+          </span>
+        </a></h3>
         <p style="margin-bottom: 0">
           <ng-pluralize count="queue.positions.length"
                         when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
@@ -44,41 +43,25 @@
           </span>
         </p>
       </div>
-      <div class="columns"
-           ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
-        <div class="button-bar right">
-          <ul ng-if="canModerateQueue(users.current, queue)" class="button-group radius" style="margin-top: 0.5rem">
-            <li>
-              <button type="button" class="button small" ng-class="{secondary: queue.hidden}"
-                      ng-click="queues.setHidden(queue.name, !queue.hidden)" style="margin-bottom: 0;">
-                <i class="fi-check size-16" ng-show="!queue.hidden"></i>
-                <i class="fi-prohibited size-16" ng-show="queue.hidden"></i>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button small" ng-class="{alert: queue.locked, success: !queue.locked}"
-                      ng-click="queues.setLocked(queue.name, !queue.locked)" style="margin-bottom: 0;">
-                <i class="fi-lock size-16" ng-show="queue.locked"></i>
-                <i class="fi-unlock size-16" ng-show="!queue.locked"></i>
-              </button>
-            </li>
-          </ul>
-          <ul class="button-group radius">
-            <li>
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
+        <div class=" right">
+          <span class="size-36" ng-if="canModerateQueue(users.current, queue)" style="vertical-align: middle">
+            <i class="fi-unlock green" ng-show="!queue.locked"></i>
+            <i class="fi-lock red" ng-show="queue.locked"></i>
+            <i class="fi-eye green" ng-show="!queue.hidden"></i>
+            <i class="fi-eye red" ng-show="queue.hidden"></i>
+          </span>
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
+                  class="button large"
+                  ng-click="joinQueue(queue.name, users.current.name)"
+                  style="margin-bottom: 0;">
+            Join
+          </button>
 
-              <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
-                      class="button large"
-                      ng-click="joinQueue(queue.name, users.current.name)"
-                      style="margin-bottom: 0;">
-                Join
-              </button>
-
-              <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large"
-                      ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
-                Leave
-              </button>
-            </li>
-          </ul>
+          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large"
+                  ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+            Leave
+          </button>
         </div>
       </div>
     </div>
