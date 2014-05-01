@@ -48,13 +48,17 @@
     </div>
   </div>
 
-  <h2>Owner Administration</h2>
+  <h2>Administration</h2>
   Choose queue to administrate
   <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
     <option disabled="disabled" selected="selected" value="">Select Queue</option>
     <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
   </select>
 
+  <div class="row collapse">
+    <div class="large-6 columns">
+
+  <p>Owners</p>
   <form class="row collapse" name="addModeratorForm"
         ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
     <div class="small-9 columns">
@@ -93,13 +97,10 @@
       </tr>
     </tbody>
   </table>
+    </div>
 
-  <h2>Moderator Administration</h2>
-  <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
-    <option disabled="disabled" selected="selected" value="">Select Queue</option>
-    <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
-  </select>
-
+  <div class="large-6 columns">
+    <p>Moderators</p>
   <form class="row collapse" name="addModeratorForm"
         ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
     <div class="small-9 columns">
@@ -138,7 +139,7 @@
       </tr>
     </tbody>
   </table>
-  <div ng-show="selectedQueue">
+  <!--div ng-show="selectedQueue">
     <p>Selected queue: <strong>{{selectedQueue.title}}</strong></p>
 
     <form class="row collapse" name="addModeratorForm"
@@ -157,9 +158,11 @@
         </button>
       </div>
     </form>
+  </div-->
+
   </div>
 
-  <div class="row">
+  <!--div class="row">
     <div class="large-6 columns">
       <h3>Owned Queues</h3>
 
@@ -221,5 +224,5 @@
         <p>(No moderators)</p>
       </div>
     </div>
-  </div>
+  </div-->
 </div>
