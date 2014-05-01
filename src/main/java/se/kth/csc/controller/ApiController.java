@@ -40,7 +40,7 @@ public class ApiController {
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
      * /queue/{queueName}/position/{userName}/comment GET PUT DELETE
      * /queue/{queueName}/clear POST
-     * /queue/{queueName}/active GET PUT
+     * /queue/{queueName}/hidden GET PUT
      * /queue/{queueName}/locked GET PUT
      * /queue/{queueName}/owner/{userName} PUT GET DELETE
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
@@ -198,17 +198,17 @@ public class ApiController {
         apiProvider.clearQueue(fetchQueueOr404(queueName));
     }
 
-    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.GET)
+    @RequestMapping(value = "/queue/{queueName}/hidden", method = RequestMethod.GET)
     @ResponseBody
-    public boolean getQueueActive(@PathVariable("queueName") String queueName) throws NotFoundException {
-        return fetchQueueOr404(queueName).isActive();
+    public boolean getQueueHidden(@PathVariable("queueName") String queueName) throws NotFoundException {
+        return fetchQueueOr404(queueName).isHidden();
     }
 
-    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.PUT)
+    @RequestMapping(value = "/queue/{queueName}/hidden", method = RequestMethod.PUT)
     @Transactional
     @ResponseBody
-    public void putQueueActive(@PathVariable("queueName") String queueName, @RequestBody boolean active) throws NotFoundException {
-        apiProvider.setActive(fetchQueueOr404(queueName), active);
+    public void putQueueHidden(@PathVariable("queueName") String queueName, @RequestBody boolean hidden) throws NotFoundException {
+        apiProvider.setHidden(fetchQueueOr404(queueName), hidden);
     }
 
     @RequestMapping(value = "/queue/{queueName}/locked", method = RequestMethod.GET)

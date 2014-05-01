@@ -24,18 +24,18 @@
     </div>
   </div>
   <div class="radius queue-row"
-       ng-repeat="queue in queues.all|arrayify|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-repeat="queue in queues.all|arrayify|queuesSeenBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
        ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
       <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
         <h3><a href="#/queue/{{queue.name}}">
-          <span ng-class="{'strike': !queue.active, 'red': queue.locked}">
+          <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
             {{queue.title}}
           </span>
         </a></h3>
-
         <p style="margin-bottom: 0">
-          <ng-pluralize count="queue.positions.length" when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
+          <ng-pluralize count="queue.positions.length"
+                        when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
           </ng-pluralize>
           <span ng-if="userQueuePos(users.current, queue.positions)">
             (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}},
@@ -48,8 +48,8 @@
           <span class="size-36" ng-if="canModerateQueue(users.current, queue)" style="vertical-align: middle">
             <i class="fi-unlock green" ng-show="!queue.locked"></i>
             <i class="fi-lock red" ng-show="queue.locked"></i>
-            <i class="fi-eye green" ng-show="queue.active"></i>
-            <i class="fi-eye red" ng-show="!queue.active"></i>
+            <i class="fi-eye green" ng-show="!queue.hidden"></i>
+            <i class="fi-eye red" ng-show="queue.hidden"></i>
           </span>
           <a href="#/queue/{{queue.name}}" ng-show="!userQueuePos(users.current, queue.positions)" type="button" class="button large"       ng-click="queues.joinQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
             Join

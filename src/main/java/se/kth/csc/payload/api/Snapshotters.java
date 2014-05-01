@@ -52,7 +52,7 @@ public final class Snapshotters {
 
         @Override
         public QueueSnapshot apply(Queue queue) {
-            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.getTitle(), queue.isActive(), queue.isLocked(),
+            return queue == null ? null : new QueueSnapshot(queue.getName(), queue.getTitle(), queue.isHidden(), queue.isLocked(),
                     transformSet(queue.getOwners(), AccountNamer.INSTANCE),
                     transformSet(queue.getModerators(), AccountNamer.INSTANCE),
                     transformSet(queue.getPositions(), QueuePositionInQueueSnapshotter.INSTANCE));

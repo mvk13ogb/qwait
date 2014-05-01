@@ -184,10 +184,10 @@
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
-                    case 'QueueActiveStatusChanged':
+                    case 'QueueHiddenStatusChanged':
                         queue = result.all[data.body.name];
                         if (queue) {
-                            queue.active = data.body.active;
+                            queue.hidden = data.body.hidden;
                         }
                         break;
                     case 'QueueCleared':
@@ -333,9 +333,9 @@
             });
         };
 
-        result.setActive = function (name, active) {
+        result.setHidden = function (name, hidden) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + encodeURIComponent(name) + '/active', '' + active, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/hidden', '' + hidden, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -640,7 +640,7 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
+    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
         $scope.users = users;
@@ -648,6 +648,10 @@
 
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.userQueuePos = queuePositions.getUserQueuePos;
+        $scope.joinQueue = function (queueName, userName) {
+            queues.joinQueue(queueName, userName);
+            $location.path('/queue/' + queueName)
+        }
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
@@ -753,6 +757,22 @@
                 }
             }
 
+            return result;
+        };
+    });
+
+    qwait.filter('queuesSeenBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (queue && !queue.hidden) {
+                    result.push(queue);
+                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                    result.push(queue);
+                }
+            }
             return result;
         };
     });

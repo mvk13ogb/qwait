@@ -1,6 +1,6 @@
 <div>
   <h2>
-    <span ng-class="{'strike': !queue.active, 'red': queue.locked}">
+    <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
       {{queue.title}}
     </span>
   </h2>
@@ -18,7 +18,7 @@
       </div>
       <div ng-show="!users.current.anonymous">
         <div class="row collapse">
-          <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
           <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
@@ -50,13 +50,13 @@
             <ul class="button-group radius" style="margin-top: 0.5rem">
               <li>
                 <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                  <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
-                  <span class="size-14" ng-show="!queue.active">Unhide</span>
+                  <span class="size-14" ng-hide="queue.hidden">Hide</span>
+                  <span class="size-14" ng-show="queue.hidden">Show</span>
                 </button>
               </li>
               <li>
-                <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
-                        ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                <button type="button" class="button small" ng-class="{alert: !queue.hidden, success: queue.hidden}"
+                        ng-click="queues.setHidden(queue.name, !queue.hidden)" style="margin-bottom: 0;">
                   <i class="fi-eye size-14"></i>
                 </button>
               </li>
