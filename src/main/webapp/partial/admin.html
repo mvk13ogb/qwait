@@ -55,7 +55,7 @@
     <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
   </select>
 
-  <form class="row collapse" name="addOwnerForm"
+  <form class="row collapse" name="addModeratorForm"
         ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
     <div class="small-9 columns">
       <input type="text" ng-model="owner" required="required"
@@ -93,8 +93,51 @@
       </tr>
     </tbody>
   </table>
-  <h2>Moderator Administration</h2>
 
+  <h2>Moderator Administration</h2>
+  <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+    <option disabled="disabled" selected="selected" value="">Select Queue</option>
+    <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
+  </select>
+
+  <form class="row collapse" name="addModeratorForm"
+        ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
+    <div class="small-9 columns">
+      <input type="text" ng-model="moderator" required="required"
+             placeholder="Add moderator to selected queue"
+             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+             class="form-control"/>
+    </div>
+    <div class="small-3 columns">
+      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+              style="margin-bottom: 0;">
+        <i class="fi-plus white-icon size-16"></i>
+        Add
+      </button>
+    </div>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Readable name</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="moderator in selectedModerators">
+        <td>{{moderator.name}}</td>
+        <td>{{moderator.readableName}}</td>
+        <td>
+          <button ng-click="queues.removeModerator(selectedQueue.name, moderator.name)"
+                  type="button" class="tiny alert" style="margin-bottom: 0;">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <div ng-show="selectedQueue">
     <p>Selected queue: <strong>{{selectedQueue.title}}</strong></p>
 
