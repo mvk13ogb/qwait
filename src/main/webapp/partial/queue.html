@@ -214,19 +214,27 @@
                 </form>
               </td>
               <td ng-show="users.current.admin" width="1">
-                <a dropdown-toggle="#remove-user" class="size-18">&#9662;</a>
-                <ul id="remove-user" ng-click="queues.leaveQueue(queue.name, position.userName)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
-                  <li>
-                    <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
-                      <span class="size-14">Remove</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
-                      <i class="fi-x size-14"></i>
-                    </button>
-                  </li>
-                </ul>
+                <div ng-controller="ModalDemoCtrl">
+                  <script type="text/ng-template" id="removeUserModal.html">
+                    <h3>Remove {{position.userName}} from {{queue.name}}</h3>
+                    <button class="button alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">Remove</button>
+                    <button class="button secondary" ng-click="cancel()">Back</button>
+                    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                  </script>
+                  <a dropdown-toggle="#remove-user" class="size-18">&#9662;</a>
+                  <ul id="remove-user" ng-click="open()" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
+                    <li>
+                      <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
+                        <span class="size-14">Remove</span>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
+                        <i class="fi-x size-14"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </td>
             </tr>
           </tbody>

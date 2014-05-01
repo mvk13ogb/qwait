@@ -680,28 +680,60 @@
         };
     }]);
 
-    qwait.controller('ModalDemoCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('removeUserModalCtrl', ['$scope', '$modal', function($scope, $modal) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'myModalContent.html',
-                controller: ModalInstanceCtrl
+                templateUrl: 'removeUserModal.html',
+                controller: ModalInstanceCtrl,
+                resolve: {
+                    data: function () {
+                        return ([$scope.position, $scope.queue, $scope.queues]);
+                    }
+                }
             });
         };
     }]);
 
     var ModalInstanceCtrl = function ($scope, $modalInstance) {
 
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
 
-  $scope.ok = function () {
-    $modalInstance.close();
-  };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
 
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-};
+    var queueModalInstanceCtrl = function ($scope, $modalInstance, queue) {
+
+        $scope.queue = queue;
+
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
+    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, data) {
+
+        $scope.position = data[0];
+        $scope.queue = data[1];
+        $scope.queues = data[2];
+
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
 
 
     qwait.filter('duration', function () {
