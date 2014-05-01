@@ -841,7 +841,7 @@
 
             $scope.ownedQueues = [];
             if (ownedQueues) {
-                for (i=0; i<ownedQueues.length; i++) {
+                for (var i=0; i<ownedQueues.length; i++) {
                     // Fetch the queues of the current user
                     $scope.ownedQueues.push(queues.get(ownedQueues[i]));
                 }
@@ -850,11 +850,11 @@
                     $scope.selectedQueue = queue;
 
                     $scope.selectedModerators = [];
-                    for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                    for (var i=0; i<$scope.selectedQueue.moderators.length; i++) {
                         $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
                     }
                     $scope.selectedOwners = [];
-                    for (i=0; i<$scope.selectedQueue.owners.length; i++) {
+                    for (var i=0; i<$scope.selectedQueue.owners.length; i++) {
                         $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
                     }
                 };
@@ -1202,7 +1202,6 @@
             else if (/(turkos|turquoise)/i.test(location)) {
                 return "turquoise";
             }
-
 
             //These computer labs have official colours too
             else if (/(spel)/i.test(location)) {

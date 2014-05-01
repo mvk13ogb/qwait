@@ -8,7 +8,7 @@
   <h2>Admin Administration</h2>
 
   <div class="row collapse">
-    <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true)">
+    <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
       <div class="row collapse">
         <div class="small-10 columns">
           <input type="text" ng-model="admin" required="required"
@@ -59,7 +59,14 @@
   <div class="row collapse">
     <div class="medium-6 columns">
       <h2>Queue Administration</h2>
-      <p>Choose queue to administrate.</p>
+      <div ng-show="selectedQueue">
+        <p>
+          Selected Queue: <strong>{{selectedQueue.title}}</strong>
+        </p>
+      </div>
+      <div ng-hide="selectedQueue">
+        <p>Choose queue to administrate</p>
+      </div>
 
       <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
         <option disabled="disabled" selected="selected" value="">Select Queue</option>
@@ -73,7 +80,7 @@
       <h3>Owners</h3>
 
       <form class="row collapse" name="addModeratorForm"
-            ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
+            ng-submit="queues.addOwner(selectedQueue.name, owner.name); owner = ''">
         <div class="small-9 columns">
           <input type="text" ng-model="owner" required="required"
                  placeholder="Add owner to selected queue"
@@ -119,7 +126,7 @@
       <h3>Moderators</h3>
 
       <form class="row collapse" name="addModeratorForm"
-            ng-submit="queues.addModerator(selectedQueue.name, moderator.name)">
+            ng-submit="queues.addModerator(selectedQueue.name, moderator.name); moderator = ''">
         <div class="small-9 columns">
           <input type="text" ng-model="moderator" required="required"
                  placeholder="Add moderator to selected queue"
