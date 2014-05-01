@@ -11,7 +11,7 @@
     <div class="small-9 columns">
       <input type="text" ng-model="admin" required="required"
              placeholder="New administrator"
-             typeahead="user as user.readableName + '(' + user.name + ')' for user in find($viewValue) | limitTo:8"
+             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
              class="form-control"/>
     </div>
     <div class="small-3 columns">
@@ -58,7 +58,7 @@
       <div class="small-9 columns">
         <input type="text" ng-model="moderator" required="required"
                placeholder="Add moderator to selected queue"
-               typeahead="user as user.readableName + '(' + user.name + ')' for user in find($viewValue) | limitTo:8"
+               typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
                class="form-control"/>
       </div>
       <div class="small-3 columns">
@@ -71,8 +71,8 @@
     </form>
   </div>
 
-  <div class="row collapse">
-    <div class="small-6 columns" ng-show="ownedQueues.length">
+  <div class="row">
+    <div class="large-6 columns" ng-show="ownedQueues.length">
       <h3>Owned Queues</h3>
 
       <table>
@@ -97,7 +97,8 @@
         </tbody>
       </table>
     </div>
-    <div class="small-6 columns" >
+
+    <div class="large-6 columns" >
       <h3>Moderators</h3>
 
       <div ng-show="selectedQueue.moderators.length">
