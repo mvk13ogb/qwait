@@ -92,7 +92,7 @@ public class ApiProviderImpl implements ApiProvider {
         QueueRemoved message = new QueueRemoved(queue.getName());
         queueStore.removeQueue(queue);
 
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
+        messageBus.convertAndSend("/topic/queue", message);
     }
 
     @Override

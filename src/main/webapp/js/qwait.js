@@ -177,6 +177,9 @@
                             result.get(data.body.name);
                         }, 500);
                         break;
+                    case 'QueueRemoved':
+                        delete result.all[data.body.name];
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -346,6 +349,14 @@
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
+            });
+        };
+
+        result.deleteQueue = function (name) {
+            return $http.delete('/api/queue/' + encodeURIComponent(name), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         };
 
@@ -657,7 +668,7 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
@@ -666,6 +677,10 @@
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
         $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
