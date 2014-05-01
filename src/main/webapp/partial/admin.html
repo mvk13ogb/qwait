@@ -51,8 +51,27 @@
   <h2>Owner Administration</h2>
   Choose queue to administrate
   <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+    <option disabled="disabled" selected="selected" value="">Select Queue</option>
     <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
   </select>
+
+  <form class="row collapse" name="addOwnerForm"
+        ng-submit="queues.addOwner(selectedQueue.name, owner.name)">
+    <div class="small-9 columns">
+      <input type="text" ng-model="owner" required="required"
+             placeholder="Add owner to selected queue"
+             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+             class="form-control"/>
+    </div>
+    <div class="small-3 columns">
+      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+              style="margin-bottom: 0;">
+        <i class="fi-plus white-icon size-16"></i>
+        Add
+      </button>
+    </div>
+  </form>
+
   <table>
     <thead>
       <tr>
@@ -62,16 +81,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="owner in selectedQueue.owners">
+      <tr ng-repeat="owner in selectedOwners">
         <td>{{owner.name}}</td>
         <td>{{owner.readableName}}</td>
         <td>
-          bl
+          <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
+                  type="button" class="tiny alert" style="margin-bottom: 0;">
+            Remove
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
-
   <h2>Moderator Administration</h2>
 
   <div ng-show="selectedQueue">

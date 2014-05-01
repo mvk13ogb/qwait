@@ -421,6 +421,22 @@
                 }
             });
         };
+
+        result.addOwner = function (name, user) {
+            return $http.put('/api/queue/' + name + '/owner/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                    }
+            });
+        };
+
+        result.removeOwner = function (name,user) {
+            return $http.delete('/api/queue/' + name + '/owner/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
         return result;
     }]);
 
@@ -777,6 +793,7 @@
 
         $scope.users = users;
         $scope.queues = queues;
+        console.dir(queues);
 
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
@@ -797,13 +814,16 @@
                     // Fetch the queues of the current user
                     $scope.ownedQueues.push(queues.get(ownedQueues[i]));
 
-
                     $scope.selectQueue = function (queue) {
                         $scope.selectedQueue = queue;
 
                         $scope.selectedModerators = [];
                         for (i=0; i<$scope.selectedQueue.moderators.length; i++) {
                             $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+                        }
+                        $scope.selectedOwners = [];
+                        for (i=0; i<$scope.selectedQueue.owners.length; i++) {
+                            $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
                         }
                     }
                 }
