@@ -52,6 +52,12 @@
                         }
                         break;
                     case 'QueueOwnerAdded':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            if (user.name == data.body.userName) {
+                                user.ownedQueues.push(data.body.queueName);
+                            }
+                        }
                         break;
                     case 'QueuePositionCreatedInAccount':
                         var user = cache.get(data.body.userName);
