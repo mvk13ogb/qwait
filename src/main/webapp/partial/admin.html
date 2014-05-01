@@ -7,24 +7,29 @@
 
   <h2>Admin Administration</h2>
 
-  <form class="row collapse" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true)">
-    <div class="small-9 columns">
-      <input type="text" ng-model="admin" required="required"
-             placeholder="New administrator"
-             typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-             class="form-control"/>
-    </div>
-    <div class="small-3 columns">
-      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-              style="margin-bottom: 0;">
-        <i class="fi-plus white-icon size-16"></i>
-        Add
-      </button>
-    </div>
-  </form>
+  <div class="row collapse">
+    <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true)">
+      <div class="row collapse">
+        <div class="small-9 columns">
+          <input type="text" ng-model="admin" required="required"
+                 placeholder="New administrator"
+                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                 class="form-control"/>
+        </div>
+        <div class="small-3 columns">
+          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                  style="margin-bottom: 0;">
+            <i class="fi-plus white-icon size-16"></i>
+            Add
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <div class="row collapse">
     <div class="small-6 columns">
-      <table>
+      <table ng-show="users.admins.length">
         <thead>
           <tr>
             <th>Name</th>
@@ -45,15 +50,23 @@
           </tr>
         </tbody>
       </table>
+      <div ng-hide="users.admins.length">
+        <p>(No admins)</p>
+      </div>
     </div>
   </div>
 
-  <h2>Administration</h2>
-  Choose queue to administrate
-  <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
-    <option disabled="disabled" selected="selected" value="">Select Queue</option>
-    <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
-  </select>
+  <div class="row collapse">
+    <div class="medium-6 columns">
+      <h2>Queue Administration</h2>
+      <p>Choose queue to administrate.</p>
+
+      <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+        <option disabled="disabled" selected="selected" value="">Select Queue</option>
+        <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
+      </select>
+    </div>
+  </div>
 
   <div class="row collapse">
     <div class="large-6 columns">
@@ -67,7 +80,7 @@
                  typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
                  class="form-control"/>
         </div>
-        <div class="small-3 columns">
+        <div class="small-2 columns left">
           <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
                   style="margin-bottom: 0;">
             <i class="fi-plus white-icon size-16"></i>
@@ -113,7 +126,7 @@
                  typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
                  class="form-control"/>
         </div>
-        <div class="small-3 columns">
+        <div class="small-2 columns left">
           <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
                   style="margin-bottom: 0;">
             <i class="fi-plus white-icon size-16"></i>

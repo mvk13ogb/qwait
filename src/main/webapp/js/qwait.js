@@ -813,7 +813,6 @@
 
         $scope.users = users;
         $scope.queues = queues;
-        console.dir(queues);
 
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
