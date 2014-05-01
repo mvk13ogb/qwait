@@ -53,8 +53,20 @@
                         break;
                     case 'QueueOwnerAdded':
                         var user = cache.get(data.body.userName);
+                        var i = user.ownedQueues.indexOf(data.body.queueName);
                         if (user) {
-                            user.ownedQueues.push(data.body.queueName);
+                            if(i == -1) {
+                                user.ownedQueues.push(data.body.queueName);
+                            }
+                        }
+                        break;
+                    case 'QueueOwnerRemoved':
+                        var user = cache.get(data.body.userName);
+                        var i = user.ownedQueues.indexOf(data.body.queueName);
+                        if (user) {
+                            if(i != -1) {
+                                user.queuePositions.splice(i, 1);
+                            }
                         }
                         break;
                     case 'QueuePositionCreatedInAccount':

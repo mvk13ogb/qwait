@@ -10,13 +10,13 @@
   <div class="row collapse">
     <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true)">
       <div class="row collapse">
-        <div class="small-9 columns">
+        <div class="small-10 columns">
           <input type="text" ng-model="admin" required="required"
                  placeholder="New administrator"
                  typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
                  class="form-control"/>
         </div>
-        <div class="small-3 columns">
+        <div class="small-2 columns">
           <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
                   style="margin-bottom: 0;">
             <i class="fi-plus white-icon size-16"></i>
