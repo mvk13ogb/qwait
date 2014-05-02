@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
-
 import java.security.Principal;
+
+import org.springframework.web.servlet.ModelAndView;
+import com.google.common.collect.ImmutableMap;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import org.springframework.web.servlet.ModelAndView;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Controls the home page.
@@ -46,13 +46,11 @@ public class HomeController {
         String hostName = "";
         try {
             hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
-            log.info(hostName);
         } catch (UnknownHostException e){
             log.info("Hostname error:" + e.getMessage());
         }
 
         return new ModelAndView("index", ImmutableMap.of("hostName", hostName));
-        //return "index";
     }
 
     /**
