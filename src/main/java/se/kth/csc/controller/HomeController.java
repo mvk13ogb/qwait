@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
 import java.security.Principal;
-
-import org.springframework.web.servlet.ModelAndView;
-import com.google.common.collect.ImmutableMap;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -41,7 +39,7 @@ public class HomeController {
      * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView index(HttpServletRequest request) {
+    public String index(HttpServletRequest request, Model model) {
 
         String hostName = "";
         try {
@@ -50,7 +48,9 @@ public class HomeController {
             log.info("Hostname error:" + e.getMessage());
         }
 
-        return new ModelAndView("index", ImmutableMap.of("hostName", hostName));
+        model.addAttribute("hostName", hostName);
+
+        return "index";
     }
 
     /**
