@@ -13,6 +13,12 @@ import se.kth.csc.persist.AccountStore;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import org.springframework.web.servlet.ModelAndView;
+import com.google.common.collect.ImmutableMap;
+
 /**
  * Controls the home page.
  */
@@ -35,8 +41,18 @@ public class HomeController {
      * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index() {
-        return "index";
+    public ModelAndView index(HttpServletRequest request) {
+
+        String hostName = "";
+        try {
+            hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
+            log.info(hostName);
+        } catch (UnknownHostException e){
+            log.info("Hostname error:" + e.getMessage());
+        }
+
+        return new ModelAndView("index", ImmutableMap.of("hostName", hostName));
+        //return "index";
     }
 
     /**
