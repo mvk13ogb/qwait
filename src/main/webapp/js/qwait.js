@@ -826,14 +826,16 @@
         $scope.users = users;
         $scope.queues = queues;
 
+        $scope.selectedQueue = undefined;
+        $scope.dropdown = undefined;
+
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
                 return res.data;
             });
         };
 
-        $scope.selectedQueue = undefined;
-        $scope.dropdown = undefined;
+        $scope.allQueues = queues.all;
 
         // The current user may not have been loaded yet
         $timeout(function () {

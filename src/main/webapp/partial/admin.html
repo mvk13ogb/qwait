@@ -7,7 +7,7 @@
 
   <h2>Admin Administration</h2>
 
-  <div class="row collapse">
+  <div class="row collapse" ng-if="users.current.admin">
     <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
       <div class="row collapse">
         <div class="small-10 columns">
@@ -68,10 +68,19 @@
         <p>Choose queue to administrate</p>
       </div>
 
-      <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
-        <option disabled="disabled" selected="selected" value="">Select Queue</option>
-        <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
-      </select>
+      <div ng-if="users.current.admin">
+        <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+          <option disabled="disabled" selected="selected" value="">Select Queue</option>
+          <option ng-repeat="queue in queues.all">{{queue.name}}</option>
+        </select>
+      </div>
+
+      <div ng-if="!users.current.admin">
+        <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+          <option disabled="disabled" selected="selected" value="">Select Queue</option>
+          <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
+        </select>
+      </div>
     </div>
   </div>
 
