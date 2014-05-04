@@ -69,6 +69,7 @@
       </div>
 
       <div ng-if="users.current.admin">
+        <!--/* Object.keys doesn't work for older browsers as object property size check */-->
         <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
           <option disabled="disabled" selected="selected" value="">Select Queue</option>
           <option ng-repeat="queue in queues.all">{{queue.name}}</option>
@@ -76,10 +77,15 @@
       </div>
 
       <div ng-if="!users.current.admin">
-        <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
-          <option disabled="disabled" selected="selected" value="">Select Queue</option>
-          <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
-        </select>
+        <div ng-show="ownedQueues.length">
+          <select ng-model="dropdown" ng-change="selectQueue(queues.get(dropdown))">
+            <option disabled="disabled" selected="selected" value="">Select Queue</option>
+            <option ng-repeat="queue in ownedQueues">{{queue.name}}</option>
+          </select>
+        </div>
+        <div ng-hide="ownedQueues.length">
+          <p>(No owned queues)</p>
+        </div>
       </div>
     </div>
   </div>
@@ -88,7 +94,7 @@
     <div class="large-6 columns">
       <h3>Owners</h3>
 
-      <form class="row collapse" name="addModeratorForm"
+      <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length > 0"
             ng-submit="queues.addOwner(selectedQueue.name, owner.name); owner = ''">
         <div class="small-9 columns">
           <input type="text" ng-model="owner" required="required"
@@ -134,7 +140,7 @@
     <div class="large-6 columns">
       <h3>Moderators</h3>
 
-      <form class="row collapse" name="addModeratorForm"
+      <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length > 0"
             ng-submit="queues.addModerator(selectedQueue.name, moderator.name); moderator = ''">
         <div class="small-9 columns">
           <input type="text" ng-model="moderator" required="required"
