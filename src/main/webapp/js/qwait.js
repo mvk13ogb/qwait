@@ -835,7 +835,18 @@
             });
         };
 
-        $scope.allQueues = queues.all;
+        $scope.selectQueue = function (queue) {
+            $scope.selectedQueue = queue;
+
+            $scope.selectedModerators = [];
+            for (var i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+            }
+            $scope.selectedOwners = [];
+            for (var i=0; i<$scope.selectedQueue.owners.length; i++) {
+                $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+            }
+        };
 
         // The current user may not have been loaded yet
         $timeout(function () {
@@ -847,19 +858,6 @@
                     // Fetch the queues of the current user
                     $scope.ownedQueues.push(queues.get(ownedQueues[i]));
                 }
-
-                $scope.selectQueue = function (queue) {
-                    $scope.selectedQueue = queue;
-
-                    $scope.selectedModerators = [];
-                    for (var i=0; i<$scope.selectedQueue.moderators.length; i++) {
-                        $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-                    }
-                    $scope.selectedOwners = [];
-                    for (var i=0; i<$scope.selectedQueue.owners.length; i++) {
-                        $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
-                    }
-                };
             } else {
                 console.log("Current user was not loaded");
             }
