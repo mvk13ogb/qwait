@@ -897,9 +897,9 @@
                 return "#E8C9AF";
             }
 
-            //If the location doesn't match anything we return an empty string
+            //If the location doesn't match anything we return transparent
             else {
-                return "";
+                return "transparent";
             }
         };
     });
