@@ -1,5 +1,9 @@
 <div>
-  <h2>{{queue.title}}</h2>
+  <h2>
+    <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+      {{queue.title}}
+    </span>
+  </h2>
 
   <div class="row collapse">
     <div class="large-3 large-offset-9 columns">
@@ -66,7 +70,7 @@
           </div>
         </label>
         <div class="row collapse">
-          <button ng-show="!userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" 
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked" class="button expand button-bot-margin" 
                   ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
             <i class="fi-plus"></i>
             Join queue
@@ -127,6 +131,20 @@
                 </button>
               </li>
             </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14">Delete</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small alert" ng-click="removeQueue(queue.name)"
+                      style="margin-bottom: 0;">
+                  <i class="fi-trash size-14"></i>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -145,7 +163,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
               <td>{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
