@@ -78,7 +78,7 @@ public class ApiController {
     @RequestMapping(value = "/user/{userName}/role/admin", method = RequestMethod.PUT)
     @Transactional
     @ResponseBody
-    public void putUserRoleAdmin(@PathVariable("userName") String userName, @RequestBody boolean admin) throws NotFoundException {
+    public void putUserRoleAdmin(@PathVariable("userName") String userName, @RequestBody boolean admin) throws NotFoundException, BadRequestException {
         apiProvider.setAdmin(fetchAccountOr404(userName), admin);
     }
 

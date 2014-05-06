@@ -15,6 +15,8 @@ import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
 
+import java.util.Iterator;
+
 /**
  * An implementation of all the actions that can be performed via the API. These are collected into a single class to
  * make security easier to handle. All of the security lock-downs can happen in this single class.
@@ -79,11 +81,24 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin')")
-    public void setAdmin(Account account, boolean admin) {
-        account.setAdmin(admin);
+    public void setAdmin(Account account, boolean admin) throws BadRequestException {
+        // Make sure there is not only one admin left
+        int adminCount = 0;
+        if (admin == false) { // Only run if trying to remove an admin
+            Iterator adminIterator = findAccounts(true, "").iterator();
+            while (adminIterator.hasNext() && adminCount < 2) {
+                adminIterator.next();
+                adminCount++;
+            }
+        }
+        if (admin == false && adminCount < 2) { // Trying to remove an admin and less than two admins left
+            throw new BadRequestException("Can not remove the last admin!");
+        } else {
+            account.setAdmin(admin);
 
-        messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(),
-                new UserAdminStatusChanged(account.getPrincipalName(), admin));
+            messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(),
+                    new UserAdminStatusChanged(account.getPrincipalName(), admin));
+        }
     }
 
     @Override
