@@ -87,7 +87,7 @@
           </div>
         </label>
         <div class="row collapse">
-          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked">
+          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked">
             <button ng-show="locationplaceholder" class="expand"
                     ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
               <i class="fi-plus"></i>

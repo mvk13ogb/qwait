@@ -787,7 +787,18 @@
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
-
+        $scope.joinQueue = function (queueName, userName) {
+            if (users.get(userName).queuePositions.length != 0) {
+                // TODO
+                console.log('test');
+            } else {
+                queues.joinQueue(queueName, userName);
+            }
+        }
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
         $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
