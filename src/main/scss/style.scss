@@ -34,11 +34,6 @@
   color: white;
 }
 
-.alert-panel {
-  @include panel($alert-color);
-  @include striped-bg(scale-color($alert-color, $lightness: 80%));
-}
-
 .active-panel {
   @include panel(scale-color($primary-color, $lightness: 80%));
 }
@@ -49,10 +44,6 @@ tr.active > td{
 
 button.itsy, .button.itsy {
   @include button-size($padding: $button-tny/2);
-}
-
-.even-button-group{
-  @include button-group-style($even: 2);
 }
 
 .queue-row.ng-enter, .queue-row.ng-move {
