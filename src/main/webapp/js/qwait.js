@@ -821,6 +821,17 @@
                         var modalInstance = $modal.open({
                             templateUrl: 'confirmationModal.html',
                             controller: ModalInstanceCtrl,
+                            resolve: {
+                                queuePositions: function () {
+                                    return users.current.queuePositions;
+                                },
+                                queueName: function () {
+                                    return queueName;
+                                },
+                                userName: function () {
+                                    return userName;
+                                }
+                            }
                         });
                     };
 
@@ -842,17 +853,12 @@
             }
         }, 200, true);
 
-        var getCurrentQueue = function () {
-            return $scope.queue.name;
-        };
+        var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName, userName) {
+            // TODO
+            //$scope.queuePositions = queuePostions;
 
-        var getCurrentUser = function () {
-            return $scope.users.current.name;
-        };
-
-        var ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.ok = function () {
-                queues.joinQueue(getCurrentQueue(), getCurrentUser());
+                queues.joinQueue(queueName, userName);
                 $modalInstance.close();
             };
 

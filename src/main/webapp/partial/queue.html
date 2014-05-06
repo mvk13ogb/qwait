@@ -343,7 +343,14 @@
   </div>
 
   <script type="text/ng-template" id="confirmationModal.html">
-    <h3>Warning</h3>
+    <h3>Confirm</h3>
+    <p>You are currently queueing in the following queues:</p>
+    <ul>
+      <li ng-repeat="queueName in queuePositions">
+        {{queueName}}
+      </li>
+    </ul>
+    <p>Queue anyway?</p>
     <span>
       <button class="button" ng-click="cancel()">Cancel</button>
       <button class="button" ng-click="ok()">Join</button>
