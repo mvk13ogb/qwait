@@ -342,12 +342,12 @@
     </div>
   </div>
 
-  <script type="text/ng-template" id="myModalContent.html">
+  <script type="text/ng-template" id="confirmationModal.html">
     <h3>Warning</h3>
     <span>
-      <button class="button" ng-click="cancelJoinQueue()">Cancel</button>
-      <button class="button" ng-click="queues.joinQueue(queue.name, users.current.name)">Join</button>
+      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button" ng-click="ok()">Join</button>
     </span>
-    <a class="close-reveal-modal" ng-click="cancelJoinQueue()">&#215;</a>
+    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
   </script>
 </div>

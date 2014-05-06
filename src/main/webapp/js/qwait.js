@@ -763,8 +763,8 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, $filter, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', '$modal', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.queues = queues;
@@ -784,22 +784,18 @@
             }
         }, 500);
 
+        $scope.queue = queues.get($route.current.params.queueName);
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
+
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
-        $scope.joinQueue = function (queueName, userName) {
-            if (users.get(userName).queuePositions.length != 0) {
-                // TODO
-                console.log('test');
-            } else {
-                queues.joinQueue(queueName, userName);
-            }
-        }
+
         $scope.removeQueue = function (queueName) {
             queues.deleteQueue(queueName);
             $location.path('/queues')
         }
-        $scope.userQueuePos = queuePositions.getUserQueuePos;
+
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
@@ -820,22 +816,50 @@
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
             if(locationform.$valid){
+                if (users.get(userName).queuePositions.length != 0) {
+                    $scope.open = function () {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'confirmationModal.html',
+                            controller: ModalInstanceCtrl,
+                        });
+                    };
 
-                queues.joinQueue(name, user);
+                    $scope.open();
+                } else {
+                    queues.joinQueue(name, user);
 
-                //HACK, places a timeout so we have time to join the queue
-                setTimeout(function() {
+                    //HACK, places a timeout so we have time to join the queue
+                    setTimeout(function() {
+                        if(locationform.$valid){
+                            queues.changeLocation(name, user, location);
+                        }
 
-                    if(locationform.$valid){
-                        queues.changeLocation(name, user, location);
-                    }
-
-                    if(commentform.$valid){
-                        queues.changeComment(name, user, comment);
-                    }
-                }, 500);
+                        if(commentform.$valid){
+                            queues.changeComment(name, user, comment);
+                        }
+                    }, 500);
+                }
             }
         }, 200, true);
+
+        var getCurrentQueue = function () {
+            return $scope.queue.name;
+        };
+
+        var getCurrentUser = function () {
+            return $scope.users.current.name;
+        };
+
+        var ModalInstanceCtrl = function ($scope, $modalInstance) {
+            $scope.ok = function () {
+                queues.joinQueue(getCurrentQueue(), getCurrentUser());
+                $modalInstance.close();
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        };
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', 'queues', function ($scope, $timeout, page, users, queues) {
