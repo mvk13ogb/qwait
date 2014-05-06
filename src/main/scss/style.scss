@@ -51,6 +51,10 @@ button.itsy, .button.itsy {
   @include button-size($padding: $button-tny/2);
 }
 
+.even-button-group{
+  @include button-group-style($even: 2);
+}
+
 .queue-row.ng-enter, .queue-row.ng-move {
   @include transition(0.5s);
   @include opacity(0);
