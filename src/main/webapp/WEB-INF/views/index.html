@@ -62,6 +62,9 @@
             <li ng-class="{active: location.path() == '/about'}">
               <a href="#/about">About</a>
             </li>
+            <li ng-class="{active: location.path() == '/help'}">
+              <a href="#/help">Help</a>
+            </li>
             <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
               <a href="#/admin">Admin</a>
             </li>

@@ -637,7 +637,6 @@
         $scope.page = page;
     }]);
 
-
     qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', function ($scope, system, messagebus, page) {
         page.title = 'Home';
 
@@ -655,7 +654,6 @@
         $scope.system = system;
         $scope.contributors = contributors;
     }]);
-
 
     qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queues';
