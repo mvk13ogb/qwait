@@ -761,11 +761,13 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
+
+        $scope.canModerateQueue = security.canModerateQueue;
         $scope.queue = queues.get($route.current.params.queueName);
         var temp = getQueuePosNr;
         $timeout(function () {

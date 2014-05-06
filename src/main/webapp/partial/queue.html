@@ -107,7 +107,7 @@
             Leave queue
           </button>
         </div>
-        <div ng-show="users.current.admin" class="row collapse">
+        <div ng-show="canModerateQueue(users.current, queue)" class="row collapse">
           <div class="small-12 columns">
             <a dropdown-toggle="#manage-queue" class="button secondary dropdown expand">
               Manage queue
