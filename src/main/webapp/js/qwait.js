@@ -767,6 +767,7 @@
         $scope.queues = queues;
         $scope.users = users;
 
+        $scope.isQueueOwner = security.isQueueOwner;
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.queue = queues.get($route.current.params.queueName);
         var temp = getQueuePosNr;
