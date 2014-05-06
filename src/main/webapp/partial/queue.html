@@ -1,5 +1,9 @@
 <div>
-  <h2>{{queue.title}}</h2>
+  <h2>
+    <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+      {{queue.title}}
+    </span>
+  </h2>
 
   <div class="row collapse">
     <div class="large-4 large-offset-8 columns">
@@ -14,12 +18,10 @@
       </div>
       <div ng-show="!users.current.anonymous">
         <div class="row collapse">
-          <button ng-show="!queuePos" class="button expand button-bot-margin"
-                  ng-click="queues.joinQueue(queue.name, users.current.name)">
+          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
             Join queue
           </button>
-          <button ng-show="queuePos" class="button expand button-bot-margin"
-                  ng-click="queues.leaveQueue(queue.name, users.current.name)">
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
             Leave queue
           </button>
         </div>
@@ -48,13 +50,13 @@
             <ul class="button-group radius" style="margin-top: 0.5rem">
               <li>
                 <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                  <span class="size-14" ng-show="queue.active">Hide&nbsp;</span>
-                  <span class="size-14" ng-show="!queue.active">Unhide</span>
+                  <span class="size-14" ng-hide="queue.hidden">Hide</span>
+                  <span class="size-14" ng-show="queue.hidden">Show</span>
                 </button>
               </li>
               <li>
-                <button type="button" class="button small" ng-class="{alert: queue.active, success: !queue.active}"
-                        ng-click="queues.setActive(queue.name, !queue.active)" style="margin-bottom: 0;">
+                <button type="button" class="button small" ng-class="{alert: !queue.hidden, success: queue.hidden}"
+                        ng-click="queues.setHidden(queue.name, !queue.hidden)" style="margin-bottom: 0;">
                   <i class="fi-eye size-14"></i>
                 </button>
               </li>
@@ -70,6 +72,20 @@
                 <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)"
                         style="margin-bottom: 0;">
                   <i class="fi-x size-14"></i>
+                </button>
+              </li>
+            </ul>
+
+            <ul class="button-group radius" style="margin-top: 0.5rem">
+              <li>
+                <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                  <span class="size-14">Delete</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="button small alert" ng-click="removeQueue(queue.name)"
+                      style="margin-bottom: 0;">
+                  <i class="fi-trash size-14"></i>
                 </button>
               </li>
             </ul>
@@ -91,8 +107,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | filter:search">
-              <td>{{$index + 1}}</td>
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
+              <td>{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
               <td ng-hide="editingLocation">
@@ -104,9 +120,9 @@
               <td ng-show="editingLocation">
                 <form
                     ng-submit="queues.changeLocation(queue.name, users.current.name, position.location); editingLocation = false">
-                  <input type="text" maxlength="15" style="margin-bottom: 0;"
+                  <input type="text" maxlength="20" style="margin-bottom: 0;"
                          ng-model="position.location"
-                         ng-change=""/>
+                         ng-change="queues.changeLocation(queue.name, users.current.name, position.location)"/>
                   <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 </form>
               </td>
@@ -119,7 +135,7 @@
               <td ng-show="editingComment">
                 <form
                     ng-submit="queues.changeComment(queue.name, users.current.name, position.comment); editingComment = false">
-                  <input type="text" maxlength="15" style="margin-bottom: 0;"
+                  <input type="text" maxlength="20" style="margin-bottom: 0;"
                          ng-model="position.comment"
                          ng-change="queues.changeComment(queue.name, users.current.name, position.comment)"/>
                   <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>

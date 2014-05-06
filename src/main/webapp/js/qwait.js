@@ -1,5 +1,5 @@
 (function () {
-    var qwait = angular.module('qwait', ['ngRoute', 'ngAnimate', 'request']);
+    var qwait = angular.module('qwait', ['mm.foundation', 'ngRoute', 'ngAnimate', 'request']);
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -50,7 +50,44 @@
                                 result.admins.splice(index, 1);
                             }
                         }
-
+                        break;
+                    case 'QueueOwnerAdded':
+                        break;
+                    case 'QueuePositionCreatedInAccount':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            user.queuePositions.push(data.body.queuePosition);
+                        }
+                        break;
+                    case 'QueuePositionRemoved':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
+                                    user.queuePositions.splice(i, 1);
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionCommentChanged':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
+                                    user.queuePositions[i].comment = data.body.comment;
+                                }
+                            }
+                        }
+                        break;
+                    case 'QueuePositionLocationChanged':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            for (i = 0; i < user.queuePositions.length; i++) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
+                                    user.queuePositions[i].location = data.body.location;
+                                }
+                            }
+                        }
                         break;
                     default:
                         console.log('Unrecognized user message', data.body);
@@ -140,6 +177,9 @@
                             result.get(data.body.name);
                         }, 500);
                         break;
+                    case 'QueueRemoved':
+                        delete result.all[data.body.name];
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -147,10 +187,10 @@
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
-                    case 'QueueActiveStatusChanged':
+                    case 'QueueHiddenStatusChanged':
                         queue = result.all[data.body.name];
                         if (queue) {
-                            queue.active = data.body.active;
+                            queue.hidden = data.body.hidden;
                         }
                         break;
                     case 'QueueCleared':
@@ -207,6 +247,12 @@
                             }
                         }
                         break;
+                    case 'QueuePositionCreatedInQueue':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            queue.positions.push(data.body.queuePosition);
+                        }
+                        break;
                     case 'QueuePositionLocationChanged':
                         queue = result.all[data.body.queueName];
                         if (queue) {
@@ -216,6 +262,17 @@
                                 }
                             }
                         }
+                        break;
+                    case 'QueuePositionRemoved':
+                        queue = result.all[data.body.queueName];
+                        if (queue) {
+                            for (i = 0; i < queue.positions.length; i++) {
+                                if (queue.positions[i].userName == data.body.userName) {
+                                    queue.positions.splice(i, 1);
+                                }
+                            }
+                        }
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -224,7 +281,12 @@
 
         $http.get('/api/queues').success(function (queues) {
             for (var i = 0; i < queues.length; i++) {
-                result.all[queues[i].name] = queues[i];
+                var name = queues[i].name;
+                if (result.all[name]) {
+                    angular.extend(result.all[name], queues[i]);
+                } else {
+                    result.all[name] = queues[i];
+                }
             }
         });
 
@@ -245,6 +307,26 @@
             return cached;
         };
 
+        result.contains = function (queueName, queues) {
+            if (queueName === undefined) {
+                return false;
+            }
+            var title = queueName.replace(/[\s\/]+/g, '-').toLowerCase();
+
+            for (var o in queues.all) {
+                if (o == title) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        result.validateForm = function (queueName, queues) {
+            if (!result.contains(queueName, queues)) {
+                result.putQueue(queueName, queues);
+            }
+        }
+
         result.setLocked = function (name, locked) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
             return $http.put('/api/queue/' + encodeURIComponent(name) + '/locked', '' + locked, {
@@ -254,19 +336,27 @@
             });
         };
 
-        result.setActive = function (name, active) {
+        result.setHidden = function (name, hidden) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + encodeURIComponent(name) + '/active', '' + active, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/hidden', '' + hidden, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
         };
 
-        result.putQueue = function (title) {
+        result.putQueue = function (title, queues) {
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
+            });
+        };
+
+        result.deleteQueue = function (name) {
+            return $http.delete('/api/queue/' + encodeURIComponent(name), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         };
 
@@ -295,7 +385,7 @@
         };
 
         result.changeComment = function (name, user, comment) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', '' + comment, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/comment', {comment: comment}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -303,7 +393,7 @@
         };
 
         result.changeLocation = function (name, user, location) {
-            return $http.put('/api/queue/' + name + '/position/' + user + '/location', '' + location, {
+            return $http.put('/api/queue/' + name + '/position/' + user + '/location', {location: location}, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -356,13 +446,39 @@
     qwait.factory('security', function () {
         var result = {
             isQueueOwner: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.owners.indexOf(user.name) != -1;
             },
             isQueueModerator: function (user, queue) {
+                if (!queue.owners) {
+                    return undefined;
+                }
                 return queue.moderators.indexOf(user.name) != -1;
             },
             canModerateQueue: function (user, queue) {
                 return result.isQueueOwner(user, queue) || result.isQueueModerator(user, queue) || user.admin;
+            }
+        };
+
+        return result;
+    });
+
+    qwait.factory('queuePositions', function () {
+        var result = {
+            getUserQueuePos: function (user, positions) {
+                if (!(user && positions)) {
+                    return undefined;
+                }
+
+                for (var i = 0; i < positions.length; i++) {
+                    if (positions[i].userName == user.name) {
+                        return positions[i];
+                    }
+                }
+
+                return null;
             }
         };
 
@@ -540,45 +656,53 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', function ($scope, page, clock, queues, users, security) {
+
+    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queues';
 
-        $scope.queues = queues;
         $scope.users = users;
+        $scope.queues = queues;
 
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = function (user, positions) {
-            for (var i = 0; i < positions.length; i++) {
-                if (positions[i].userName == user.name) {
-                    return positions[i];
-                }
-            }
-            return null;
-        };
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
+        $scope.joinQueue = function (queueName, userName) {
+            queues.joinQueue(queueName, userName);
+            $location.path('/queue/' + queueName)
+        }
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', function ($scope, $route, clock, queues, users, page) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
         $scope.users = users;
-
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
         page.title = 'Admin tools';
 
         $scope.users = users;
+
+        $scope.find = function (user) {
+            return users.find(user).then(function (res) {
+                return res.data;
+            });
+        };
     }]);
 
     qwait.filter('duration', function () {
@@ -654,6 +778,22 @@
                 }
             }
 
+            return result;
+        };
+    });
+
+    qwait.filter('queuesSeenBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (queue && !queue.hidden) {
+                    result.push(queue);
+                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                    result.push(queue);
+                }
+            }
             return result;
         };
     });

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
+import se.kth.csc.payload.Comment;
+import se.kth.csc.payload.Location;
 import se.kth.csc.payload.api.*;
 
 import java.security.Principal;
@@ -38,7 +40,7 @@ public class ApiController {
      * /queue/{queueName}/position/{userName}/location GET PUT DELETE
      * /queue/{queueName}/position/{userName}/comment GET PUT DELETE
      * /queue/{queueName}/clear POST
-     * /queue/{queueName}/active GET PUT
+     * /queue/{queueName}/hidden GET PUT
      * /queue/{queueName}/locked GET PUT
      * /queue/{queueName}/owner/{userName} PUT GET DELETE
      * /queue/{queueName}/moderator/{userName} PUT GET DELETE
@@ -135,51 +137,57 @@ public class ApiController {
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.GET)
     @ResponseBody
-    public String getQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public Location getQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         String location = fetchQueuePositionOr404(queueName, userName).getLocation();
         if (location == null) {
             throw new NotFoundException(String.format("Queue position for queue %s and user %s doesn't have a location", queueName, userName));
         } else {
-            return location;
+            return new Location(location);
         }
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.PUT)
     @Transactional
     @ResponseBody
-    public void putQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName, @RequestBody String location) throws NotFoundException {
-        apiProvider.setLocation(fetchQueuePositionOr404(queueName, userName), location);
+    public void putQueuePositionLocation(
+            @PathVariable("queueName") String queueName,
+            @PathVariable("userName") String userName,
+            @RequestBody Location location) throws NotFoundException, BadRequestException {
+        apiProvider.setLocation(fetchQueuePositionOr404(queueName, userName), location.getLocation());
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.DELETE)
     @Transactional
     @ResponseBody
-    public void deleteQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public void deleteQueuePositionLocation(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException, BadRequestException {
         apiProvider.setLocation(fetchQueuePositionOr404(queueName, userName), null);
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.GET)
     @ResponseBody
-    public String getQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public Comment getQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
         String comment = fetchQueuePositionOr404(queueName, userName).getComment();
         if (comment == null) {
             throw new NotFoundException(String.format("Queue position for queue %s and user %s doesn't have a comment", queueName, userName));
         } else {
-            return comment;
+            return new Comment(comment);
         }
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.PUT)
     @Transactional
     @ResponseBody
-    public void putQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName, @RequestBody String comment) throws NotFoundException {
-        apiProvider.setComment(fetchQueuePositionOr404(queueName, userName), comment);
+    public void putQueuePositionComment(
+            @PathVariable("queueName") String queueName,
+            @PathVariable("userName") String userName,
+            @RequestBody Comment comment) throws NotFoundException, BadRequestException {
+        apiProvider.setComment(fetchQueuePositionOr404(queueName, userName), comment.getComment());
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/comment", method = RequestMethod.DELETE)
     @Transactional
     @ResponseBody
-    public void deleteQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
+    public void deleteQueuePositionComment(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException, BadRequestException {
         apiProvider.setComment(fetchQueuePositionOr404(queueName, userName), null);
     }
 
@@ -190,17 +198,17 @@ public class ApiController {
         apiProvider.clearQueue(fetchQueueOr404(queueName));
     }
 
-    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.GET)
+    @RequestMapping(value = "/queue/{queueName}/hidden", method = RequestMethod.GET)
     @ResponseBody
-    public boolean getQueueActive(@PathVariable("queueName") String queueName) throws NotFoundException {
-        return fetchQueueOr404(queueName).isActive();
+    public boolean getQueueHidden(@PathVariable("queueName") String queueName) throws NotFoundException {
+        return fetchQueueOr404(queueName).isHidden();
     }
 
-    @RequestMapping(value = "/queue/{queueName}/active", method = RequestMethod.PUT)
+    @RequestMapping(value = "/queue/{queueName}/hidden", method = RequestMethod.PUT)
     @Transactional
     @ResponseBody
-    public void putQueueActive(@PathVariable("queueName") String queueName, @RequestBody boolean active) throws NotFoundException {
-        apiProvider.setActive(fetchQueueOr404(queueName), active);
+    public void putQueueHidden(@PathVariable("queueName") String queueName, @RequestBody boolean hidden) throws NotFoundException {
+        apiProvider.setHidden(fetchQueueOr404(queueName), hidden);
     }
 
     @RequestMapping(value = "/queue/{queueName}/locked", method = RequestMethod.GET)

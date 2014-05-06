@@ -31,7 +31,8 @@ public class FilteredCasAuthEntryPoint implements AuthenticationEntryPoint, Init
         final String redirectUrl = CommonUtils.constructRedirectUrl(
                 this.loginUrl, this.serviceProperties.getServiceParameter(), urlEncodedService, this.serviceProperties.isSendRenew(), false);
 
-        if (servletRequest.getHeader("Accept").contains("text/html")) {
+        String accept = servletRequest.getHeader("Accept");
+        if (accept != null && accept.contains("text/html")) {
             response.sendRedirect(redirectUrl);
         } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access to this resource requires authentication");

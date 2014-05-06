@@ -3,9 +3,6 @@ package se.kth.csc.controller;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.api.AccountSnapshot;
-
-import java.util.List;
 
 public interface ApiProvider {
     Iterable<Account> findAccounts(boolean onlyAdmin, String query);
@@ -28,13 +25,13 @@ public interface ApiProvider {
 
     void deleteQueuePosition(QueuePosition queuePosition);
 
-    void setComment(QueuePosition queuePosition, String comment);
+    void setComment(QueuePosition queuePosition, String comment) throws BadRequestException;
 
-    void setLocation(QueuePosition queuePosition, String location);
+    void setLocation(QueuePosition queuePosition, String location) throws BadRequestException;
 
     void clearQueue(Queue queue);
 
-    void setActive(Queue queue, boolean active);
+    void setHidden(Queue queue, boolean hidden);
 
     void setLocked(Queue queue, boolean locked);
 

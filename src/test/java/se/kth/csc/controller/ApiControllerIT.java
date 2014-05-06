@@ -160,7 +160,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
                 .andExpect(jsonPath("name", is("abc123")))
-                .andExpect(jsonPath("active", is(true)))
+                .andExpect(jsonPath("hidden", is(false)))
                 .andExpect(jsonPath("locked", is(false)))
                 .andExpect(jsonPath("owners", hasSize(1)))
                 .andExpect(jsonPath("owners[0]", is("testUser")))
@@ -687,17 +687,17 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("owners", hasSize(0)))
-                .andExpect(jsonPath("active", is(true)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(jsonPath("hidden", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(false)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(jsonPath("hidden", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
 
         // For Owner (who is not an Admin)
         mockMvc.perform(get("/api/user/testUser").session(session))
@@ -707,26 +707,27 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("owners", hasSize(1)))
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
         mockMvc.perform(put("/api/user/testUser/role/admin").session(session).contentType(MediaType.APPLICATION_JSON).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
+                .andExpect(jsonPath("hidden", is(false)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(false)));
-        mockMvc.perform(put("/api/queue/abc123/active").contentType(MediaType.APPLICATION_JSON).session(session).content("true"))
+                .andExpect(jsonPath("hidden", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/hidden").contentType(MediaType.APPLICATION_JSON).session(session).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("active", is(true)));
+                .andExpect(jsonPath("hidden", is(false)));
     }
 
     /**
      * Test to add and remove a comment for a user.
+     *
      * @throws Exception
      */
     @Test
@@ -758,6 +759,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove a comment for another user.
+     *
      * @throws Exception
      */
     @Test
@@ -865,6 +867,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove the location for a user.
+     *
      * @throws Exception
      */
     @Test
@@ -896,6 +899,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
 
     /**
      * Test to add and remove a location for another user.
+     *
      * @throws Exception
      */
     @Test
@@ -934,7 +938,7 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("positions", hasSize(1)))
                 .andExpect(jsonPath("positions[0].userName", is("testUser")));
-        mockMvc.perform(delete("/api/queue/abc123/positions/testUser"))
+        mockMvc.perform(delete("/api/queue/abc123/position/testUser").session(session))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
