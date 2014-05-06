@@ -67,7 +67,7 @@ public class ApiProviderImpl implements ApiProvider {
         Queue queue = new Queue();
         queue.setName(queueName);
         queue.setTitle(title);
-        queue.setActive(true);
+        queue.setHidden(false);
         queue.setLocked(false);
         queue.getOwners().add(owner);
         queueStore.storeQueue(queue);
@@ -92,11 +92,11 @@ public class ApiProviderImpl implements ApiProvider {
         QueueRemoved message = new QueueRemoved(queue.getName());
         queueStore.removeQueue(queue);
 
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
+        messageBus.convertAndSend("/topic/queue", message);
     }
 
     @Override
-    @PreAuthorize("!#queue.locked and #queue.active")
+    @PreAuthorize("!#queue.locked and !#queue.hidden")
     public void addQueuePosition(Queue queue, Account account) {
         QueuePosition queuePosition = new QueuePosition();
         queuePosition.setQueue(queue);
@@ -108,7 +108,7 @@ public class ApiProviderImpl implements ApiProvider {
         QueuePositionCreatedInQueue message1 = new QueuePositionCreatedInQueue(
                 Snapshotters.QueuePositionInQueueSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
         QueuePositionCreatedInAccount message2 = new QueuePositionCreatedInAccount(
-                Snapshotters.QueuePositionInAccountSnapshotter.INSTANCE.apply(queuePosition), queue.getName());
+                Snapshotters.QueuePositionInAccountSnapshotter.INSTANCE.apply(queuePosition), account.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message1);
         messageBus.convertAndSend("/topic/user/" + account.getPrincipalName(), message2);
     }
@@ -165,10 +165,13 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
-    public void setActive(Queue queue, boolean active) {
-        queue.setActive(active);
-
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueActiveStatusChanged(queue.getName(), active));
+    public void setHidden(Queue queue, boolean hidden) {
+        queue.setHidden(hidden);
+        if (hidden) {
+            clearQueue(queue);
+            setLocked(queue, true);
+        }
+        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueHiddenStatusChanged(queue.getName(), hidden));
     }
 
     @Override

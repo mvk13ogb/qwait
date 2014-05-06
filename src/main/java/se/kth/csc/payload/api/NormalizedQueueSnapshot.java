@@ -3,13 +3,13 @@ package se.kth.csc.payload.api;
 public class NormalizedQueueSnapshot {
     private final String name;
     private final String title;
-    private final boolean active;
+    private final boolean hidden;
     private final boolean locked;
 
-    public NormalizedQueueSnapshot(String name, String title, boolean active, boolean locked) {
+    public NormalizedQueueSnapshot(String name, String title, boolean hidden, boolean locked) {
         this.name = name;
         this.title = title;
-        this.active = active;
+        this.hidden = hidden;
         this.locked = locked;
     }
 
@@ -21,8 +21,8 @@ public class NormalizedQueueSnapshot {
         return title;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean isHidden() {
+        return hidden;
     }
 
     public boolean isLocked() {

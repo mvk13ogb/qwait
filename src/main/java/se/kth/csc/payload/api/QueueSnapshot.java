@@ -10,11 +10,11 @@ public class QueueSnapshot extends NormalizedQueueSnapshot {
     private final ImmutableSet<String> moderators;
     private final ImmutableSet<QueuePositionInQueueSnapshot> positions;
 
-    public QueueSnapshot(String name, String title, boolean active, boolean locked,
+    public QueueSnapshot(String name, String title, boolean hidden, boolean locked,
                          ImmutableSet<String> owners,
                          ImmutableSet<String> moderators,
                          ImmutableSet<QueuePositionInQueueSnapshot> positions) {
-        super(name, title, active, locked);
+        super(name, title, hidden, locked);
         this.owners = owners;
         this.moderators = moderators;
         this.positions = positions;

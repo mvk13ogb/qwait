@@ -524,11 +524,10 @@
                         </goals>
                         <configuration>
                             <preloadSources>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/jquery.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/angular.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/angular-animate.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/angular-route.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/mm-foundation-tpls-0.1.0.min.js</source>
+                                <source>${project.basedir}/src/main/webapp/vendor/js/mm-foundation-tpls-0.2.0-SNAPSHOT.min.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/sockjs.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/stomp.js</source>
                                 <source>${project.basedir}/src/main/webapp/vendor/js/moment-with-langs.js</source>

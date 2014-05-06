@@ -63,7 +63,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions.splice(i, 1);
                                 }
                             }
@@ -73,7 +73,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions[i].comment = data.body.comment;
                                 }
                             }
@@ -83,7 +83,7 @@
                         var user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
-                                if (user.queuePositions[i].userName == data.body.userName) {
+                                if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions[i].location = data.body.location;
                                 }
                             }
@@ -177,6 +177,9 @@
                             result.get(data.body.name);
                         }, 500);
                         break;
+                    case 'QueueRemoved':
+                        delete result.all[data.body.name];
+                        break;
                     default:
                         console.log('Unrecognized queue message', data.body);
                 }
@@ -184,10 +187,10 @@
             messagebus.subscribe('/topic/queue/*', function (data) {
                 var queue, i;
                 switch (data.body['@type']) {
-                    case 'QueueActiveStatusChanged':
+                    case 'QueueHiddenStatusChanged':
                         queue = result.all[data.body.name];
                         if (queue) {
-                            queue.active = data.body.active;
+                            queue.hidden = data.body.hidden;
                         }
                         break;
                     case 'QueueCleared':
@@ -333,9 +336,9 @@
             });
         };
 
-        result.setActive = function (name, active) {
+        result.setHidden = function (name, hidden) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
-            return $http.put('/api/queue/' + encodeURIComponent(name) + '/active', '' + active, {
+            return $http.put('/api/queue/' + encodeURIComponent(name) + '/hidden', '' + hidden, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -346,6 +349,14 @@
             var name = title.replace(/[\s\/]+/g, '-').toLowerCase();
             return $http.put('/api/queue/' + encodeURIComponent(name), {
                 'title': title
+            });
+        };
+
+        result.deleteQueue = function (name) {
+            return $http.delete('/api/queue/' + encodeURIComponent(name), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         };
 
@@ -640,7 +651,7 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, page, clock, queues, users, security, queuePositions) {
+    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
         page.title = 'Queue list';
 
         $scope.users = users;
@@ -648,12 +659,16 @@
 
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.userQueuePos = queuePositions.getUserQueuePos;
+        $scope.joinQueue = function (queueName, userName) {
+            queues.joinQueue(queueName, userName);
+            $location.path('/queue/' + queueName)
+        }
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $route, clock, queues, users, page, queuePositions) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
@@ -662,6 +677,10 @@
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
         $scope.userQueuePos = queuePositions.getUserQueuePos;
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
@@ -857,6 +876,22 @@
                 }
             }
 
+            return result;
+        };
+    });
+
+    qwait.filter('queuesSeenBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (queue && !queue.hidden) {
+                    result.push(queue);
+                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                    result.push(queue);
+                }
+            }
             return result;
         };
     });

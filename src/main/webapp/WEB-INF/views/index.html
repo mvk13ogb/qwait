@@ -45,45 +45,48 @@
     </script>
   </head>
   <body>
-    <nav class="top-bar" data-topbar="topbar" ng-controller="TopbarCtrl">
-      <ul class="title-area">
-        <li class="name">
-          <h1><a href="#/">{{system.product.name}}</a></h1>
-        </li>
-        <li class="toggle-topbar menu-icon"><a>Menu</a></li>
-      </ul>
-      <section class="top-bar-section">
-        <ul class="left">
-          <li ng-class="{active: location.path() == '/queues'}">
-            <a href="#/queues">Queues</a>
+    <div ng-controller="TopbarCtrl">
+      <top-bar>
+        <ul class="title-area">
+          <li class="name">
+            <h1><a href="#/">{{system.product.name}}</a></h1>
           </li>
-          <li ng-class="{active: location.path() == '/about'}">
-            <a href="#/about">About</a>
-          </li>
-          <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
-            <a href="#/admin">Admin</a>
-          </li>
+          <!--/* Must have empty ="" here to avoid Thymeleaf exception */-->
+          <li toggle-top-bar="" class="menu-icon"><a>Menu</a></li>
         </ul>
-        <ul class="right">
-          <li>
-            <a>
-              <span ng-if="messagebus.protocol">{{messagebus.describeProtocol(messagebus.protocol)}}</span>
-              <span ng-if="messagebus.ready" class="success label">Connected</span>
-              <span ng-if="!messagebus.ready" class="alert label">Disconnected</span>
-            </a>
-          </li>
-          <li ng-if="!users.current.anonymous"><a href="#">Logged in as
-            <strong>{{users.current.readableName}}</strong></a></li>
-          <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
-          <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
-        </ul>
-      </section>
-    </nav>
+        <top-bar-section>
+          <ul class="left">
+            <li ng-class="{active: location.path() == '/queues'}">
+              <a href="#/queues">Queues</a>
+            </li>
+            <li ng-class="{active: location.path() == '/about'}">
+              <a href="#/about">About</a>
+            </li>
+            <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
+              <a href="#/admin">Admin</a>
+            </li>
+          </ul>
+          <ul class="right">
+            <li>
+              <a>
+                <span ng-if="messagebus.protocol">{{messagebus.describeProtocol(messagebus.protocol)}}</span>
+                <span ng-if="messagebus.ready" class="success label">Connected</span>
+                <span ng-if="!messagebus.ready" class="alert label">Disconnected</span>
+              </a>
+            </li>
+            <li ng-if="!users.current.anonymous"><a href="#">Logged in as
+              <strong>{{users.current.readableName}}</strong></a></li>
+            <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
+            <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
+          </ul>
+        </top-bar-section>
+      </top-bar>
+    </div>
 
     <div class="row">
       <section ng-view="ng-view" class="large-12 columns"></section>
     </div>
 
-    <script th:src="@{/vendor/js/mm-foundation-tpls-0.1.0.min.js}"></script>
+    <script th:src="@{/vendor/js/mm-foundation-tpls-0.2.0-SNAPSHOT.min.js}"></script>
   </body>
 </html>
