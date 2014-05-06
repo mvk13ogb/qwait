@@ -341,4 +341,13 @@
       </div>
     </div>
   </div>
+
+  <script type="text/ng-template" id="myModalContent.html">
+    <h3>Warning</h3>
+    <span>
+      <button class="button" ng-click="cancelJoinQueue()">Cancel</button>
+      <button class="button" ng-click="queues.joinQueue(queue.name, users.current.name)">Join</button>
+    </span>
+    <a class="close-reveal-modal" ng-click="cancelJoinQueue()">&#215;</a>
+  </script>
 </div>
