@@ -673,11 +673,13 @@
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
-        page.title = 'View queue';
-
+        
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
+
+        page.title = $scope.queue.title || 'Queue';
+
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
