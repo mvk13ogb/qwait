@@ -165,7 +165,7 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                <ul ng-if="users.current.admin || canModerateQueue(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button secondary small" style="margin-bottom: 0;">
                       <span class="size-14">Hide&nbsp;</span>
@@ -179,7 +179,7 @@
                 </ul>
               </div>
 
-              <ul ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
+              <ul ng-if="users.current.admin || canModerateQueue(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button secondary small" style="margin-bottom: 0;">
                     <span class="size-14">Unhide</span>
@@ -234,7 +234,7 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                <ul ng-if="users.current.admin || canModerateQueue(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button secondary small" style="margin-bottom: 0;">
                       <span class="size-14">Delete</span>
