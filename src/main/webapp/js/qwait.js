@@ -727,7 +727,7 @@
             }
         }, wait, false);
 
-        $scope.joinQueueFull = function (name, user, location, locationform, comment, commentform){
+        $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
             queues.joinQueue(name, user);
 
             //HACK, places a timeout so we have time to join the queue
@@ -741,7 +741,7 @@
                     queues.changeComment(name, user, comment);
                 }
             }, 500);
-        };
+        }, 200, true);
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {

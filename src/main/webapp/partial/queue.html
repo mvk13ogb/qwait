@@ -70,12 +70,21 @@
           </div>
         </label>
         <div class="row collapse">
-          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked" class="button expand button-bot-margin" 
-                  ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
-            <i class="fi-plus"></i>
-            Join queue
-          </button>
-          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" 
+          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked">
+            <button ng-show="locationplaceholder" class="expand"
+                    ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
+              <i class="fi-plus"></i>
+              Join queue
+            </button>
+
+            <button ng-show="!locationplaceholder" class="expand disabled"
+                    tooltip="In order to queue, you need to enter your location."
+                    tooltip-placement="bottom" tooltip-trigger="focus">
+              <i class="fi-plus"></i>
+                Join queue
+            </button>
+          </div>
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand"
                   ng-click="queues.leaveQueue(queue.name, users.current.name)">
             <i class="fi-x"></i>
             Leave queue
