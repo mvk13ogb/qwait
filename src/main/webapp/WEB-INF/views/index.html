@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
-    <title ng-controller="TitleCtrl" ng-bind="page.title + ' &mdash; ' + system.product.name + ' v' + system.product.version">QWait</title>
+    <title ng-controller="TitleCtrl" ng-bind="page.title + ' | ' + system.product.name">QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -49,18 +49,21 @@
       <top-bar>
         <ul class="title-area">
           <li class="name">
-            <h1><a href="#/">{{system.product.name}}</a></h1>
+            <a href="#/" class="top-logo logo-small"></a>
           </li>
           <!--/* Must have empty ="" here to avoid Thymeleaf exception */-->
           <li toggle-top-bar="" class="menu-icon"><a>Menu</a></li>
         </ul>
         <top-bar-section>
           <ul class="left">
-            <li ng-class="{active: location.path() == '/queues'}">
+            <li ng-class="{active: location.path() == '/'}">
               <a href="#/queues">Queues</a>
             </li>
             <li ng-class="{active: location.path() == '/about'}">
               <a href="#/about">About</a>
+            </li>
+            <li ng-class="{active: location.path() == '/help'}">
+              <a href="#/help">Help</a>
             </li>
             <li ng-if="users.current.admin" ng-class="{active: location.path() == '/admin'}">
               <a href="#/admin">Admin</a>
@@ -69,12 +72,18 @@
           <ul class="right">
             <li>
               <a>
-                <span ng-if="messagebus.protocol">{{messagebus.describeProtocol(messagebus.protocol)}}</span>
-                <span ng-if="messagebus.ready" class="success label">Connected</span>
-                <span ng-if="!messagebus.ready" class="alert label">Disconnected</span>
+                <span ng-if="messagebus.ready" class="green" title="Connected with {{messagebus.describeProtocol(messagebus.protocol)}}"> 
+                  <span class="size-24">&#9679;</span>
+                  <span class="hide-for-large-up">Connected</span>
+                </span>
+
+                <span ng-if="!messagebus.ready" class="red" title="Disconnected">
+                  <span class="size-24">&#9679;</span>
+                  <span class="hide-for-large-up">Disconnected</span>
+                </span>
               </a>
             </li>
-            <li ng-if="!users.current.anonymous"><a href="#">Logged in as
+            <li ng-if="!users.current.anonymous"><a>Logged in as
               <strong>{{users.current.readableName}}</strong></a></li>
             <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
             <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>

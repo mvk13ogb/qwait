@@ -39,7 +39,7 @@
             <td>{{admin.name}}</td>
             <td>{{admin.readableName}}</td>
             <td>
-              <button ng-click="users.setAdmin(admin.name, false)" type="button" class="tiny alert"
+              <button ng-if="users.admins.length > 1" ng-click="users.setAdmin(admin.name, false, users.current.name)" type="button" class="tiny alert"
                       style="margin-bottom: 0;">
                 Remove
               </button>

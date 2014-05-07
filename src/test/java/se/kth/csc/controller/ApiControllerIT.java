@@ -86,6 +86,19 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     }
 
     @Test
+    // It should not be allowed to remove the only existing admin
+    public void testRevokeOnlyAdmin() throws Exception {
+        MockHttpSession session1 = signInAs("testUser", "admin");
+        mockMvc.perform(get("/api/user/testUser").session(session1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is("testUser")))
+                .andExpect(jsonPath("admin", is(true)));
+
+        mockMvc.perform(put("/api/user/testUser/role/admin").session(session1).contentType(MediaType.APPLICATION_JSON).content("false"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testPutUserRoleAdminForbidden() throws Exception {
         MockHttpSession session1 = signInAs("testUser");
         mockMvc.perform(get("/api/user/testUser").session(session1))
@@ -647,8 +660,14 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     public void testOwnerAddAndRevokeOwner() throws Exception {
         MockHttpSession session = signInAs("testUser", "admin");
         MockHttpSession session2 = signInAs("testUser2");
+        // Need two admins to be able to remove one admin later
+        MockHttpSession session3 = signInAs("testUser3", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser3").session(session3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is("testUser3")))
+                .andExpect(jsonPath("admin", is(true)));
         mockMvc.perform(put("/api/user/testUser/role/admin").session(session).contentType(MediaType.APPLICATION_JSON).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/testUser").session(session))
@@ -678,9 +697,13 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     public void testCloseAndOpenQueue() throws Exception {
         // For Admin (who is not an Owner)
         MockHttpSession session = signInAs("testUser", "admin");
+        // Need two admins to be able to remove one admin later
+        MockHttpSession session2 = signInAs("testUser2", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/testUser").session(session))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser2").session(session2))
                 .andExpect(status().isOk());
         mockMvc.perform(delete("/api/queue/abc123/owner/testUser").session(session))
                 .andExpect(status().isOk());
@@ -811,8 +834,16 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
     @Test
     public void testLockUnlockQueueAsOwner() throws Exception {
         MockHttpSession session1 = signInAs("testUser1", "admin");
+        // Need two admins to be able to remove one admin later
+        MockHttpSession session2 = signInAs("testUser2", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/api/user/testUser1").session(session1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("admin", is(true)));
+        mockMvc.perform(get("/api/user/testUser2").session(session2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("admin", is(true)));
         mockMvc.perform(put("/api/user/testUser1/role/admin").contentType(MediaType.APPLICATION_JSON).session(session1).content("false"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/testUser1").session(session1))
