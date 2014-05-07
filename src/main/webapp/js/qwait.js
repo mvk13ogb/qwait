@@ -704,8 +704,11 @@
                 templateUrl: 'lockQueueModalContent.html',
                 controller: queueModalInstanceCtrl,
                 resolve: {
-                    data: function () {
-                        return ([$scope.queue, $scope.queues]);
+                    queue: function () {
+                        return $scope.queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
                     }
                 }
             });
@@ -720,8 +723,11 @@
                 templateUrl: 'hideQueueModalContent.html',
                 controller: queueModalInstanceCtrl,
                 resolve: {
-                    data: function () {
-                        return ([$scope.queue, $scope.queues]);
+                    queue: function () {
+                        return $scope.queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
                     }
                 }
             });
@@ -736,8 +742,11 @@
                 templateUrl: 'clearQueueModalContent.html',
                 controller: queueModalInstanceCtrl,
                 resolve: {
-                    data: function () {
-                        return ([$scope.queue, $scope.queues]);
+                    queue: function () {
+                        return $scope.queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
                     }
                 }
             });
@@ -752,8 +761,14 @@
                 templateUrl: 'deleteQueueModalContent.html',
                 controller: deleteQueueModalInstanceCtrl,
                 resolve: {
-                    data: function () {
-                        return ([$scope.queue, $scope.queues, $location]);
+                    queue: function () {
+                        return $scope.queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
+                    },
+                    location: function () {
+                        return $location;
                     }
                 }
             });
@@ -766,10 +781,16 @@
 
             var modalInstance = $modal.open({
                 templateUrl: 'removeUserModalContent.html',
-                controller: 'removeUserModalInstanceCtrl',
+                controller: removeUserModalInstanceCtrl,
                 resolve: {
-                    data: function () {
-                        return [position, $scope.queue, $scope.queues];
+                    queue: function () {
+                        return $scope.queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
+                    },
+                    position: function () {
+                        return position;
                     }
                 }
             });
@@ -788,10 +809,10 @@
     };
 
 
-    var queueModalInstanceCtrl = function ($scope, $modalInstance, data) {
+    var queueModalInstanceCtrl = function ($scope, $modalInstance, queue, queues) {
 
-        $scope.queue = data[0];
-        $scope.queues = data[1];
+        $scope.queue = queue;
+        $scope.queues = queues;
 
         $scope.ok = function () {
             $modalInstance.close();
@@ -802,11 +823,11 @@
         };
     };
 
-    var deleteQueueModalInstanceCtrl = function ($scope, $modalInstance, data) {
+    var deleteQueueModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, location) {
 
-        $scope.queue = data[0];
-        $scope.queues = data[1];
-        $location = data[2];
+        $scope.queue = queue;
+        $scope.queues = queues;
+        $location = location;
 
         $scope.deleteQueue = function (queueName) {
             $scope.queues.deleteQueue(queueName);
@@ -822,11 +843,12 @@
         };
     };
 
-    qwait.controller('removeUserModalInstanceCtrl', ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
+    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, position) {
 
-        $scope.position = data[0];
-        $scope.queue = data[1];
-        $scope.queues = data[2];
+        $scope.queue = queue;
+        $scope.queues = queues;
+        $scope.position = position;
+
 
         $scope.ok = function () {
             $modalInstance.close();
@@ -835,7 +857,7 @@
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    }]);
+    };
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
