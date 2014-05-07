@@ -81,7 +81,7 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin')")
-    public void setAdmin(Account account, boolean admin) throws BadRequestException {
+    public void setAdmin(Account account, boolean admin) throws ForbiddenException {
         // Make sure there is not only one admin left
         int adminCount = 0;
         if (admin == false) { // Only run if trying to remove an admin
@@ -92,7 +92,7 @@ public class ApiProviderImpl implements ApiProvider {
             }
         }
         if (admin == false && adminCount < 2) { // Trying to remove an admin and less than two admins left
-            throw new BadRequestException("Can not remove the last admin!");
+            throw new ForbiddenException("Can not remove the last admin!");
         } else {
             account.setAdmin(admin);
 
