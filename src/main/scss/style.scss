@@ -37,6 +37,11 @@
   @include panel(#FAFAFA);
 }
 
+.grey-panel{
+  @include panel(#333, 0.85rem);
+  color: white;
+}
+
 .active-panel {
   @include panel(scale-color($primary-color, $lightness: 80%));
 }
