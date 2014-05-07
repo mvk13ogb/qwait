@@ -3,15 +3,15 @@
 
     qwait.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/', {
-                templateUrl: 'partial/home.html',
-                controller: 'HomeCtrl'
-            }).
             when('/about', {
                 templateUrl: 'partial/about.html',
                 controller: 'AboutCtrl'
             }).
-            when('/queues', {
+            when('/help', {
+                templateUrl: 'partial/help.html',
+                controller: 'HelpCtrl'
+            }).
+            when('/', {
                 templateUrl: 'partial/queue-list.html',
                 controller: 'QueueListCtrl'
             }).
@@ -637,11 +637,8 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', function ($scope, system, messagebus, page) {
-        page.title = 'Home';
-
-        $scope.system = system;
-        $scope.messagebus = messagebus;
+    qwait.controller('HelpCtrl', ['$scope', 'page', function ($scope, page) {
+        page.title = 'Help';
     }]);
 
     qwait.controller('AboutCtrl', ['$scope', 'system', 'page', 'contributors', function ($scope, system, page, contributors) {
@@ -652,7 +649,7 @@
     }]);
 
     qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
-        page.title = 'Queue list';
+        page.title = 'Queues';
 
         $scope.users = users;
         $scope.queues = queues;
@@ -669,11 +666,13 @@
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
-        page.title = 'View queue';
-
+        
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
+
+        page.title = $scope.queue.title || 'Queue';
+
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
