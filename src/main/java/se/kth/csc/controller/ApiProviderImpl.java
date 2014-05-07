@@ -84,15 +84,15 @@ public class ApiProviderImpl implements ApiProvider {
     public void setAdmin(Account account, boolean admin) throws ForbiddenException {
         // Make sure there is not only one admin left
         int adminCount = 0;
-        if (admin == false) { // Only run if trying to remove an admin
+        if (!admin) { // Only run if trying to remove an admin
             Iterator adminIterator = findAccounts(true, "").iterator();
             while (adminIterator.hasNext() && adminCount < 2) {
                 adminIterator.next();
                 adminCount++;
             }
         }
-        if (admin == false && adminCount < 2) { // Trying to remove an admin and less than two admins left
-            throw new ForbiddenException("Can not remove the last admin!");
+        if (!admin && adminCount < 2) { // Trying to remove an admin and less than two admins left
+            throw new ForbiddenException("Can not remove the last admin");
         } else {
             account.setAdmin(admin);
 
