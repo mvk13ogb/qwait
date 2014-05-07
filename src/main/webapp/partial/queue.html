@@ -264,13 +264,44 @@
               <th width="1"></th>
               <th>Location</th>
               <th>Comment</th>
-              <th ng-show="users.current.admin" width="1"></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
               <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
-              <td>{{getUser(position.userName).readableName}}</td>
+              <td>
+                {{getUser(position.userName).readableName}}
+                <span ng-show="users.current.admin" ng-controller="removeUserModalCtrl">
+                  <script type="text/ng-template" id="removeUserModalContent.html">
+                    <h3>Remove {{position.userName}} from {{queue.title}}</h3>
+                    <p>This will remove the user from the queue.</p>
+                    <button class="alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">
+                      <i class="fi-x"></i>
+                      Remove
+                    </button>
+                    <button class="secondary" ng-click="cancel()">Back</button>
+                    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                  </script>
+
+                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18">
+                    <i class="fi-x"></i>
+                  </a>
+                  <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
+                    <li>
+                      <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
+                        <span class="size-14">
+                          Remove
+                        </span>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
+                        <i class="fi-x size-14"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </span>
+              </td>
               <td>{{timeDiff(position.startTime)}}</td>
               <td>
                 <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
@@ -304,38 +335,6 @@
                          ng-change="queues.changeComment(queue.name, users.current.name, position.comment)"/>
                   <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 </form>
-              </td>
-              <td ng-show="users.current.admin" width="1">
-                <div ng-controller="removeUserModalCtrl">
-                  <script type="text/ng-template" id="removeUserModalContent.html">
-                    <h3>Remove {{position.userName}} from {{queue.title}}</h3>
-                    <p>This will remove the user from the queue.</p>
-                    <button class="alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">
-                      <i class="fi-x"></i>
-                      Remove
-                    </button>
-                    <button class="secondary" ng-click="cancel()">Back</button>
-                    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
-                  </script>
-
-                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18">
-                    <i class="fi-x"></i>
-                  </a>
-                  <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
-                    <li>
-                      <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
-                        <span class="size-14">
-                          Remove
-                        </span>
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
-                        <i class="fi-x size-14"></i>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
               </td>
             </tr>
           </tbody>
