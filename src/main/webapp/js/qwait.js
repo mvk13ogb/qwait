@@ -854,14 +854,12 @@
         }, 200, true);
 
         var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName, userName) {
-            // TODO
-            //$scope.queuePositions = queuePostions;
-
+            var qp = queuePositions;
+            $scope.queuePositions = qp;
             $scope.ok = function () {
                 queues.joinQueue(queueName, userName);
                 $modalInstance.close();
             };
-
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };

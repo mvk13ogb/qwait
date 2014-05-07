@@ -344,16 +344,18 @@
 
   <script type="text/ng-template" id="confirmationModal.html">
     <h3>Confirm</h3>
-    <p>You are currently queueing in the following queues:</p>
+    <p>You are currently queueing in the following queue<ng-pluralize count="queuePositions.length"
+                     when="{'0': 'No queues', 'one': ':', 'other': 's:'}">
+    </ng-pluralize></p>
     <ul>
-      <li ng-repeat="queueName in queuePositions">
-        {{queueName}}
+      <li ng-repeat="queuePosition in queuePositions">
+        {{queuePosition.queueName}}
       </li>
     </ul>
     <p>Queue anyway?</p>
     <span>
-      <button class="button" ng-click="cancel()">Cancel</button>
       <button class="button" ng-click="ok()">Join</button>
+      <button class="button" ng-click="cancel()">Cancel</button>
     </span>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
   </script>
