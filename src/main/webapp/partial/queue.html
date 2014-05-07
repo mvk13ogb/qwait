@@ -7,9 +7,9 @@
   <h5 ng-show="userQueuePos(users.current, queue.positions)">
     Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
   </h5>
-  <p ng-hide="queue.positions">This queue is empty</p>
+  <p ng-hide="queue.positions.length > 0">This queue is empty</p>
 
-  <div ng-show="queue.positions" class="row collapse">
+  <div ng-show="queue.positions.length > 0" class="row collapse">
     <div class="large-3 large-offset-9 columns">
       <input type="text" ng-model="search" placeholder="Find users"/>
     </div>
@@ -188,7 +188,7 @@
       </div>
     </div>
 
-    <div class="large-9 columns" ng-show="queue.positions">
+    <div class="large-9 columns" ng-show="queue.positions.length > 0">
       <div class="row collapse">
         <table class="small-12 columns">
           <thead>
