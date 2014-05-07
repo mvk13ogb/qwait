@@ -23,6 +23,9 @@
                 templateUrl: 'partial/admin.html',
                 controller: 'AdminCtrl'
             }).
+            when('/error', {
+                templateUrl: 'partial/error.html',
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -858,14 +861,17 @@
             var i;
             $scope.selectedQueue = queue;
 
-            $scope.selectedModerators = [];
-            for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
-                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-            }
-            $scope.selectedOwners = [];
-            for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
-                $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
-            }
+        $scope.selectedModerators = [];
+        for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
+            $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+        }
+        $scope.selectedOwners = [];
+        for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
+            $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+        }
+
+        $scope.getUser = function (userName) {
+            return users.get(userName);
         };
 
         var ownedQueues = users.current.ownedQueues;
