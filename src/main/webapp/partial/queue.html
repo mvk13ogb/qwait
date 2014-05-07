@@ -155,7 +155,7 @@
               <div ng-show="!queue.hidden" ng-controller="hideQueueModalCtrl">
                 <script type="text/ng-template" id="hideQueueModalContent.html">
                   <h2>Hide queue {{queue.title}}</h2>
-                  <p>This will hide the queue from the queue list.</p>
+                  <p>This will clear, lock and hide the queue, making it invisible in the queue list.</p>
 
                   <button class="alert" ng-click="queues.setHidden(queue.name, true); ok()">
                     <i class="fi-eye"></i>
