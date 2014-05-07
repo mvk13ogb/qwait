@@ -6,8 +6,8 @@
   </h2>
 
   <div class="row collapse">
-    <div class="large-4 large-offset-8 columns">
-      <input type="text" ng-model="search" placeholder="Find users"/>
+    <div class="large-3 large-offset-9 columns">
+      <input type="text" class="search" ng-model="search" placeholder="Find users"/>
     </div>
   </div>
 
@@ -17,11 +17,76 @@
         Not logged in
       </div>
       <div ng-show="!users.current.anonymous">
+        <label>
+          Location
+          <div class="row collapse">
+            <div class="small-12 columns">
+              <div ng-show="userQueuePos(users.current, queue.positions)">
+                <form name="locationform">
+                  <input type="text"
+                         name="input"
+                         ng-model="userQueuePos(users.current, queue.positions).location"
+                         ng-change="changeLocationDebounced(locationform, queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)"
+                         ng-class="{error: locationform.input.$error.required}"
+                         maxlength="20"
+                         ng-required="true"/>
+                  <small ng-show="locationform.input.$error.required" class="error">Required</small>
+                </form>
+              </div>
+              <div ng-show="!userQueuePos(users.current, queue.positions)">
+                <form name="locationplaceholderform">
+                  <input type="text"
+                         name="input"
+                         ng-model="locationplaceholder"
+                         ng-class="{error: locationplaceholderform.input.$error.required}"
+                         maxlength="20"
+                         ng-required="true"/>
+                  <small ng-show="locationplaceholderform.input.$error.required" class="error">Required</small>
+                </form>
+              </div>
+            </div>
+          </div>
+        </label>
+        <label>
+          Comment
+          <div class="row collapse">
+            <div class="small-12 columns">
+              <div ng-show="userQueuePos(users.current, queue.positions)">
+                <form name="commentform">
+                  <input type="text"
+                         ng-model="userQueuePos(users.current, queue.positions).comment"
+                         ng-change="changeCommentDebounced(commentform, queue.name, users.current.name, userQueuePos(users.current, queue.positions).comment)"
+                         maxlength="20"/>
+                </form>
+            </div>
+            <div ng-show="!userQueuePos(users.current, queue.positions)">
+              <form name="commentplaceholderform">
+                <input type="text"
+                       ng-model="commentplaceholder"
+                       maxlength="20"/>
+              </form>
+            </div>
+            </div>
+          </div>
+        </label>
         <div class="row collapse">
-          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" class="button expand button-bot-margin" ng-click="queues.joinQueue(queue.name, users.current.name)">
-            Join queue
-          </button>
-          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand button-bot-margin" ng-click="queues.leaveQueue(queue.name, users.current.name)">
+          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked">
+            <button ng-show="locationplaceholder" class="expand"
+                    ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
+              <i class="fi-plus"></i>
+              Join queue
+            </button>
+
+            <button ng-show="!locationplaceholder" class="expand disabled"
+                    tooltip="In order to queue, you need to enter your location."
+                    tooltip-placement="bottom" tooltip-trigger="focus">
+              <i class="fi-plus"></i>
+                Join queue
+            </button>
+          </div>
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand"
+                  ng-click="queues.leaveQueue(queue.name, users.current.name)">
+            <i class="fi-x"></i>
             Leave queue
           </button>
         </div>
@@ -117,7 +182,7 @@
               </td>
               <td ng-hide="editingLocation">
                 {{position.location}}
-                <button type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
+                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
                   <i class="fi-pencil"></i>
                 </button>
               </td>
@@ -132,7 +197,7 @@
               </td>
               <td ng-hide="editingComment">
                 {{position.comment}}
-                <button type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingComment = true">
+                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingComment = true">
                   <i class="fi-pencil"></i>
                 </button>
               </td>
