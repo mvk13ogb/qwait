@@ -637,13 +637,6 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HomeCtrl', ['$scope', 'system', 'messagebus', 'page', function ($scope, system, messagebus, page) {
-        page.title = 'Home';
-
-        $scope.system = system;
-        $scope.messagebus = messagebus;
-    }]);
-
     qwait.controller('HelpCtrl', ['$scope', 'page', function ($scope, page) {
         page.title = 'Help';
     }]);

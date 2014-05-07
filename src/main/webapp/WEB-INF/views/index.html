@@ -83,7 +83,7 @@
                 </span>
               </a>
             </li>
-            <li ng-if="!users.current.anonymous"><a href="#">Logged in as
+            <li ng-if="!users.current.anonymous"><a>Logged in as
               <strong>{{users.current.readableName}}</strong></a></li>
             <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
             <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
