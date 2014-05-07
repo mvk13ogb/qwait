@@ -249,7 +249,9 @@
                     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                   </script>
 
-                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18">&#9662;</a>
+                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18">
+                    <i class="fi-x"></i>
+                  </a>
                   <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
                     <li>
                       <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
