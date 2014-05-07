@@ -17,7 +17,7 @@ public interface ApiProvider {
 
     void createQueue(String queueName, Account owner, String title);
 
-    void setAdmin(Account account, boolean admin);
+    void setAdmin(Account account, boolean admin) throws ForbiddenException;
 
     void deleteQueue(Queue queue);
 

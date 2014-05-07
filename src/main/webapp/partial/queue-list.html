@@ -51,7 +51,7 @@
             <i class="fi-eye green" ng-show="!queue.hidden"></i>
             <i class="fi-eye red" ng-show="queue.hidden"></i>
           </span>
-          <button ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
+          <button ng-show="!users.current.anonymous && !userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
                   class="button large"
                   ng-click="joinQueue(queue.name, users.current.name)"
                   style="margin-bottom: 0;">

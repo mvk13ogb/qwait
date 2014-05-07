@@ -6,6 +6,8 @@
 @import "compass/css3/text-shadow";
 @import "compass/css3/box-shadow";
 @import "compass/css3/border-radius";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
 
 @mixin striped-bg($bg-color: #ccc, $darken-amount: 5%, $stripe-color: darken($bg-color, $darken-amount)) {
   background-color: $bg-color;
@@ -61,6 +63,27 @@ button.itsy, .button.itsy {
   -moz-animation: 0.5s fade-out;
   -o-animation: 0.5s fade-out;
   animation: 0.5s fade-out;
+}
+
+.top-bar {
+  overflow: hidden;
+}
+
+.top-logo {
+  @include opacity(1);
+  @include transition(300ms);
+  
+  background: url(../../images/qwait-topbar-logo.png);
+  background-size: 115px 30px;
+
+  width: 115px;
+  height: 30px;
+  margin: 8px;
+  display: inline-block;
+}
+
+.top-logo:hover {
+  @include opacity(0.5);
 }
 
 @keyframes fade-out {

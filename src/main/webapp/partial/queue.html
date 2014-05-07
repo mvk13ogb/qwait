@@ -196,6 +196,7 @@
               <th width="1">#</th>
               <th>User</th>
               <th>Time</th>
+              <th width="1"></th>
               <th>Location</th>
               <th>Comment</th>
               <th ng-show="users.current.admin" width="1"></th>
@@ -206,6 +207,9 @@
               <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
               <td>{{getUser(position.userName).readableName}}</td>
               <td>{{timeDiff(position.startTime)}}</td>
+              <td>
+                <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
+              </td>
               <td ng-hide="editingLocation">
                 {{position.location}}
                 <button type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
