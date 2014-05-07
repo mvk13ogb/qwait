@@ -23,6 +23,9 @@
                 templateUrl: 'partial/admin.html',
                 controller: 'AdminCtrl'
             }).
+            when('/error', {
+                templateUrl: 'partial/error.html',
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -673,7 +676,24 @@
 
         $scope.queues = queues;
         $scope.users = users;
-        $scope.queue = queues.get($route.current.params.queueName);
+
+        //redirect if we visit an invalid queue
+        var currentQueues = angular.copy(queues);
+        var queueList = [];
+        for (var key in currentQueues.all) {
+            if (currentQueues.all.hasOwnProperty(key)) {
+                queueList.push(currentQueues.all[key]);
+            }
+        }
+
+        if (queues.contains($route.current.params.queueName, currentQueues)){
+            $scope.queue = queues.get($route.current.params.queueName);
+        } else if (queueList.length != 0) {
+            $location.path('/error')
+        } else {
+            $scope.queue = queues.get($route.current.params.queueName);
+        }
+
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
