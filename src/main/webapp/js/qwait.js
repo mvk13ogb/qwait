@@ -808,7 +808,7 @@
         }, wait, false);
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
-            if(location != null){
+            if(locationform.$valid){
 
                 queues.joinQueue(name, user);
 
