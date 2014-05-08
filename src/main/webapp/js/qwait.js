@@ -761,15 +761,17 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, $filter, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
+        $scope.queue = queues.get($route.current.params.queueName);
         $scope.queues = queues;
         $scope.users = users;
 
         $scope.isQueueOwner = security.isQueueOwner;
         $scope.canModerateQueue = security.canModerateQueue;
-        $scope.queue = queues.get($route.current.params.queueName);
+        $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
+
         var temp = getQueuePosNr;
         $timeout(function () {
             $scope.queuePosNr = function () {
