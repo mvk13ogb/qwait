@@ -179,7 +179,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
+    @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void setHidden(Queue queue, boolean hidden) {
         queue.setHidden(hidden);
         if (hidden) {

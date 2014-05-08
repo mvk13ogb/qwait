@@ -52,6 +52,22 @@
                         }
                         break;
                     case 'QueueOwnerAdded':
+                        var user = cache.get(data.body.userName);
+                        var i = user.ownedQueues.indexOf(data.body.queueName);
+                        if (user) {
+                            if(i == -1) {
+                                user.ownedQueues.push(data.body.queueName);
+                            }
+                        }
+                        break;
+                    case 'QueueOwnerRemoved':
+                        var user = cache.get(data.body.userName);
+                        var i = user.ownedQueues.indexOf(data.body.queueName);
+                        if (user) {
+                            if(i != -1) {
+                                user.queuePositions.splice(i, 1);
+                            }
+                        }
                         break;
                     case 'QueuePositionCreatedInAccount':
                         var user = cache.get(data.body.userName);
@@ -86,6 +102,24 @@
                                 if (user.queuePositions[i].queueName == data.body.queueName) {
                                     user.queuePositions[i].location = data.body.location;
                                 }
+                            }
+                        }
+                        break;
+                    case 'QueueModeratorAdded':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            if (i == -1) {
+                                user.moderatedQueues.push(data.body.queueName);
+                            }
+                        }
+                        break;
+                    case 'QueueModeratorRemoved':
+                        var user = cache.get(data.body.userName);
+                        if (user) {
+                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            if (i != -1) {
+                                user.moderatedQueues.splice(i, 1);
                             }
                         }
                         break;
@@ -208,7 +242,11 @@
                     case 'QueueModeratorAdded':
                         queue = result.all[data.body.queueName];
                         if (queue) {
-                            queue.moderators.push(data.body.userName);
+                            i = queue.moderators.indexOf(data.body.userName);
+
+                            if (i == -1) {
+                                queue.moderators.push(data.body.userName);
+                            }
                         }
                         break;
                     case 'QueueModeratorRemoved':
@@ -394,6 +432,38 @@
 
         result.changeLocation = function (name, user, location) {
             return $http.put('/api/queue/' + name + '/position/' + user + '/location', {location: location}, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.addModerator = function (name, user) {
+            return $http.put('/api/queue/' + name + '/moderator/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.removeModerator = function (name, user) {
+            return $http.delete('/api/queue/' + name + '/moderator/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.addOwner = function (name, user) {
+            return $http.put('/api/queue/' + name + '/owner/' + user, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        result.removeOwner = function (name,user) {
+            return $http.delete('/api/queue/' + name + '/owner/' + user, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -656,7 +726,6 @@
         $scope.system = system;
         $scope.messagebus = messagebus;
 
-        broadcaster.broadcast('User ' + users.current.name + ' visiting home page');
     }]);
 
     qwait.controller('TitleCtrl', ['$scope', 'system', 'page', function ($scope, system, page) {
@@ -692,11 +761,14 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
+
+        $scope.isQueueOwner = security.isQueueOwner;
+        $scope.canModerateQueue = security.canModerateQueue;
         $scope.queue = queues.get($route.current.params.queueName);
         var temp = getQueuePosNr;
         $timeout(function () {
@@ -751,16 +823,45 @@
         }, 200, true);
     }]);
 
-    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', function ($scope, $timeout, page, users) {
+    qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', 'queues', function ($scope, $timeout, page, users, queues) {
         page.title = 'Admin tools';
 
         $scope.users = users;
+        $scope.queues = queues;
+
+        $scope.selectedQueue = undefined;
+        $scope.dropdown = undefined;
 
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
                 return res.data;
             });
         };
+
+        $scope.selectQueue = function (queue) {
+            $scope.selectedQueue = queue;
+
+            $scope.selectedModerators = [];
+            for (var i=0; i<$scope.selectedQueue.moderators.length; i++) {
+                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+            }
+            $scope.selectedOwners = [];
+            for (var i=0; i<$scope.selectedQueue.owners.length; i++) {
+                $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+            }
+        };
+
+        var ownedQueues = users.current.ownedQueues;
+
+        $scope.ownedQueues = [];
+        if (ownedQueues) {
+            for (var i=0; i<ownedQueues.length; i++) {
+                // Fetch the queues of the current user
+                $scope.ownedQueues.push(queues.get(ownedQueues[i]));
+            }
+        } else {
+            console.log("Current user was not loaded");
+        }
     }]);
 
     qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
@@ -1101,7 +1202,6 @@
             else if (/(turkos|turquoise)/i.test(location)) {
                 return "turquoise";
             }
-
 
             //These computer labs have official colours too
             else if (/(spel)/i.test(location)) {
