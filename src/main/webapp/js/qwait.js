@@ -732,19 +732,22 @@
         }, wait, false);
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
-            queues.joinQueue(name, user);
+            if(location != null){
 
-            //HACK, places a timeout so we have time to join the queue
-            setTimeout(function() {
+                queues.joinQueue(name, user);
 
-                if(locationform.$valid){
-                    queues.changeLocation(name, user, location);
-                }
+                //HACK, places a timeout so we have time to join the queue
+                setTimeout(function() {
 
-                if(commentform.$valid){
-                    queues.changeComment(name, user, comment);
-                }
-            }, 500);
+                    if(locationform.$valid){
+                        queues.changeLocation(name, user, location);
+                    }
+
+                    if(commentform.$valid){
+                        queues.changeComment(name, user, comment);
+                    }
+                }, 500);
+            }
         }, 200, true);
     }]);
 
