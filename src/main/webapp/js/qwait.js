@@ -692,13 +692,18 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $location, $route, clock, queues, users, page, queuePositions, debounce) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr', function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
 
         page.title = $scope.queue.title || 'Queue';
+
+        // TODO Everything has not been loaded yet
+        $timeout(function () {
+            $scope.queuePosNr = getQueuePosNr;
+        }, 1000);
 
         $scope.getUser = function (userName) {
             return users.get(userName);
@@ -1024,13 +1029,13 @@
     qwait.factory('getQueuePosNr', function () {
         return function (name, positions) {
             var sortedPositions = positions.sort(function (a, b) {
-                return(a.id - b.id);
+                return(a.startTime - b.startTime);
             });
 
             for (var i = 0; i < sortedPositions.length; i++) {
                 var pos = sortedPositions[i];
 
-                if (pos.account.principalName == name)
+                if (pos.userName == name)
                     return i + 1;
             }
 
