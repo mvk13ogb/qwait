@@ -23,8 +23,9 @@
                 templateUrl: 'partial/admin.html',
                 controller: 'AdminCtrl'
             }).
-            when('/error', {
+            when('/error/:errorMsg', {
                 templateUrl: 'partial/error.html',
+                controller: 'ErrorCtrl',
             }).
             otherwise({
                 redirectTo: '/'
@@ -689,7 +690,7 @@
         if (queues.contains($route.current.params.queueName, currentQueues)){
             $scope.queue = queues.get($route.current.params.queueName);
         } else if (queueList.length != 0) {
-            $location.path('/error')
+            $location.path('/error/404')
         } else {
             $scope.queue = queues.get($route.current.params.queueName);
         }
@@ -718,6 +719,16 @@
             });
         };
     }]);
+
+    qwait.controller('ErrorCtrl', ['$scope', '$timeout', '$routeParams', 'page', function ($scope, $timeout, $routeParams, page) {
+            page.title = 'Error ' + $routeParams.errorMsg;
+            //TODO maybe encode the url to hide the numbers?
+            if ($routeParams.errorMsg == 404) {
+                $scope.error = "Error 404: Queue was not found";
+            } else {
+            $scope.error = "Unknown error";
+            }
+        }]);
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
