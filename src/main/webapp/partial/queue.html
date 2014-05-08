@@ -51,7 +51,7 @@
                 </form>
               </div>
               <div ng-show="!userQueuePos(users.current, queue.positions)">
-                <form name="locationplaceholderform">
+                <form name="locationplaceholderform" ng-submit="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
                   <input type="text"
                          name="input"
                          ng-model="locationplaceholder"
@@ -77,7 +77,7 @@
                 </form>
             </div>
             <div ng-show="!userQueuePos(users.current, queue.positions)">
-              <form name="commentplaceholderform">
+              <form name="commentplaceholderform" ng-submit="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
                 <input type="text"
                        ng-model="commentplaceholder"
                        maxlength="20"/>
