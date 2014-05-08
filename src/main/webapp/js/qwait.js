@@ -692,13 +692,21 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $location, $route, clock, queues, users, page, queuePositions, debounce) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
-
-        page.title = $scope.queue.title || 'Queue';
+        var temp = getQueuePosNr;
+        $timeout(function () {
+            $scope.queuePosNr = function () {
+                var i = temp(users.current.name, $scope.queue.positions);
+                page.title = i ? (' [' + i + '] ' + $scope.queue.title || 'Queue') : 
+                    ($scope.queue.title || 'Queue');
+                return i;
+            }
+        }, 500);
 
         $scope.getUser = function (userName) {
             return users.get(userName);
@@ -1024,13 +1032,13 @@
     qwait.factory('getQueuePosNr', function () {
         return function (name, positions) {
             var sortedPositions = positions.sort(function (a, b) {
-                return(a.id - b.id);
+                return(a.startTime - b.startTime);
             });
 
             for (var i = 0; i < sortedPositions.length; i++) {
                 var pos = sortedPositions[i];
 
-                if (pos.account.principalName == name)
+                if (pos.userName == name)
                     return i + 1;
             }
 
@@ -1038,7 +1046,7 @@
         }
     });
 
-    //This function returns the official color of the computer lab. 
+    //This function returns the official color of the computer lab.
     //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
     qwait.filter('getComputerColor', function () {
         return function (location) {

@@ -5,7 +5,7 @@
     </span>
   </h2>
   <h5 ng-show="userQueuePos(users.current, queue.positions)">
-    Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
+    Your position: {{queuePosNr()}}
   </h5>
   <p ng-hide="queue.positions.length > 0">This queue is empty</p>
 
@@ -268,7 +268,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
-              <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
+              <td width="1">{{$index + 1}}</td>
               <td>
                 {{getUser(position.userName).readableName}}
                 <span ng-show="users.current.admin" ng-controller="removeUserModalCtrl">
