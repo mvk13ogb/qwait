@@ -700,10 +700,7 @@
 
         page.title = $scope.queue.title || 'Queue';
 
-        // TODO Everything has not been loaded yet
-        $timeout(function () {
-            $scope.queuePosNr = getQueuePosNr;
-        }, 1000);
+        $scope.queuePosNr = getQueuePosNr;
 
         $scope.getUser = function (userName) {
             return users.get(userName);
