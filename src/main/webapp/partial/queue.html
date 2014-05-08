@@ -107,7 +107,7 @@
             Leave queue
           </button>
         </div>
-        <div ng-show="users.current.admin" class="row collapse">
+        <div ng-show="canModerateQueue(users.current, queue)" class="row collapse">
           <div class="small-12 columns">
             <a dropdown-toggle="#manage-queue" class="button secondary dropdown expand">
               Manage queue
@@ -165,7 +165,7 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button secondary small" style="margin-bottom: 0;">
                       <span class="size-14">Hide&nbsp;</span>
@@ -179,7 +179,7 @@
                 </ul>
               </div>
 
-              <ul ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
+              <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button secondary small" style="margin-bottom: 0;">
                     <span class="size-14">Unhide</span>
@@ -212,8 +212,7 @@
                     </button>
                   </li>
                   <li>
-                    <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" 
-                            style="margin-bottom: 0;">
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
                       <i class="fi-x size-14"></i>
                     </button>
                   </li>
@@ -234,7 +233,7 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button secondary small" style="margin-bottom: 0;">
                       <span class="size-14">Delete</span>
