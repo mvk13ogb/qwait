@@ -692,13 +692,15 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $location, $route, clock, queues, users, page, queuePositions, debounce) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$filter', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $location, $route, $filter, clock, queues, users, page, queuePositions, debounce) {
 
         $scope.queues = queues;
-        $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
 
         page.title = $scope.queue.title || 'Queue';
+
+        $scope.users = users;
+        $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
 
         $scope.getUser = function (userName) {
             return users.get(userName);
