@@ -29,12 +29,12 @@
       </div>
 
       <div class="grey-panel text-center" ng-show="!users.current.anonymous && queue.locked">
-        <i class="fi-lock size-48"></i>
+        <i class="fi-lock red size-48"></i>
         <p>This queue is locked, and can't be entered</p>
       </div>
 
       <div ng-show="!users.current.anonymous">
-        <label>
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
           Location
           <div class="row collapse">
             <div class="small-12 columns">
@@ -64,7 +64,7 @@
             </div>
           </div>
         </label>
-        <label>
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
           Comment
           <div class="row collapse">
             <div class="small-12 columns">
