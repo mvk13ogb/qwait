@@ -699,12 +699,14 @@
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
         var temp = getQueuePosNr;
-
-        $timeout(function() {
-          $scope.queuePosNr = temp(users.current.name, $scope.queue.positions);
-          page.title = ($scope.queue.title || 'Queue') + ' [' + $scope.queuePosNr + ']';
-        },500);
-
+        $timeout(function () {
+            $scope.queuePosNr = function () {
+                var i = temp(users.current.name, $scope.queue.positions);
+                page.title = i ? (' [' + i + ']' + $scope.queue.title || 'Queue') : 
+                    ($scope.queue.title || 'Queue');
+                return i;
+            }
+        }, 500);
 
         $scope.getUser = function (userName) {
             return users.get(userName);
