@@ -6,13 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
-import se.kth.csc.payload.AccountSnapshot;
-import se.kth.csc.payload.QueueParameters;
-import se.kth.csc.payload.QueuePositionSnapshot;
-import se.kth.csc.payload.QueueSnapshot;
+import se.kth.csc.payload.api.AccountSnapshot;
+import se.kth.csc.payload.api.QueueParameters;
+import se.kth.csc.payload.api.QueuePositionSnapshot;
+import se.kth.csc.payload.api.QueueSnapshot;
 import se.kth.csc.persist.AccountStore;
 import se.kth.csc.persist.QueuePositionStore;
 import se.kth.csc.persist.QueueStore;
@@ -22,13 +23,13 @@ import java.security.Principal;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class ApiControllerTest {
     private AccountStore accountStore;
     private QueueStore queueStore;
     private QueuePositionStore queuePositionStore;
+    private SimpMessagingTemplate simpMessagingTemplate;
     private ApiController apiController;
 
     @Before
@@ -36,8 +37,9 @@ public class ApiControllerTest {
         accountStore = mock(AccountStore.class);
         queueStore = mock(QueueStore.class);
         queuePositionStore = mock(QueuePositionStore.class);
+        simpMessagingTemplate = mock(SimpMessagingTemplate.class);
 
-        apiController = new ApiController(new ApiProviderImpl(accountStore, queueStore, queuePositionStore));
+        apiController = new ApiController(new ApiProviderImpl(accountStore, queueStore, queuePositionStore, simpMessagingTemplate));
     }
 
     @Test
@@ -225,8 +227,8 @@ public class ApiControllerTest {
 
         QueuePositionSnapshot actual = apiController.getQueuePosition(queueName, userName);
 
-        assertEquals(queueName, actual.getQueue().getName());
-        assertEquals(userName, actual.getUser().getName());
+        assertEquals(queueName, actual.getQueueName());
+        assertEquals(userName, actual.getUserName());
     }
 
     @Test(expected = NotFoundException.class)
@@ -309,7 +311,9 @@ public class ApiControllerTest {
     public void testDeleteQueuePosition() throws NotFoundException {
         String queueName = "testqueue";
         String userName = "testuser";
-        QueuePosition queuePosition = mock(QueuePosition.class);
+        QueuePosition queuePosition = mock(QueuePosition.class, RETURNS_DEEP_STUBS);
+        when(queuePosition.getAccount().getPrincipalName()).thenReturn(userName);
+        when(queuePosition.getQueue().getName()).thenReturn(queueName);
 
         when(queuePositionStore.fetchQueuePositionWithQueueAndUser(queueName, userName)).thenReturn(queuePosition);
 

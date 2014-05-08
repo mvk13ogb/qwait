@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import se.kth.csc.model.Account;
 import se.kth.csc.persist.AccountStore;
-
 import java.security.Principal;
+import org.springframework.ui.Model;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Controls the home page.
@@ -35,35 +39,25 @@ public class HomeController {
      * The welcome page of the web application
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String welcome(Principal principal){
-        if (principal != null) {
-            return "redirect:/queue";
-        } else {
-            return "welcome";
+    public String index(HttpServletRequest request, Model model) {
+
+        String hostName = "";
+        try {
+            hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
+        } catch (UnknownHostException e){
+            log.info("Hostname error:" + e.getMessage());
         }
-    }
 
-    /**
-     * The about page of the web application.
-     */
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String index() {
-        return "home";
-    }
+        model.addAttribute("hostName", hostName);
 
-    /**
-     * The help page of the web application
-     */
-    @RequestMapping(value = "/help", method = RequestMethod.GET)
-    public String help(){
-        return "help";
+        return "index";
     }
 
     /**
      * The debug page of the web application
      */
     @RequestMapping(value = "/debug", method = RequestMethod.GET)
-    public String debug(){
+    public String debug() {
         return "debug";
     }
 
@@ -107,7 +101,7 @@ public class HomeController {
 
     // Used to enforce authentication when logging in from welcome page
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
-    public String loginRedirect() {
-        return "redirect:/queue";
+    public String login() {
+        return "redirect:/";
     }
 }

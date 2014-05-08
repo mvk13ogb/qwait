@@ -1,0 +1,71 @@
+<div>
+  <h1>Queues</h1>
+  <div class="row collapse">
+    <div class="medium-3 columns">
+      <div ng-if="users.current.admin">
+        <form ng-submit="queues.validateForm(queueName, queues); queueName = ''">
+          <div class="row collapse">
+            <div class="small-9 columns">
+              <input type="text" ng-model="queueName" minlength="1" maxlength="30" required="required"
+                     placeholder="New queue name"/>
+
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" ng-disabled="queues.contains(queueName, queues)" class="button button-success postfix radius"
+                      style="margin-bottom: 0;">
+                <i class="fi-plus white-icon size-16"></i>
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="medium-3 columns pull-right">
+      <input type="text" class="search" ng-model="search.title" placeholder="Find queues"/>
+    </div>
+  </div>
+  <div class="radius queue-row"
+       ng-repeat="queue in queues.all|arrayify|queuesSeenBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
+    <div class="row">
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-8': !canModerateQueue(users.current, queue)}">
+        <h3><a href="#/queue/{{queue.name}}">
+          <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+            {{queue.title}}
+          </span>
+        </a></h3>
+        <p style="margin-bottom: 0">
+          <ng-pluralize count="queue.positions.length"
+                        when="{'0': 'Nobody queueing.', 'one': 'One person queueing.', 'other': '{} people queueing.'}">
+          </ng-pluralize>
+          <span ng-if="userQueuePos(users.current, queue.positions)">
+            (You: {{timeDiff(userQueuePos(users.current, queue.positions).startTime)}},
+            {{queue.positions.indexOf(userQueuePos(users.current, queue.positions))}} ahead of you)
+          </span>
+        </p>
+      </div>
+      <div class="columns" ng-class="{'medium-6': canModerateQueue(users.current, queue), 'medium-4': !canModerateQueue(users.current, queue)}">
+        <div class=" right">
+          <span class="size-36" ng-if="canModerateQueue(users.current, queue)" style="vertical-align: middle">
+            <i class="fi-unlock green" ng-show="!queue.locked"></i>
+            <i class="fi-lock red" ng-show="queue.locked"></i>
+            <i class="fi-eye green" ng-show="!queue.hidden"></i>
+            <i class="fi-eye red" ng-show="queue.hidden"></i>
+          </span>
+          <button ng-show="!users.current.anonymous && !userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked" type="button"
+                  class="button large"
+                  ng-click="joinQueue(queue.name, users.current.name)"
+                  style="margin-bottom: 0;">
+            Join
+          </button>
+
+          <button ng-show="userQueuePos(users.current, queue.positions)" type="button" class="button large"
+                  ng-click="queues.leaveQueue(queue.name, users.current.name)" style="margin-bottom: 0;">
+            Leave
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

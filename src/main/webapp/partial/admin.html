@@ -1,0 +1,52 @@
+<div>
+  <h1>Administration</h1>
+
+  <p>
+    Please be careful on this page; here, you have the power to change anything.
+  </p>
+
+  <h2>Administrators</h2>
+
+  <form class="row collapse" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true)">
+    <div class="small-9 columns">
+      <input type="text" ng-model="admin" required="required"
+             placeholder="New administrator"
+             typeahead="user as user.readableName + '(' + user.name + ')' for user in find($viewValue) | limitTo:8"
+             class="form-control" typeahead-loading="loadingLocations"/>
+
+             <i ng-show="loadingLocations" class="fi-clock black-icon size-24"></i>
+    </div>
+    <div class="small-3 columns">
+      <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+              style="margin-bottom: 0;">
+        <i class="fi-plus white-icon size-16"></i>
+        Add
+      </button>
+    </div>
+  </form>
+  <div class="row collapse">
+    <div class="small-6 columns">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Readable name</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="admin in users.admins">
+            <td>{{admin.name}}</td>
+            <td>{{admin.readableName}}</td>
+            <td>
+              <button ng-if="users.admins.length > 1" ng-click="users.setAdmin(admin.name, false, users.current.name)" type="button" class="tiny alert"
+                      style="margin-bottom: 0;">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

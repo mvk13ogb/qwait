@@ -1,0 +1,345 @@
+<div>
+  <h2>
+    <span ng-class="{'strike': queue.hidden, 'red': queue.locked}">
+      {{queue.title}}
+    </span>
+  </h2>
+  <h5 ng-show="userQueuePos(users.current, queue.positions)">
+    Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
+  </h5>
+  <p ng-hide="queue.positions.length > 0">This queue is empty</p>
+
+  <div ng-show="queue.positions.length > 0" class="row collapse">
+    <div class="large-3 large-offset-9 columns">
+      <input type="text" class="search" ng-model="search" placeholder="Find users"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="large-3 columns">
+
+      <div class="grey-panel" ng-show="users.current.anonymous">
+        <div class="text-center">
+          <i class="fi-alert size-48"></i>
+          <p>In order to queue, you must first log in.</p>
+        </div>
+        <a href="/login" class="button expand">
+          Log in
+        </a>
+      </div>
+
+      <div class="grey-panel text-center" ng-show="!users.current.anonymous && queue.locked">
+        <i class="fi-lock red size-48"></i>
+        <p>This queue is locked, and can't be entered</p>
+      </div>
+
+      <div ng-show="!users.current.anonymous">
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
+          Location
+          <div class="row collapse">
+            <div class="small-12 columns">
+              <div ng-show="userQueuePos(users.current, queue.positions)">
+                <form name="locationform">
+                  <input type="text"
+                         name="input"
+                         ng-model="userQueuePos(users.current, queue.positions).location"
+                         ng-change="changeLocationDebounced(locationform, queue.name, users.current.name, userQueuePos(users.current, queue.positions).location)"
+                         ng-class="{error: locationform.input.$error.required}"
+                         maxlength="20"
+                         ng-required="true"/>
+                  <small ng-show="locationform.input.$error.required" class="error">Required</small>
+                </form>
+              </div>
+              <div ng-show="!userQueuePos(users.current, queue.positions)">
+                <form name="locationplaceholderform">
+                  <input type="text"
+                         name="input"
+                         ng-model="locationplaceholder"
+                         ng-class="{error: locationplaceholderform.input.$error.required}"
+                         maxlength="20"
+                         ng-required="true"/>
+                  <small ng-show="locationplaceholderform.input.$error.required" class="error">Required</small>
+                </form>
+              </div>
+            </div>
+          </div>
+        </label>
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
+          Comment
+          <div class="row collapse">
+            <div class="small-12 columns">
+              <div ng-show="userQueuePos(users.current, queue.positions)">
+                <form name="commentform">
+                  <input type="text"
+                         ng-model="userQueuePos(users.current, queue.positions).comment"
+                         ng-change="changeCommentDebounced(commentform, queue.name, users.current.name, userQueuePos(users.current, queue.positions).comment)"
+                         maxlength="20"/>
+                </form>
+            </div>
+            <div ng-show="!userQueuePos(users.current, queue.positions)">
+              <form name="commentplaceholderform">
+                <input type="text"
+                       ng-model="commentplaceholder"
+                       maxlength="20"/>
+              </form>
+            </div>
+            </div>
+          </div>
+        </label>
+        <div class="row collapse">
+          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked">
+            <button ng-show="locationplaceholder" class="expand"
+                    ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
+              <i class="fi-plus"></i>
+              Join queue
+            </button>
+
+            <button ng-show="!locationplaceholder" class="expand disabled"
+                    tooltip="In order to queue, you need to enter your location."
+                    tooltip-placement="bottom" tooltip-trigger="focus">
+              <i class="fi-plus"></i>
+                Join queue
+            </button>
+          </div>
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand"
+                  ng-click="queues.leaveQueue(queue.name, users.current.name)">
+            <i class="fi-x"></i>
+            Leave queue
+          </button>
+        </div>
+        <div ng-show="users.current.admin" class="row collapse">
+          <div class="small-12 columns">
+            <a dropdown-toggle="#manage-queue" class="button secondary dropdown expand">
+              Manage queue
+            </a>
+            <div id="manage-queue" class="medium f-dropdown content">
+              <div ng-show="!queue.locked" ng-controller="lockQueueModalCtrl">
+                <script type="text/ng-template" id="lockQueueModalContent.html">
+                  <h2>Lock queue {{queue.title}}</h2>
+                  <p>This will make users unable to join the queue.</p>
+
+                  <button class="alert" ng-click="queues.setLocked(queue.name, true); ok()">
+                    <i class="fi-lock"></i>
+                    Lock
+                  </button>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Lock&nbsp;</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
+                      <i class="fi-lock size-14"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <ul ng-show="queue.locked" ng-click="queues.setLocked(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
+                <li>
+                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                    <span class="size-14">Unlock</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="button small success" style="margin-bottom: 0;">
+                    <i class="fi-unlock size-14"></i>
+                  </button>
+                </li>
+              </ul>
+
+              <div ng-show="!queue.hidden" ng-controller="hideQueueModalCtrl">
+                <script type="text/ng-template" id="hideQueueModalContent.html">
+                  <h2>Hide queue {{queue.title}}</h2>
+                  <p>This will clear, lock and hide the queue, making it invisible in the queue list.</p>
+
+                  <button class="alert" ng-click="queues.setHidden(queue.name, true); ok()">
+                    <i class="fi-eye"></i>
+                    Hide
+                  </button>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Hide&nbsp;</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
+                      <i class="fi-eye size-14"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <ul ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
+                <li>
+                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                    <span class="size-14">Unhide</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="button small success" style="margin-bottom: 0;">
+                    <i class="fi-eye size-14"></i>
+                  </button>
+                </li>
+              </ul>
+
+              <div ng-controller="clearQueueModalCtrl">
+                <script type="text/ng-template" id="clearQueueModalContent.html">
+                  <h2>Clear queue {{queue.title}}</h2>
+                  <p>This will remove all users from the queue.</p>
+
+                  <button class="alert" ng-click="queues.clearQueue(queue.name, false); ok()">
+                    <i class="fi-x"></i>
+                    Clear
+                  </button>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Clear</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" ng-click="queues.clearQueue(queue.name)" 
+                            style="margin-bottom: 0;">
+                      <i class="fi-x size-14"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <div ng-controller="deleteQueueModalCtrl">
+
+                <script type="text/ng-template" id="deleteQueueModalContent.html">
+                  <h2>Delete queue {{queue.title}}</h2>
+                  <p>This will permanently delete the queue. Are you sure?</p>
+
+                  <button class="alert" ng-click="deleteQueue(queue.name); ok()">
+                    <i class="fi-trash"></i>
+                    Delete
+                  </button>
+                  <button class="secondary" ng-click="cancel()">Back</button>
+                  <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                </script>
+
+                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
+                  <li>
+                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
+                      <span class="size-14">Delete</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="button small alert" style="margin-bottom: 0;">
+                      <i class="fi-trash size-14"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="large-9 columns" ng-show="queue.positions.length > 0">
+      <div class="row collapse">
+        <table class="small-12 columns">
+          <thead>
+            <tr>
+              <th width="1">#</th>
+              <th>User</th>
+              <th>Time</th>
+              <th width="1"></th>
+              <th>Location</th>
+              <th>Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
+              <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
+              <td>
+                {{getUser(position.userName).readableName}}
+                <span ng-show="users.current.admin" ng-controller="removeUserModalCtrl">
+                  <script type="text/ng-template" id="removeUserModalContent.html">
+                    <h3>Remove {{position.userName}} from {{queue.title}}</h3>
+                    <p>This will remove the user from the queue.</p>
+                    <button class="alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">
+                      <i class="fi-x"></i>
+                      Remove
+                    </button>
+                    <button class="secondary" ng-click="cancel()">Back</button>
+                    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                  </script>
+
+                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18">
+                    <i class="fi-x"></i>
+                  </a>
+                  <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
+                    <li>
+                      <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
+                        <span class="size-14">
+                          Remove
+                        </span>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
+                        <i class="fi-x size-14"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </span>
+              </td>
+              <td>{{timeDiff(position.startTime)}}</td>
+              <td>
+                <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
+              </td>
+              <td ng-hide="editingLocation">
+                {{position.location}}
+                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
+                  <i class="fi-pencil"></i>
+                </button>
+              </td>
+              <td ng-show="editingLocation">
+                <form
+                    ng-submit="queues.changeLocation(queue.name, users.current.name, position.location); editingLocation = false">
+                  <input type="text" maxlength="20" style="margin-bottom: 0;"
+                         ng-model="position.location"
+                         ng-change="queues.changeLocation(queue.name, users.current.name, position.location)"/>
+                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                </form>
+              </td>
+              <td ng-hide="editingComment">
+                {{position.comment}}
+                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingComment = true">
+                  <i class="fi-pencil"></i>
+                </button>
+              </td>
+              <td ng-show="editingComment">
+                <form
+                    ng-submit="queues.changeComment(queue.name, users.current.name, position.comment); editingComment = false">
+                  <input type="text" maxlength="20" style="margin-bottom: 0;"
+                         ng-model="position.comment"
+                         ng-change="queues.changeComment(queue.name, users.current.name, position.comment)"/>
+                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
