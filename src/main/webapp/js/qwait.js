@@ -692,15 +692,15 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr', function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
+        $scope.queuePosNr = getQueuePosNr(users.current.name, $scope.queue.positions);
 
-        page.title = $scope.queue.title || 'Queue';
-
-        $scope.queuePosNr = getQueuePosNr;
+        page.title = ($scope.queue.title || 'Queue') + ' [' + $scope.queuePosNr + ']';
 
         $scope.getUser = function (userName) {
             return users.get(userName);
@@ -1040,7 +1040,7 @@
         }
     });
 
-    //This function returns the official color of the computer lab. 
+    //This function returns the official color of the computer lab.
     //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
     qwait.filter('getComputerColor', function () {
         return function (location) {
