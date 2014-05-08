@@ -692,12 +692,20 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$filter', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', function ($scope, $location, $route, $filter, clock, queues, users, page, queuePositions, debounce) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, $filter, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.queue = queues.get($route.current.params.queueName);
-
-        page.title = $scope.queue.title || 'Queue';
+        var temp = getQueuePosNr;
+        $timeout(function () {
+            $scope.queuePosNr = function () {
+                var i = temp(users.current.name, $scope.queue.positions);
+                page.title = i ? (' [' + i + '] ' + $scope.queue.title || 'Queue') : 
+                    ($scope.queue.title || 'Queue');
+                return i;
+            }
+        }, 500);
 
         $scope.users = users;
         $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
@@ -726,19 +734,22 @@
         }, wait, false);
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
-            queues.joinQueue(name, user);
+            if(location != null){
 
-            //HACK, places a timeout so we have time to join the queue
-            setTimeout(function() {
+                queues.joinQueue(name, user);
 
-                if(locationform.$valid){
-                    queues.changeLocation(name, user, location);
-                }
+                //HACK, places a timeout so we have time to join the queue
+                setTimeout(function() {
 
-                if(commentform.$valid){
-                    queues.changeComment(name, user, comment);
-                }
-            }, 500);
+                    if(locationform.$valid){
+                        queues.changeLocation(name, user, location);
+                    }
+
+                    if(commentform.$valid){
+                        queues.changeComment(name, user, comment);
+                    }
+                }, 500);
+            }
         }, 200, true);
     }]);
 
@@ -1026,13 +1037,13 @@
     qwait.factory('getQueuePosNr', function () {
         return function (name, positions) {
             var sortedPositions = positions.sort(function (a, b) {
-                return(a.id - b.id);
+                return(a.startTime - b.startTime);
             });
 
             for (var i = 0; i < sortedPositions.length; i++) {
                 var pos = sortedPositions[i];
 
-                if (pos.account.principalName == name)
+                if (pos.userName == name)
                     return i + 1;
             }
 
@@ -1040,7 +1051,7 @@
         }
     });
 
-    //This function returns the official color of the computer lab. 
+    //This function returns the official color of the computer lab.
     //In the cases where we return the hex color, it's because KTHs color doesn't match the CSS definition
     qwait.filter('getComputerColor', function () {
         return function (location) {

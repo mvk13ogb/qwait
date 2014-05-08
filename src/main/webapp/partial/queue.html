@@ -5,7 +5,7 @@
     </span>
   </h2>
   <h5 ng-show="userQueuePos(users.current, queue.positions)">
-    Your position: {{queue.positions.indexOf(userQueuePos(users.current, queue.positions)) + 1}}
+    Your position: {{queuePosNr()}}
   </h5>
   <p ng-hide="queue.positions.length > 0">This queue is empty</p>
 
@@ -51,7 +51,7 @@
                 </form>
               </div>
               <div ng-show="!userQueuePos(users.current, queue.positions)">
-                <form name="locationplaceholderform">
+                <form name="locationplaceholderform" ng-submit="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
                   <input type="text"
                          name="input"
                          ng-model="locationplaceholder"
@@ -77,7 +77,7 @@
                 </form>
             </div>
             <div ng-show="!userQueuePos(users.current, queue.positions)">
-              <form name="commentplaceholderform">
+              <form name="commentplaceholderform" ng-submit="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
                 <input type="text"
                        ng-model="commentplaceholder"
                        maxlength="20"/>
@@ -268,7 +268,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
-              <td width="1">{{queue.positions.indexOf(position) + 1}}</td>
+              <td width="1">{{$index + 1}}</td>
               <td>
                 {{getUser(position.userName).readableName}}
                 <span ng-show="users.current.admin" ng-controller="removeUserModalCtrl">
