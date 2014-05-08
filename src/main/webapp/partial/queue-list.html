@@ -46,7 +46,7 @@
           <span ng-if="userQueuePos(users.current, queue.positions)">
             <i class="fi-torso size-36" style="vertical-align: middle"></i>
             <span class="size-24" style="vertical-align: middle">
-              {{queue.positions.indexOf(userQueuePos(users.current, queue.positions))+1}}/{{queue.positions.length}}
+              {{queuePos(users.current.name, queue.positions)}}/{{queue.positions.length}}
             </span>
           </span>
           <span ng-if="!userQueuePos(users.current, queue.positions)">
