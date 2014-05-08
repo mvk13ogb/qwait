@@ -762,7 +762,7 @@
     }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, '$filter', clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+            function ($scope, $location, $route, $timeout, $filter, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.queues = queues;
