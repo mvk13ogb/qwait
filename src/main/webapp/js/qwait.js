@@ -744,11 +744,13 @@
         $scope.contributors = contributors;
     }]);
 
-    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', function ($scope, $location, page, clock, queues, users, security, queuePositions) {
+    qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', 'getQueuePosNr',
+            function ($scope, $location, page, clock, queues, users, security, queuePositions, getQueuePosNr) {
         page.title = 'Queues';
 
         $scope.users = users;
         $scope.queues = queues;
+        $scope.queuePos = getQueuePosNr;
 
         $scope.canModerateQueue = security.canModerateQueue;
         $scope.userQueuePos = queuePositions.getUserQueuePos;
