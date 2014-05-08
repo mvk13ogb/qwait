@@ -692,15 +692,19 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', 'clock', 'queues', 'users', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, clock, queues, users, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queues = queues;
         $scope.users = users;
         $scope.queue = queues.get($route.current.params.queueName);
-        $scope.queuePosNr = getQueuePosNr(users.current.name, $scope.queue.positions);
+        var temp = getQueuePosNr;
 
-        page.title = ($scope.queue.title || 'Queue') + ' [' + $scope.queuePosNr + ']';
+        $timeout(function() {
+          $scope.queuePosNr = temp(users.current.name, $scope.queue.positions);
+          page.title = ($scope.queue.title || 'Queue') + ' [' + $scope.queuePosNr + ']';
+        },500);
+
 
         $scope.getUser = function (userName) {
             return users.get(userName);
