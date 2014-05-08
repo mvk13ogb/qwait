@@ -33,7 +33,8 @@
             readableName: /*[[${anonymous} ? null : ${#authentication.userDetails.name}]]*/ null,
             admin: /*[[${#authorization.expression("hasRole('admin')")}]]*/ false,
             roles: /*[[${#authentication.authorities.![authority]}]]*/ [],
-            anonymous: /*[[${anonymous}]]*/ true
+            anonymous: /*[[${anonymous}]]*/ true,
+            hostName: /*[[${hostName}]]*/ null
           },
           product: {
             name: /*[[#{product.name}]]*/ 'QWait',
