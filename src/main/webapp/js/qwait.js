@@ -702,7 +702,7 @@
         $timeout(function () {
             $scope.queuePosNr = function () {
                 var i = temp(users.current.name, $scope.queue.positions);
-                page.title = i ? (' [' + i + ']' + $scope.queue.title || 'Queue') : 
+                page.title = i ? (' [' + i + '] ' + $scope.queue.title || 'Queue') : 
                     ($scope.queue.title || 'Queue');
                 return i;
             }
