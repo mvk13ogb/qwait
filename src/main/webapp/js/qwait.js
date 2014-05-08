@@ -851,20 +851,17 @@
             }
         };
 
-        // The current user may not have been loaded yet
-        $timeout(function () {
-            var ownedQueues = users.current.ownedQueues;
+        var ownedQueues = users.current.ownedQueues;
 
-            $scope.ownedQueues = [];
-            if (ownedQueues) {
-                for (var i=0; i<ownedQueues.length; i++) {
-                    // Fetch the queues of the current user
-                    $scope.ownedQueues.push(queues.get(ownedQueues[i]));
-                }
-            } else {
-                console.log("Current user was not loaded");
+        $scope.ownedQueues = [];
+        if (ownedQueues) {
+            for (var i=0; i<ownedQueues.length; i++) {
+                // Fetch the queues of the current user
+                $scope.ownedQueues.push(queues.get(ownedQueues[i]));
             }
-        }, 500);
+        } else {
+            console.log("Current user was not loaded");
+        }
     }]);
 
     qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {

@@ -27,7 +27,7 @@
     </form>
   </div>
 
-  <div class="row collapse">
+  <div ng-if="users.current.admin" class="row collapse">
     <div class="small-6 columns">
       <table ng-show="users.admins.length">
         <thead>
