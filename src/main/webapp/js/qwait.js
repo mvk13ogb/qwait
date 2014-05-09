@@ -784,7 +784,6 @@
             }
         }, 500);
 
-        $scope.queue = queues.get($route.current.params.queueName);
         $scope.userQueuePos = queuePositions.getUserQueuePos;
 
         $scope.getUser = function (userName) {
@@ -816,7 +815,7 @@
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
             if(locationform.$valid){
-                if (users.get(userName).queuePositions.length != 0) {
+                if (users.get(user).queuePositions.length != 0) {
                     $scope.open = function () {
                         var modalInstance = $modal.open({
                             templateUrl: 'confirmationModal.html',
@@ -826,10 +825,10 @@
                                     return users.current.queuePositions;
                                 },
                                 queueName: function () {
-                                    return queueName;
+                                    return name;
                                 },
                                 userName: function () {
-                                    return userName;
+                                    return user;
                                 }
                             }
                         });
