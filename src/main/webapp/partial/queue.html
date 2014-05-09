@@ -345,7 +345,7 @@
   <script type="text/ng-template" id="confirmationModal.html">
     <h3>Confirm</h3>
     <p>You are currently queueing in the following queue<ng-pluralize count="queuePositions.length"
-                     when="{'0': 'No queues', 'one': ':', 'other': 's:'}">
+                     when="{'one': ':', 'other': 's:'}">
     </ng-pluralize></p>
     <ul>
       <li ng-repeat="queuePosition in queuePositions">
