@@ -1,4 +1,36 @@
-<div>
+<!-- Not logged in user -->
+<div class="panel" ng-if="users.current.anonymous">
+  <h1>Not logged in user</h1>
+  You are not logged in. If you only want to view a queue, that's cool, but to
+  be able to enter a queue, you will need to <a href="/login">log in</a>.
+
+  <h4>Viewing a queue</h4>
+  TODO
+</div>
+
+<!-- Logged in user without any moderator/admin/queue owner privileges -->
+<div class="panel" ng-if="!users.current.anonymous">
   <h1>Help</h1>
   Coming soon.
+</div>
+
+<!-- Admin -->
+<div class="panel" ng-if="users.current.admin">
+  <h2>Admin functions</h2>
+  <h4>Adding another administrator</h4>
+  TODO
+</div>
+
+<!-- Queue owner or admin -->
+<div class="panel" ng-if="users.current.ownedQueues.length || users.current.admin">
+  <h2>Queue owner functions</h2>
+  <h4>Adding another administrator</h4>
+  TODO
+</div>
+
+<!-- Moderator or admin -->
+<div class="panel" ng-if="users.current.moderatedQueues.length || users.current.admin">
+  <h2>Moderator functions</h2>
+  <h4>Adding another administrator</h4>
+  TODO
 </div>

@@ -685,8 +685,9 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HelpCtrl', ['$scope', 'page', function ($scope, page) {
+    qwait.controller('HelpCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
         page.title = 'Help';
+        $scope.users = users;
     }]);
 
     qwait.controller('AboutCtrl', ['$scope', 'system', 'page', 'contributors', function ($scope, system, page, contributors) {
