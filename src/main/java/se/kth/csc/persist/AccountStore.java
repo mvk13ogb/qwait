@@ -10,4 +10,6 @@ public interface AccountStore {
     public Account fetchNewestAccount();
 
     public void storeAccount(Account account);
+
+    public Iterable<Account> findAccounts(boolean onlyAdmin, String query);
 }

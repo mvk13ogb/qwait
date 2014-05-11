@@ -1,149 +1,129 @@
 @import "normalize";
 @import "settings";
 @import "foundation";
+@import "foundation/components/mixins";
+@import "compass/css3/images";
+@import "compass/css3/text-shadow";
+@import "compass/css3/box-shadow";
+@import "compass/css3/border-radius";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
 
-tr.active td{
-  background-color: rgba(0, 128, 218, 0.3);
-}
-
-h1 {
-  margin-top: 15px; 
+@mixin striped-bg($bg-color: #ccc, $darken-amount: 5%, $stripe-color: darken($bg-color, $darken-amount)) {
+  background-color: $bg-color;
+  @include background-image(linear-gradient(-45deg, $stripe-color 25%, transparent 25%, transparent 50%, $stripe-color 50%, $stripe-color 75%, transparent 75%, transparent));
+  background-size: 40px 40px;
 }
 
 .search {
-  @include form-element;
-  background: url('../icons/magnifying-glass.png') no-repeat;
+  background: url(../icons/magnifying-glass.png) no-repeat;
+  background-size: 25px 25px;
   background-position: right 3px center;
-  background-size: 24px 24px;
+}
+
+.red {
+  color: #F00;
+}
+
+.green {
+  color: #0C0;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.plain-panel {
+  @include panel(#FAFAFA);
+}
+
+.grey-panel{
+  @include panel(#333, 0.85rem);
+  color: white;
+}
+
+.active-panel {
+  @include panel(scale-color($primary-color, $lightness: 80%));
+}
+
+tr.active > td{
+  background: scale-color($primary-color, $lightness: 80%);
+}
+
+button.itsy, .button.itsy {
+  @include button-size($padding: $button-tny/2);
+}
+
+.queue-row.ng-enter, .queue-row.ng-move {
+  @include transition(0.5s);
+  @include opacity(0);
+}
+
+.queue-row.ng-enter.ng-enter-active,
+.queue-row.ng-move.ng-move-active {
+  @include opacity(1);
+}
+
+.queue-row.ng-leave {
+  -webkit-animation: 0.5s fade-out;
+  -moz-animation: 0.5s fade-out;
+  -o-animation: 0.5s fade-out;
+  animation: 0.5s fade-out;
 }
 
 .top-bar {
-  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-  overflow: hidden; //Overflows by one pixel in certain occasions
-}
-
-.top-absolute {
-  position: absolute !important;
-  margin-left: -72px !important;
-  left: 50%;
-  top: 4px;
+  overflow: hidden;
 }
 
 .top-logo {
   @include opacity(1);
   @include transition(300ms);
+  
+  background: url(../../images/qwait-topbar-logo.png);
+  background-size: 115px 30px;
+
+  width: 115px;
+  height: 30px;
+  margin: 8px;
+  display: inline-block;
 }
 
 .top-logo:hover {
   @include opacity(0.5);
 }
 
-.logo-small {
-  width: 115px;
-  height: 30px;
-  margin: 8px;
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-.button-bot-margin {
-  margin-bottom: 40px;
+@-webkit-keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-.no-bot-margin {
-  margin-bottom: 0px;
+@-moz-keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-.search-margin {
-  margin-top: 32px;
-}
-
-.alert-margin {
-  margin-top: 52px;
-}
-
-.add-queue-margin {
-  margin-top: 1.5em;
-}
-
-.small-top-margin {
-  margin-top: 4px;
-}
-
-.small-top-padding {
-  padding-top: 4px;
-}
-
-.bot-padding {
-  padding-bottom: 5px;
-}
-
-.menu-icon-padding {
-  padding-left: 3px;
-  padding-top: 2px;
-}
-
-.login-spacing {
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  margin-bottom: 12px;
-}
-
-.table-button-padding {
-  padding: 6px;
-}
-
-.icon-margin {
-  margin-right: 2px;
-}
-
-.middle {
-  vertical-align: middle;
-}
-
-//Used for not making the remove button wrap
-.remove-button {
-  min-width: 75px;
-}
-
-.tinier {
-  font-size: 0.7rem;
-  padding: 0.4rem 0rem 0.5em;
-}
-
-.location-indicator {
-  position: absolute; 
-  margin-left: -10px; 
-
-  border-bottom: 10px double transparent; 
-  border-left: 10px solid transparent; 
-}
-
-.admin-location-indicator {
-  margin-top: -13px;
-}
-
-.user-location-indicator {
-  margin-top: -9px;
-}
-
-.grey-background {
-  background-color: #333;
-  border-radius: 2px;
-}
-
-.green-icon {
-  color: #20C040;
-  text-shadow: 1px 1px #007000
-}
-
-.red-icon {
-  color: #F02020;
-  text-shadow: 1px 1px #B00000;
-}
-
-.white, .white-icon {
-  color: white;
-}
-
-.white-icon {
-  text-shadow: 1px 1px rgba(50, 50, 50, 0.8);
+@-o-keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

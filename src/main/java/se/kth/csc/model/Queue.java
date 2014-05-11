@@ -41,18 +41,18 @@ public class Queue {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "queue", cascade = CascadeType.ALL)
     private Set<QueuePosition> positions = Sets.newHashSet();
 
-    @Column(name = "active")
-    private boolean active;
+    @Column(name = "hidden")
+    private boolean hidden;
 
     @Column(name = "locked")
     private boolean locked;
 
-    public boolean isActive() {
-        return active;
+    public boolean isHidden() {
+        return hidden;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public boolean isLocked() {

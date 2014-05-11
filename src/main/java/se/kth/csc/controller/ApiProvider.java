@@ -4,20 +4,20 @@ import se.kth.csc.model.Account;
 import se.kth.csc.model.Queue;
 import se.kth.csc.model.QueuePosition;
 
-import java.util.List;
-
 public interface ApiProvider {
+    Iterable<Account> findAccounts(boolean onlyAdmin, String query);
+
     Account fetchAccount(String userName) throws NotFoundException;
 
     Queue fetchQueue(String queueName) throws NotFoundException;
 
-    List<Queue> fetchAllQueues();
+    Iterable<Queue> fetchAllQueues();
 
     QueuePosition fetchQueuePosition(String queueName, String userName);
 
     void createQueue(String queueName, Account owner, String title);
 
-    void setAdmin(Account account, boolean admin);
+    void setAdmin(Account account, boolean admin) throws ForbiddenException;
 
     void deleteQueue(Queue queue);
 
@@ -25,13 +25,13 @@ public interface ApiProvider {
 
     void deleteQueuePosition(QueuePosition queuePosition);
 
-    void setComment(QueuePosition queuePosition, String comment);
+    void setComment(QueuePosition queuePosition, String comment) throws BadRequestException;
 
-    void setLocation(QueuePosition queuePosition, String location);
+    void setLocation(QueuePosition queuePosition, String location) throws BadRequestException;
 
     void clearQueue(Queue queue);
 
-    void setActive(Queue queue, boolean active);
+    void setHidden(Queue queue, boolean hidden);
 
     void setLocked(Queue queue, boolean locked);
 

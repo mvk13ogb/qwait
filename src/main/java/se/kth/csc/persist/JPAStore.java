@@ -8,11 +8,7 @@ import se.kth.csc.model.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
-import java.util.LinkedList;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Repository
@@ -21,11 +17,6 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Override
-    public Queue fetchQueueWithId(int id) {
-        return entityManager.find(Queue.class, id);
-    }
 
     @Override
     public Queue fetchQueueWithName(String name) {
@@ -44,54 +35,6 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
         return entityManager.createQuery(q.select(q.from(Queue.class))).getResultList();
-    }
-
-    @Override
-    public List<String> fetchAllQueueNames() {
-        List<String> queueNames = new LinkedList<String>();
-        for (Queue queue : fetchAllQueues()) {
-            queueNames.add(queue.getName());
-        }
-        return queueNames;
-    }
-
-    @Override
-    public List<Queue> fetchAllActiveQueues() {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        Root<Queue> queueRoot = q.from(Queue.class);
-        q.select(queueRoot).where(queueRoot.get(Queue_.active));
-        return entityManager.createQuery(q).getResultList();
-    }
-
-    @Override
-    public List<Queue> fetchAllModeratedQueues(Account account) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        q.select(q.from(Queue.class));
-        List<Queue> list = entityManager.createQuery(q).getResultList();
-        List<Queue> tmpList = new LinkedList<Queue>();
-        for (Queue que : list) {
-            if (que.getModerators().contains(account)) {
-                tmpList.add(que);
-            }
-        }
-        return tmpList;
-    }
-
-    @Override
-    public List<Queue> fetchAllOwnedQueues(Account account) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Queue> q = cb.createQuery(Queue.class);
-        q.select(q.from(Queue.class));
-        List<Queue> list = entityManager.createQuery(q).getResultList();
-        List<Queue> tmpList = new LinkedList<Queue>();
-        for (Queue que : list) {
-            if (que.getOwners().contains(account)) {
-                tmpList.add(que);
-            }
-        }
-        return tmpList;
     }
 
     @Override
@@ -161,6 +104,37 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
     }
 
     @Override
+    public Iterable<Account> findAccounts(boolean onlyAdmin, String query) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Account> q = cb.createQuery(Account.class);
+        Root<Account> account = q.from(Account.class);
+
+        Expression<Boolean> expression = null;
+
+        if (onlyAdmin) {
+            // This looks like it could be replaced with account.get(Account_.admin), but it can't because of syntax
+            expression = cb.equal(account.get(Account_.admin), true);
+        }
+
+        if (query != null) {
+            Expression<Boolean> queryExpression =
+                    cb.like(cb.lower(account.get(Account_.name)), "%" + query.toLowerCase() + "%");
+
+            if (expression == null) {
+                expression = queryExpression;
+            } else {
+                expression = cb.and(expression, queryExpression);
+            }
+        }
+
+        if (expression != null) {
+            q.where(expression);
+        }
+
+        return entityManager.createQuery(q.select(account)).getResultList();
+    }
+
+    @Override
     public QueuePosition fetchQueuePositionWithId(int id) {
         return entityManager.find(QueuePosition.class, id);
     }
@@ -178,7 +152,7 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
             return entityManager.createQuery(
                     q.select(queuePosition)
                             .where(cb.and(cb.equal(queue.get(Queue_.name), queueName),
-                                    cb.equal(account.get(Account_.name), userName)))
+                                    cb.equal(account.get(Account_.principalName), userName)))
             ).getSingleResult();
         } catch (NoResultException e) {
             return null;
