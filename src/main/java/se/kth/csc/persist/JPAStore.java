@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -153,7 +152,7 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
             return entityManager.createQuery(
                     q.select(queuePosition)
                             .where(cb.and(cb.equal(queue.get(Queue_.name), queueName),
-                                    cb.equal(account.get(Account_.name), userName)))
+                                    cb.equal(account.get(Account_.principalName), userName)))
             ).getSingleResult();
         } catch (NoResultException e) {
             return null;
