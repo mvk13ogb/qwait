@@ -693,21 +693,21 @@
         }
     }]);
 
-    qwait.factory('debounce', function($timeout, $q) {
-        return function(func, wait, immediate) {
+    qwait.factory('debounce', function ($timeout, $q) {
+        return function (func, wait, immediate) {
             var timeout;
             var deferred = $q.defer();
-            return function() {
+            return function () {
                 var context = this, args = arguments;
-                var later = function() {
+                var later = function () {
                     timeout = null;
-                    if(!immediate) {
+                    if (!immediate) {
                       deferred.resolve(func.apply(context, args));
                       deferred = $q.defer();
                     }
                 };
                 var callNow = immediate && !timeout;
-                if ( timeout ) {
+                if (timeout) {
                     $timeout.cancel(timeout);
                 }
                 timeout = $timeout(later, wait);
@@ -829,6 +829,18 @@
                                 },
                                 userName: function () {
                                     return user;
+                                },
+                                location: function () {
+                                    return location;
+                                },
+                                locationform: function () {
+                                    return locationform;
+                                },
+                                comment: function () {
+                                    return comment;
+                                },
+                                commentform: function () {
+                                    return commentform;
                                 }
                             }
                         });
@@ -852,11 +864,25 @@
             }
         }, 200, true);
 
-        var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName, userName) {
+        var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName,
+                userName, location, locationform, comment, commentform) {
             var qp = queuePositions;
             $scope.queuePositions = qp;
+
             $scope.ok = function () {
                 queues.joinQueue(queueName, userName);
+
+                // HACK: Places a timeout so there is time to join the queue
+                setTimeout(function() {
+                    if(locationform.$valid){
+                        queues.changeLocation(queueName, userName, location);
+                    }
+
+                    if(commentform.$valid){
+                        queues.changeComment(queueName, userName, comment);
+                    }
+                }, 500);
+
                 $modalInstance.close();
             };
             $scope.cancel = function () {
