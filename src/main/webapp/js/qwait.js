@@ -1027,6 +1027,9 @@
                     },
                     position: function () {
                         return position;
+                    },
+                    users: function () {
+                        return $scope.users;
                     }
                 }
             });
@@ -1123,12 +1126,16 @@
         };
     };
 
-    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, position) {
+    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, position, users) {
 
         $scope.queue = queue;
         $scope.queues = queues;
         $scope.position = position;
+        $scope.users = users;
 
+        $scope.getUser = function (userName) {
+            return users.get(userName);
+        };
 
         $scope.ok = function () {
             $modalInstance.close();
