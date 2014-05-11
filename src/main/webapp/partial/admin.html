@@ -5,14 +5,14 @@
     Please be careful on this page; here, you have the power to change anything.
   </p>
 
-  <h2>Admin Administration</h2>
+  <h2>Admins</h2>
 
   <div class="row collapse" ng-if="users.current.admin">
     <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
       <div class="row collapse">
         <div class="small-10 columns">
           <input type="text" ng-model="admin" required="required"
-                 placeholder="New administrator"
+                 placeholder="Add admin"
                  typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
                  class="form-control"/>
         </div>
@@ -33,14 +33,14 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Readable Name</th>
+            <th>KTH-id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="admin in users.admins">
-            <td>{{admin.name}}</td>
             <td>{{admin.readableName}}</td>
+            <td>{{admin.name}}</td>
             <td>
               <button ng-if="users.admins.length > 1" ng-click="users.setAdmin(admin.name, false, users.current.name)" type="button" class="tiny alert"
                       style="margin-bottom: 0;">
@@ -58,7 +58,7 @@
 
   <div class="row collapse">
     <div class="medium-6 columns">
-      <h2>Queue Administration</h2>
+      <h2>Queues</h2>
       <div ng-show="selectedQueue">
         <p>
           Selected Queue: <strong>{{selectedQueue.title}}</strong>
@@ -91,51 +91,6 @@
   </div>
 
   <div ng-if="selectedQueue" class="row collapse">
-    <div class="large-6 columns">
-      <h3>Owners</h3>
-
-      <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
-            ng-submit="queues.addOwner(selectedQueue.name, owner.name); owner = ''">
-        <div class="small-9 columns">
-          <input type="text" ng-model="owner" required="required"
-                 placeholder="Add owner to selected queue"
-                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-                 class="form-control"/>
-        </div>
-        <div class="small-2 columns left">
-          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-                  style="margin-bottom: 0;">
-            <i class="fi-plus white-icon size-16"></i>
-            Add
-          </button>
-        </div>
-      </form>
-
-      <table ng-show="selectedQueue.owners.length">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Readable name</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="owner in selectedOwners">
-            <td>{{owner.name}}</td>
-            <td>{{owner.readableName}}</td>
-            <td>
-              <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
-                      type="button" class="tiny alert" style="margin-bottom: 0;">
-                Remove
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div ng-hide="selectedQueue.owners.length">
-        <p>(No owners)</p>
-      </div>
-    </div>
 
     <div class="large-6 columns">
       <h3>Moderators</h3>
@@ -161,14 +116,14 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Readable name</th>
+            <th>KTH-id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="moderator in selectedModerators">
-            <td>{{moderator.name}}</td>
             <td>{{moderator.readableName}}</td>
+            <td>{{moderator.name}}</td>
             <td>
               <button ng-click="queues.removeModerator(selectedQueue.name, moderator.name)"
                       type="button" class="tiny alert" style="margin-bottom: 0;">
@@ -180,6 +135,52 @@
       </table>
       <div ng-hide="selectedQueue.moderators.length">
         <p>(No moderators)</p>
+      </div>
+    </div>
+
+    <div class="large-6 columns">
+      <h3>Owners</h3>
+
+      <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
+            ng-submit="queues.addOwner(selectedQueue.name, owner.name); owner = ''">
+        <div class="small-9 columns">
+          <input type="text" ng-model="owner" required="required"
+                 placeholder="Add owner to selected queue"
+                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                 class="form-control"/>
+        </div>
+        <div class="small-2 columns left">
+          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                  style="margin-bottom: 0;">
+            <i class="fi-plus white-icon size-16"></i>
+            Add
+          </button>
+        </div>
+      </form>
+
+      <table ng-show="selectedQueue.owners.length">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>KTH-id</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="owner in selectedOwners">
+            <td>{{owner.readableName}}</td>
+            <td>{{owner.name}}</td>
+            <td>
+              <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
+                      type="button" class="tiny alert" style="margin-bottom: 0;">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-hide="selectedQueue.owners.length">
+        <p>(No owners)</p>
       </div>
     </div>
   </div>
