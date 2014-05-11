@@ -124,11 +124,18 @@
           <tr ng-repeat="moderator in selectedModerators">
             <td>{{moderator.readableName}}</td>
             <td>{{moderator.name}}</td>
-            <td>
-              <button ng-click="queues.removeModerator(selectedQueue.name, moderator.name)"
-                      type="button" class="tiny alert" style="margin-bottom: 0;">
-                Remove
-              </button>
+            <td ng-controller="removeModeratorModalCtrl">
+              <script type="text/ng-template" id="removeModeratorModalContent.html">
+                <h3>Remove moderator {{position.readableName}} from {{queue.title}}</h3>
+                <p>This will remove the user as a moderator from the queue.</p>
+                <button class="alert" ng-click="queues.removeModerator(queue.name, position.name); ok()">
+                  <i class="fi-x"></i>
+                  Remove
+                </button>
+                <button class="secondary" ng-click="cancel()">Back</button>
+                <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+              </script>
+              <a><i ng-click="open(moderator, selectedQueue)" class="fi-x red"></i></a>
             </td>
           </tr>
         </tbody>
@@ -170,11 +177,18 @@
           <tr ng-repeat="owner in selectedOwners">
             <td>{{owner.readableName}}</td>
             <td>{{owner.name}}</td>
-            <td>
-              <button ng-click="queues.removeOwner(selectedQueue.name, owner.name)"
-                      type="button" class="tiny alert" style="margin-bottom: 0;">
-                Remove
-              </button>
+            <td ng-controller="removeOwnerModalCtrl">
+              <script type="text/ng-template" id="removeOwnerModalContent.html">
+                <h3>Remove owner {{position.readableName}} from {{queue.title}}</h3>
+                <p>This will remove the user as an owner from the queue.</p>
+                <button class="alert" ng-click="queues.removeOwner(queue.name, position.name); ok()">
+                  <i class="fi-x"></i>
+                  Remove
+                </button>
+                <button class="secondary" ng-click="cancel()">Back</button>
+                <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+              </script>
+              <a><i ng-click="open(owner, selectedQueue)" class="fi-x red"></i></a>
             </td>
           </tr>
         </tbody>

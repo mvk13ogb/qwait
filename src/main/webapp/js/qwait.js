@@ -1033,6 +1033,50 @@
         };
     }]);
 
+    qwait.controller('removeModeratorModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function (moderator, queue) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'removeModeratorModalContent.html',
+                controller: removeUserModalInstanceCtrl,
+                resolve: {
+                    queue: function () {
+                        return queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
+                    },
+                    position: function () {
+                        return moderator;
+                    }
+                }
+            });
+        };
+    }]);
+
+    qwait.controller('removeOwnerModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function (owner, queue) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'removeOwnerModalContent.html',
+                controller: removeUserModalInstanceCtrl,
+                resolve: {
+                    queue: function () {
+                        return queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
+                    },
+                    position: function () {
+                        return owner;
+                    }
+                }
+            });
+        };
+    }]);
+
     var ModalInstanceCtrl = function ($scope, $modalInstance) {
 
         $scope.ok = function () {
