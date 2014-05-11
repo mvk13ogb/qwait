@@ -868,6 +868,7 @@
                 userName, location, locationform, comment, commentform) {
             var qp = queuePositions;
             $scope.queuePositions = qp;
+            $scope.queueName = queueName;
 
             $scope.ok = function () {
                 queues.joinQueue(queueName, userName);
