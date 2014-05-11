@@ -87,7 +87,7 @@
           </div>
         </label>
         <div class="row collapse">
-          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.locked">
+          <div ng-show="!userQueuePos(users.current, queue.positions) && !queue.hidden && !queue.locked">
             <button ng-show="locationplaceholder" class="expand"
                     ng-click="joinQueueFull(queue.name, users.current.name, locationplaceholder, locationplaceholderform, commentplaceholder, commentplaceholderform)">
               <i class="fi-plus"></i>
@@ -341,4 +341,22 @@
       </div>
     </div>
   </div>
+
+  <script type="text/ng-template" id="confirmationModal.html">
+    <h3>Confirm</h3>
+    <p>You are currently queueing in the following queue<ng-pluralize count="queuePositions.length"
+                     when="{'one': ':', 'other': 's:'}">
+    </ng-pluralize></p>
+    <ul>
+      <li ng-repeat="queuePosition in queuePositions">
+        {{queuePosition.queueName}}
+      </li>
+    </ul>
+    <p>Queue anyway?</p>
+    <span>
+      <button class="button" ng-click="ok()">Join</button>
+      <button class="button" ng-click="cancel()">Cancel</button>
+    </span>
+    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+  </script>
 </div>

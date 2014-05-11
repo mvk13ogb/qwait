@@ -693,21 +693,21 @@
         }
     }]);
 
-    qwait.factory('debounce', function($timeout, $q) {
-        return function(func, wait, immediate) {
+    qwait.factory('debounce', function ($timeout, $q) {
+        return function (func, wait, immediate) {
             var timeout;
             var deferred = $q.defer();
-            return function() {
+            return function () {
                 var context = this, args = arguments;
-                var later = function() {
+                var later = function () {
                     timeout = null;
-                    if(!immediate) {
+                    if (!immediate) {
                       deferred.resolve(func.apply(context, args));
                       deferred = $q.defer();
                     }
                 };
                 var callNow = immediate && !timeout;
-                if ( timeout ) {
+                if (timeout) {
                     $timeout.cancel(timeout);
                 }
                 timeout = $timeout(later, wait);
@@ -763,8 +763,8 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, $filter, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', '$modal', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
+            function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
         $scope.queue = queues.get($route.current.params.queueName);
         $scope.queues = queues;
@@ -784,11 +784,17 @@
             }
         }, 500);
 
+        $scope.userQueuePos = queuePositions.getUserQueuePos;
+
         $scope.getUser = function (userName) {
             return users.get(userName);
         };
 
-        $scope.userQueuePos = queuePositions.getUserQueuePos;
+        $scope.removeQueue = function (queueName) {
+            queues.deleteQueue(queueName);
+            $location.path('/queues')
+        }
+
         $scope.timeDiff = function (time) {
             return moment(time).from(clock.now, true);
         };
@@ -809,22 +815,80 @@
 
         $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
             if(locationform.$valid){
+                if (users.get(user).queuePositions.length != 0) {
+                    $scope.open = function () {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'confirmationModal.html',
+                            controller: ModalInstanceCtrl,
+                            resolve: {
+                                queuePositions: function () {
+                                    return users.current.queuePositions;
+                                },
+                                queueName: function () {
+                                    return name;
+                                },
+                                userName: function () {
+                                    return user;
+                                },
+                                location: function () {
+                                    return location;
+                                },
+                                locationform: function () {
+                                    return locationform;
+                                },
+                                comment: function () {
+                                    return comment;
+                                },
+                                commentform: function () {
+                                    return commentform;
+                                }
+                            }
+                        });
+                    };
 
-                queues.joinQueue(name, user);
+                    $scope.open();
+                } else {
+                    queues.joinQueue(name, user);
 
-                //HACK, places a timeout so we have time to join the queue
+                    //HACK, places a timeout so we have time to join the queue
+                    setTimeout(function() {
+                        if(locationform.$valid){
+                            queues.changeLocation(name, user, location);
+                        }
+
+                        if(commentform.$valid){
+                            queues.changeComment(name, user, comment);
+                        }
+                    }, 500);
+                }
+            }
+        }, 200, true);
+
+        var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName,
+                userName, location, locationform, comment, commentform) {
+            var qp = queuePositions;
+            $scope.queuePositions = qp;
+
+            $scope.ok = function () {
+                queues.joinQueue(queueName, userName);
+
+                // HACK: Places a timeout so there is time to join the queue
                 setTimeout(function() {
-
                     if(locationform.$valid){
-                        queues.changeLocation(name, user, location);
+                        queues.changeLocation(queueName, userName, location);
                     }
 
                     if(commentform.$valid){
-                        queues.changeComment(name, user, comment);
+                        queues.changeComment(queueName, userName, comment);
                     }
                 }, 500);
-            }
-        }, 200, true);
+
+                $modalInstance.close();
+            };
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        };
     }]);
 
     qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', 'queues', function ($scope, $timeout, page, users, queues) {
