@@ -8,15 +8,66 @@
 
   <h4>Viewing a queue</h4>
   <p>
-    If you don't want to log in, and have a queue viewing fetish, you can open up any queue and see the virtual
-    line of people. This is done by clicking the name of the queue you want to stalk in the
-    <a href="#/queues">Queues</a> page.
+    If you don't want to log in, you can open up any queue and see the virtual line of eagerly waiting people.
+    This is done by clicking the name of the queue you want to look at in the <a href="#/queues">Queues</a> page.
   </p>
+  <p>For example, if you want to look at the queue for <em>Allm&aumlnhandledning</em>, you click like this:</p>
+  <img src="images/help/allmanhand.png" alt="Allm&aumlnhandledning">
 </div>
 
-<!-- Logged in user without any moderator/admin/queue owner privileges -->
+<!-- Admin -->
+<div class="panel" ng-if="users.current.admin">
+  <h2>Admin functions</h2>
+
+  <h3>Adding an administrator</h3>
+  <p>
+    To add an administrator, go to the <em><a href="#/admin">Admin</a></em> page. Then enter the name of the
+    user you wish add as administrator in the field under <em>Admin administration</em> and click <em>Add</em>.
+    The user should now show up in the admin list. If not, please refresh the page.
+  </p>
+
+  <h3>Removing an administrator</h3>
+  <p>
+    To remove an administrator, go to the <em><a href="#/admin">Admin</a></em> page. Then, under
+    <em>Admin administration</em>, click the remove button beside the name of the administrator you wish to remove.
+    The user should now disappear from the admin list. If not, please refresh the page.
+  </p>
+  <p>
+    Please note that there must always be at least one administrator. It is therefor not possible to remove
+    an administrator if it is the last administrator.
+  </p>
+
+  <h3>Adding a queue owner</h3>
+  <p>See <em><a href="#/help/#adding-a-queue-owner">Adding a queue owner</a></em> under <em>Queue owner functions</em>.</p>
+</div>
+
+<!-- Queue owner or admin -->
+<div class="panel" ng-if="users.current.ownedQueues.length || users.current.admin">
+  <h2>Queue owner functions</h2>
+
+  <h3 id="adding-a-queue-owner">Adding a queue owner</h3>
+  <p>TODO</p>
+
+  <h3>Hibernating a queue</h3>
+  <p>TODO</p>
+</div>
+
+<!-- Moderator or admin -->
+<div class="panel" ng-if="users.current.moderatedQueues.length || users.current.admin">
+  <h2>Queue moderator functions</h2>
+  <h3>Removing a queue position</h3>
+  <p>TODO</p>
+
+  <h3>Locking a queue</h3>
+  <p>TODO</p>
+
+  <h3>Clearing a queue</h3>
+  <p>TODO</p>
+</div>
+
+<!-- Logged in regular user without any moderator/admin/queue owner privileges -->
 <div class="panel" ng-if="!users.current.anonymous">
-  <h2>Help for regular users</h2>
+  <h2>Regular users</h2>
 
   <h3>Queue status</h3>
   <p>
@@ -25,23 +76,31 @@
   </p>
   <table>
     <tr>
+      <th align="left">Style</th>
+      <th align="left">Icon</th>
+      <th align="left">Description</th>
+    </tr>
+    <tr>
       <td><strong>Active queue</strong></td>
+      <td></td>
       <td>The queue is active and can be joined</td>
     </tr>
     <tr>
-      <td><strong class="red">Locked queue <i class="fi-lock size-16"></i></strong></td>
+      <td><strong class="red">Locked queue</strong></td>
+      <td><i class="fi-lock size-16 red"></i></td>
       <td>The queue is locked and can't be joined</td>
     </tr>
     <tr>
-      <td><strong class="red strike">Hibernated queue <i class="fi-prohibited size-16"></i></strong></td>
+      <td><strong class="red strike">Hibernated queue</strong></td>
+      <td><i class="fi-prohibited size-16 red"></i></td>
       <td>This queue is locked and hidden from the queue list, and can't be joined</td>
     </tr>
   </table>
 
-  <h3>Find a queue</h3>
+  <h3 id="find-a-queue">Find a queue</h3>
   <p>
     The first step to queueing would be to find the queue you wish to join, right? So how is that done?
-    Well, first go to the <a href="#/queues">Queues page</a>. There you can either scroll to find the queue
+    Well, first go to the <em><a href="#/queues">Queues page</a></em>. There you can either scroll to find the queue
     you are searching for, or you could search for the queue. To scroll, just scroll - more info on scrolling
     will not be covered in this help section. To search for a queue, type the queue name (or parts of the queue name)
     in the box that looks like this:
@@ -50,7 +109,7 @@
 
   <h3>Join a queue</h3>
   <p>
-    To join a queue, you will first need to find the queue (see <em>Finding a queue</em>). When you have found
+    To join a queue, you will first need to find the queue (see <em><a href="#/help/#find-a-queue">Find a queue</a></em>). When you have found
     the queue, let's say you want to join the queue <em>Allm&aumlnhandledning</em>, click the queue name.
   </p>
   <img src="images/help/allmanhand.png" alt="Allm&aumlnhandledning">
@@ -62,34 +121,13 @@
   <p>
     If your location is not automatically obtained, please type your location in the location field.
   </p>
-  <p>Now click <img src="images/help/join-queue-button.png" alt="Join queue button"> and you are done!</p>
+  <p>Now click the <em>Join queue</em> button, and you are done!</p>
 
   <h3>Leave a queue</h3>
   <p>
-    To leave a queue, you must first join the queue. If you haven't joined the queue you want to leave, we recommend
-    not joining that queue. If you however have joined the queue you want to leave, enter that queue page and
-    click <img src="images/help/leave-queue-button.png" alt="Leave queue button">
+    To leave a queue, you must first join a queue. If you haven't joined the queue you want to leave, we recommend
+    you not joining that queue in the first place. If you already have joined the queue you want to leave, go to that
+    queues main page and click the <em>Leave queue</em> button.
   </p>
 
-</div>
-
-<!-- Admin -->
-<div class="panel" ng-if="users.current.admin">
-  <h2>Admin functions</h2>
-  <h4>Adding another administrator</h4>
-  <p>TODO</p>
-</div>
-
-<!-- Queue owner or admin -->
-<div class="panel" ng-if="users.current.ownedQueues.length || users.current.admin">
-  <h2>Queue owner functions</h2>
-  <h4>Adding another administrator</h4>
-  <p>TODO</p>
-</div>
-
-<!-- Moderator or admin -->
-<div class="panel" ng-if="users.current.moderatedQueues.length || users.current.admin">
-  <h2>Moderator functions</h2>
-  <h4>Adding another administrator</h4>
-  <p>TODO</p>
 </div>
