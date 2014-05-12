@@ -106,7 +106,7 @@
                 Join queue
             </button>
           </div>
-          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand"
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="alert expand"
                   ng-click="queues.leaveQueue(queue.name, users.current.name)">
             <i class="fi-x"></i>
             Leave queue
@@ -277,7 +277,7 @@
                 {{getUser(position.userName).readableName}}
                 <span ng-show="users.current.admin" ng-controller="RemoveUserModalCtrl">
                   <script type="text/ng-template" id="remove-user-modal-content.html">
-                    <h3>Remove {{position.userName}} from {{queue.title}}</h3>
+                    <h3>Remove {{getUser(position.userName).readableName}} from {{queue.title}}</h3>
                     <p>This will remove the user from the queue.</p>
                     <button class="alert" ng-click="queues.leaveQueue(queue.name, position.userName); ok()">
                       <i class="fi-x"></i>
@@ -288,7 +288,7 @@
                   </script>
 
                   <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18" style="vertical-align: middle">
-                    <i class="fi-x"></i>
+                    <i class="fi-x red"></i>
                   </a>
                   <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
                     <li>
@@ -348,7 +348,7 @@
   </div>
 
   <script type="text/ng-template" id="confirmationModal.html">
-    <h3>Confirm</h3>
+    <h3>Confirm joining {{queueName}}</h3>
     <p>You are currently queueing in the following queue<ng-pluralize count="queuePositions.length"
                      when="{'one': ':', 'other': 's:'}">
     </ng-pluralize></p>
@@ -359,8 +359,10 @@
     </ul>
     <p>Queue anyway?</p>
     <span>
-      <button class="button" ng-click="ok()">Join</button>
-      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button" ng-click="ok()">
+        <i class="fi-plus"></i>
+        Join</button>
+      <button class="button secondary" ng-click="cancel()">Back</button>
     </span>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
   </script>
