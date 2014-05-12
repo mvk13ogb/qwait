@@ -34,18 +34,25 @@
           <tr>
             <th>Name</th>
             <th>KTH-id</th>
-            <th>&nbsp;</th>
+            <th ng-if="users.admins.length > 1">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="admin in users.admins">
             <td>{{admin.readableName}}</td>
             <td>{{admin.name}}</td>
-            <td>
-              <button ng-if="users.admins.length > 1" ng-click="users.setAdmin(admin.name, false, users.current.name)" type="button" class="tiny alert"
-                      style="margin-bottom: 0;">
-                Remove
-              </button>
+            <td ng-if="users.admins.length > 1" ng-controller="removeAdminModalCtrl">
+              <script type="text/ng-template" id="removeAdminModalContent.html">
+                <h3>Remove admin {{position.readableName}}</h3>
+                <p>This will remove the user as an admin from QWait.</p>
+                <button class="alert" ng-click="users.setAdmin(position.name, false, users.current.name); ok()">
+                  <i class="fi-x"></i>
+                  Remove
+                </button>
+                <button class="secondary" ng-click="cancel()">Back</button>
+                <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+              </script>
+              <a><i ng-click="open(admin)" class="fi-x red"></i></a>
             </td>
           </tr>
         </tbody>
@@ -93,7 +100,7 @@
   <div ng-if="selectedQueue" class="row collapse">
 
     <div class="large-6 columns">
-      <h3>Moderators</h3>
+      <h4>Moderators</h4>
 
       <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
             ng-submit="queues.addModerator(selectedQueue.name, moderator.name); moderator = ''">
@@ -146,7 +153,7 @@
     </div>
 
     <div class="large-6 columns">
-      <h3>Owners</h3>
+      <h4>Owners</h4>
 
       <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
             ng-submit="queues.addOwner(selectedQueue.name, owner.name); owner = ''">

@@ -1053,6 +1053,9 @@
                     },
                     position: function () {
                         return moderator;
+                    },
+                    users: function () {
+                        return $scope.users;
                     }
                 }
             });
@@ -1075,6 +1078,34 @@
                     },
                     position: function () {
                         return owner;
+                    },
+                    users: function () {
+                        return $scope.users;
+                    }
+                }
+            });
+        };
+    }]);
+
+    qwait.controller('removeAdminModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+        $scope.open = function (admin, queue) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'removeAdminModalContent.html',
+                controller: removeUserModalInstanceCtrl,
+                resolve: {
+                    queue: function () {
+                        return queue;
+                    },
+                    queues: function () {
+                        return $scope.queues;
+                    },
+                    position: function () {
+                        return admin;
+                    },
+                    users: function () {
+                        return $scope.users;
                     }
                 }
             });
