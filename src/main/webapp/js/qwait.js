@@ -34,9 +34,11 @@
 
         messagebus.whenReady(function () {
             messagebus.subscribe('/topic/user/*', function (data) {
+                var i;
+                var user;
                 switch (data.body['@type']) {
                     case 'UserAdminStatusChanged':
-                        var user = cache.get(data.body.name);
+                        user = cache.get(data.body.name);
                         if (user) {
                             user.admin = data.body.admin;
 
@@ -52,31 +54,31 @@
                         }
                         break;
                     case 'QueueOwnerAdded':
-                        var user = cache.get(data.body.userName);
-                        var i = user.ownedQueues.indexOf(data.body.queueName);
+                        user = cache.get(data.body.userName);
+                        i = user.ownedQueues.indexOf(data.body.queueName);
                         if (user) {
-                            if(i == -1) {
+                            if (i == -1) {
                                 user.ownedQueues.push(data.body.queueName);
                             }
                         }
                         break;
                     case 'QueueOwnerRemoved':
-                        var user = cache.get(data.body.userName);
-                        var i = user.ownedQueues.indexOf(data.body.queueName);
+                        user = cache.get(data.body.userName);
+                        i = user.ownedQueues.indexOf(data.body.queueName);
                         if (user) {
-                            if(i != -1) {
+                            if (i != -1) {
                                 user.queuePositions.splice(i, 1);
                             }
                         }
                         break;
                     case 'QueuePositionCreatedInAccount':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
                             user.queuePositions.push(data.body.queuePosition);
                         }
                         break;
                     case 'QueuePositionRemoved':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].queueName == data.body.queueName) {
@@ -86,7 +88,7 @@
                         }
                         break;
                     case 'QueuePositionCommentChanged':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].queueName == data.body.queueName) {
@@ -96,7 +98,7 @@
                         }
                         break;
                     case 'QueuePositionLocationChanged':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
                             for (i = 0; i < user.queuePositions.length; i++) {
                                 if (user.queuePositions[i].queueName == data.body.queueName) {
@@ -106,18 +108,18 @@
                         }
                         break;
                     case 'QueueModeratorAdded':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
-                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            i = user.moderatedQueues.indexOf(data.body.queueName);
                             if (i == -1) {
                                 user.moderatedQueues.push(data.body.queueName);
                             }
                         }
                         break;
                     case 'QueueModeratorRemoved':
-                        var user = cache.get(data.body.userName);
+                        user = cache.get(data.body.userName);
                         if (user) {
-                            var i = user.moderatedQueues.indexOf(data.body.queueName);
+                            i = user.moderatedQueues.indexOf(data.body.queueName);
                             if (i != -1) {
                                 user.moderatedQueues.splice(i, 1);
                             }
@@ -357,13 +359,13 @@
                 }
             }
             return false;
-        }
+        };
 
         result.validateForm = function (queueName, queues) {
             if (!result.contains(queueName, queues)) {
                 result.putQueue(queueName, queues);
             }
-        }
+        };
 
         result.setLocked = function (name, locked) {
             // The "'' + " bit is needed because apparently you can't send "false" as JSON here
@@ -391,35 +393,19 @@
         };
 
         result.deleteQueue = function (name) {
-            return $http.delete('/api/queue/' + encodeURIComponent(name), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.delete('/api/queue/' + encodeURIComponent(name));
         };
 
         result.clearQueue = function (name) {
-            return $http.post('/api/queue/' + name + '/clear', {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.post('/api/queue/' + name + '/clear', {});
         };
 
         result.joinQueue = function (name, user) {
-            return $http.put('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.put('/api/queue/' + name + '/position/' + user, {});
         };
 
         result.leaveQueue = function (name, user) {
-            return $http.delete('/api/queue/' + name + '/position/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.delete('/api/queue/' + name + '/position/' + user);
         };
 
         result.changeComment = function (name, user, comment) {
@@ -439,35 +425,19 @@
         };
 
         result.addModerator = function (name, user) {
-            return $http.put('/api/queue/' + name + '/moderator/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.put('/api/queue/' + name + '/moderator/' + user, {});
         };
 
         result.removeModerator = function (name, user) {
-            return $http.delete('/api/queue/' + name + '/moderator/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.delete('/api/queue/' + name + '/moderator/' + user);
         };
 
         result.addOwner = function (name, user) {
-            return $http.put('/api/queue/' + name + '/owner/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            return $http.put('/api/queue/' + name + '/owner/' + user, {});
         };
 
-        result.removeOwner = function (name,user) {
-            return $http.delete('/api/queue/' + name + '/owner/' + user, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+        result.removeOwner = function (name, user) {
+            return $http.delete('/api/queue/' + name + '/owner/' + user);
         };
         return result;
     }]);
@@ -482,9 +452,9 @@
         return {
             all: [
                 { name: 'Adrian Blanco', gravatar: '5e24f37bda5a846cdaa822e72627fe63', github: 'adrianblp'},
-                { name: 'Casper Winsnes' },
+                { name: 'Casper Winsnes', gravatar: '0cb03d273d7ab05bcdd39b317a3bb401' },
                 { name: 'Christoffer Pettersson', gravatar: '5ba6cca11f93ea6d22f458700ac8a506' },
-                { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', twitter: 'dflemstr' },
+                { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', github: 'dflemstr', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
                 { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', twitter: 'hlilje' },
@@ -536,7 +506,7 @@
     });
 
     qwait.factory('queuePositions', function () {
-        var result = {
+        return {
             getUserQueuePos: function (user, positions) {
                 if (!(user && positions)) {
                     return undefined;
@@ -551,8 +521,6 @@
                 return null;
             }
         };
-
-        return result;
     });
 
     qwait.factory('messagebus', ['$rootScope', '$timeout', '$interval', function ($rootScope, $timeout, $interval) {
@@ -677,22 +645,6 @@
         return result;
     }]);
 
-    qwait.factory('broadcaster', ['messagebus', function (messagebus) {
-        messagebus.whenReady(function () {
-            messagebus.subscribe('/topic/broadcast', function (data) {
-                console.log('Broadcast:', data.body.message);
-            });
-        });
-
-        return {
-            broadcast: function (message) {
-                messagebus.whenReady(function () {
-                    messagebus.send('/app/broadcast', {}, {message: message});
-                });
-            }
-        }
-    }]);
-
     qwait.factory('debounce', function ($timeout, $q) {
         return function (func, wait, immediate) {
             var timeout;
@@ -702,8 +654,8 @@
                 var later = function () {
                     timeout = null;
                     if (!immediate) {
-                      deferred.resolve(func.apply(context, args));
-                      deferred = $q.defer();
+                        deferred.resolve(func.apply(context, args));
+                        deferred = $q.defer();
                     }
                 };
                 var callNow = immediate && !timeout;
@@ -712,7 +664,7 @@
                 }
                 timeout = $timeout(later, wait);
                 if (callNow) {
-                    deferred.resolve(func.apply(context,args));
+                    deferred.resolve(func.apply(context, args));
                     deferred = $q.defer();
                 }
                 return deferred.promise;
@@ -720,7 +672,7 @@
         };
     });
 
-    qwait.controller('TopbarCtrl', ['$scope', '$location', 'users', 'system', 'messagebus', 'broadcaster', function ($scope, $location, users, system, messagebus, broadcaster) {
+    qwait.controller('TopbarCtrl', ['$scope', '$location', 'users', 'system', 'messagebus', function ($scope, $location, users, system, messagebus) {
         $scope.location = $location;
         $scope.users = users;
         $scope.system = system;
@@ -745,151 +697,147 @@
     }]);
 
     qwait.controller('QueueListCtrl', ['$scope', '$location', 'page', 'clock', 'queues', 'users', 'security', 'queuePositions', 'getQueuePosNr',
-            function ($scope, $location, page, clock, queues, users, security, queuePositions, getQueuePosNr) {
-        page.title = 'Queues';
+        function ($scope, $location, page, clock, queues, users, security, queuePositions, getQueuePosNr) {
+            page.title = 'Queues';
 
-        $scope.users = users;
-        $scope.queues = queues;
-        $scope.queuePos = getQueuePosNr;
+            $scope.users = users;
+            $scope.queues = queues;
+            $scope.queuePos = getQueuePosNr;
 
-        $scope.canModerateQueue = security.canModerateQueue;
-        $scope.userQueuePos = queuePositions.getUserQueuePos;
-        $scope.joinQueue = function (queueName, userName) {
-            queues.joinQueue(queueName, userName);
-            $location.path('/queue/' + queueName)
-        }
-        $scope.timeDiff = function (time) {
-            return moment(time).from(clock.now, true);
-        };
-    }]);
+            $scope.canModerateQueue = security.canModerateQueue;
+            $scope.userQueuePos = queuePositions.getUserQueuePos;
+            $scope.joinQueue = function (queueName, userName) {
+                queues.joinQueue(queueName, userName);
+                $location.path('/queue/' + queueName)
+            };
+            $scope.timeDiff = function (time) {
+                return moment(time).from(clock.now, true);
+            };
+        }]);
 
     qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', '$modal', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-            function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+        function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
 
-        $scope.queue = queues.get($route.current.params.queueName);
-        $scope.queues = queues;
-        $scope.users = users;
+            $scope.queue = queues.get($route.current.params.queueName);
+            $scope.queues = queues;
+            $scope.users = users;
 
-        $scope.isQueueOwner = security.isQueueOwner;
-        $scope.canModerateQueue = security.canModerateQueue;
-        $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
+            $scope.isQueueOwner = security.isQueueOwner;
+            $scope.canModerateQueue = security.canModerateQueue;
+            $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
 
-        var temp = getQueuePosNr;
-        $timeout(function () {
-            $scope.queuePosNr = function () {
-                var i = temp(users.current.name, $scope.queue.positions);
-                page.title = i ? (' [' + i + '] ' + $scope.queue.title || 'Queue') : 
-                    ($scope.queue.title || 'Queue');
-                return i;
-            }
-        }, 500);
-
-        $scope.userQueuePos = queuePositions.getUserQueuePos;
-
-        $scope.getUser = function (userName) {
-            return users.get(userName);
-        };
-
-        $scope.removeQueue = function (queueName) {
-            queues.deleteQueue(queueName);
-            $location.path('/queues')
-        }
-
-        $scope.timeDiff = function (time) {
-            return moment(time).from(clock.now, true);
-        };
-
-        var wait = 2000;
-
-        $scope.changeLocationDebounced = debounce(function (form, queueName, userName, location) {
-            if (form.$valid) {
-                queues.changeLocation(queueName, userName, location);
-            }
-        }, wait, false);
-
-        $scope.changeCommentDebounced = debounce(function (form, queueName, userName, comment) {
-            if (form.$valid) {
-                queues.changeComment(queueName, userName, comment);
-            }
-        }, wait, false);
-
-        $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform){
-            if(locationform.$valid){
-                if (users.get(user).queuePositions.length != 0) {
-                    $scope.open = function () {
-                        var modalInstance = $modal.open({
-                            templateUrl: 'confirmationModal.html',
-                            controller: ModalInstanceCtrl,
-                            resolve: {
-                                queuePositions: function () {
-                                    return users.current.queuePositions;
-                                },
-                                queueName: function () {
-                                    return name;
-                                },
-                                userName: function () {
-                                    return user;
-                                },
-                                location: function () {
-                                    return location;
-                                },
-                                locationform: function () {
-                                    return locationform;
-                                },
-                                comment: function () {
-                                    return comment;
-                                },
-                                commentform: function () {
-                                    return commentform;
-                                }
-                            }
-                        });
-                    };
-
-                    $scope.open();
-                } else {
-                    queues.joinQueue(name, user);
-
-                    //HACK, places a timeout so we have time to join the queue
-                    setTimeout(function() {
-                        if(locationform.$valid){
-                            queues.changeLocation(name, user, location);
-                        }
-
-                        if(commentform.$valid){
-                            queues.changeComment(name, user, comment);
-                        }
-                    }, 500);
+            var temp = getQueuePosNr;
+            $timeout(function () {
+                $scope.queuePosNr = function () {
+                    var i = temp(users.current.name, $scope.queue.positions);
+                    page.title = i ? (' [' + i + '] ' + $scope.queue.title || 'Queue') :
+                        ($scope.queue.title || 'Queue');
+                    return i;
                 }
-            }
-        }, 200, true);
+            }, 500);
 
-        var ModalInstanceCtrl = function ($scope, $modalInstance, queuePositions, queueName,
-                userName, location, locationform, comment, commentform) {
-            var qp = queuePositions;
-            $scope.queuePositions = qp;
+            $scope.userQueuePos = queuePositions.getUserQueuePos;
 
-            $scope.ok = function () {
-                queues.joinQueue(queueName, userName);
-
-                // HACK: Places a timeout so there is time to join the queue
-                setTimeout(function() {
-                    if(locationform.$valid){
-                        queues.changeLocation(queueName, userName, location);
-                    }
-
-                    if(commentform.$valid){
-                        queues.changeComment(queueName, userName, comment);
-                    }
-                }, 500);
-
-                $modalInstance.close();
+            $scope.getUser = function (userName) {
+                return users.get(userName);
             };
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+
+            $scope.removeQueue = function (queueName) {
+                queues.deleteQueue(queueName);
+                $location.path('/queues');
             };
-        };
-    }]);
+
+            $scope.timeDiff = function (time) {
+                return moment(time).from(clock.now, true);
+            };
+
+            var wait = 2000;
+
+            $scope.changeLocationDebounced = debounce(function (form, queueName, userName, location) {
+                if (form.$valid) {
+                    queues.changeLocation(queueName, userName, location);
+                }
+            }, wait, false);
+
+            $scope.changeCommentDebounced = debounce(function (form, queueName, userName, comment) {
+                if (form.$valid) {
+                    queues.changeComment(queueName, userName, comment);
+                }
+            }, wait, false);
+
+            $scope.joinQueueFull = debounce(function (name, user, location, locationform, comment, commentform) {
+                if (locationform.$valid) {
+                    if (users.get(user).queuePositions.length != 0) {
+                        $scope.open = function () {
+                            var modalInstance = $modal.open({
+                                templateUrl: 'confirmationModal.html',
+                                controller: function ($scope, $modalInstance, queuePositions, queueName, userName, location, locationform, comment, commentform) {
+                                    $scope.queuePositions = queuePositions;
+
+                                    $scope.ok = function () {
+                                        queues.joinQueue(queueName, userName);
+
+                                        // HACK: Places a timeout so there is time to join the queue
+                                        setTimeout(function () {
+                                            if (locationform.$valid) {
+                                                queues.changeLocation(queueName, userName, location);
+                                            }
+
+                                            if (commentform.$valid) {
+                                                queues.changeComment(queueName, userName, comment);
+                                            }
+                                        }, 500);
+
+                                        $modalInstance.close();
+                                    };
+                                    $scope.cancel = function () {
+                                        $modalInstance.dismiss('cancel');
+                                    };
+                                },
+                                resolve: {
+                                    queuePositions: function () {
+                                        return users.current.queuePositions;
+                                    },
+                                    queueName: function () {
+                                        return name;
+                                    },
+                                    userName: function () {
+                                        return user;
+                                    },
+                                    location: function () {
+                                        return location;
+                                    },
+                                    locationform: function () {
+                                        return locationform;
+                                    },
+                                    comment: function () {
+                                        return comment;
+                                    },
+                                    commentform: function () {
+                                        return commentform;
+                                    }
+                                }
+                            });
+                        };
+
+                        $scope.open();
+                    } else {
+                        queues.joinQueue(name, user);
+
+                        //HACK, places a timeout so we have time to join the queue
+                        setTimeout(function () {
+                            if (locationform.$valid) {
+                                queues.changeLocation(name, user, location);
+                            }
+
+                            if (commentform.$valid) {
+                                queues.changeComment(name, user, comment);
+                            }
+                        }, 500);
+                    }
+                }
+            }, 200, true);
+        }]);
 
     qwait.controller('AdminCtrl', ['$scope', '$timeout', 'page', 'users', 'queues', function ($scope, $timeout, page, users, queues) {
         page.title = 'Admin tools';
@@ -907,14 +855,15 @@
         };
 
         $scope.selectQueue = function (queue) {
+            var i;
             $scope.selectedQueue = queue;
 
             $scope.selectedModerators = [];
-            for (var i=0; i<$scope.selectedQueue.moderators.length; i++) {
+            for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
                 $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
             }
             $scope.selectedOwners = [];
-            for (var i=0; i<$scope.selectedQueue.owners.length; i++) {
+            for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
                 $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
             }
         };
@@ -923,7 +872,7 @@
 
         $scope.ownedQueues = [];
         if (ownedQueues) {
-            for (var i=0; i<ownedQueues.length; i++) {
+            for (var i = 0; i < ownedQueues.length; i++) {
                 // Fetch the queues of the current user
                 $scope.ownedQueues.push(queues.get(ownedQueues[i]));
             }
@@ -932,13 +881,25 @@
         }
     }]);
 
-    qwait.controller('lockQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('LockQueueModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'lockQueueModalContent.html',
-                controller: queueModalInstanceCtrl,
+                templateUrl: 'lock-queue-modal-content.html',
+                controller: function ($scope, $modalInstance, queue, queues) {
+
+                    $scope.queue = queue;
+                    $scope.queues = queues;
+
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
                 resolve: {
                     queue: function () {
                         return $scope.queue;
@@ -951,13 +912,25 @@
         };
     }]);
 
-    qwait.controller('hideQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('HideQueueModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'hideQueueModalContent.html',
-                controller: queueModalInstanceCtrl,
+                templateUrl: 'hide-queue-modal-content.html',
+                controller: function ($scope, $modalInstance, queue, queues) {
+
+                    $scope.queue = queue;
+                    $scope.queues = queues;
+
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
                 resolve: {
                     queue: function () {
                         return $scope.queue;
@@ -970,13 +943,25 @@
         };
     }]);
 
-    qwait.controller('clearQueueModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('ClearQueueModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'clearQueueModalContent.html',
-                controller: queueModalInstanceCtrl,
+                templateUrl: 'clear-queue-modal-content.html',
+                controller: function ($scope, $modalInstance, queue, queues) {
+
+                    $scope.queue = queue;
+                    $scope.queues = queues;
+
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
                 resolve: {
                     queue: function () {
                         return $scope.queue;
@@ -989,13 +974,31 @@
         };
     }]);
 
-    qwait.controller('deleteQueueModalCtrl', ['$scope', '$modal', '$location', function($scope, $modal, $location) {
+    qwait.controller('DeleteQueueModalCtrl', ['$scope', '$modal', '$location', function ($scope, $modal, $location) {
 
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'deleteQueueModalContent.html',
-                controller: deleteQueueModalInstanceCtrl,
+                templateUrl: 'delete-queue-modal-content.html',
+                controller: function ($scope, $modalInstance, queue, queues, location) {
+
+                    $scope.queue = queue;
+                    $scope.queues = queues;
+                    $location = location;
+
+                    $scope.deleteQueue = function (queueName) {
+                        $scope.queues.deleteQueue(queueName);
+                        $location.path('/queues');
+                    };
+
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
                 resolve: {
                     queue: function () {
                         return $scope.queue;
@@ -1011,13 +1014,25 @@
         };
     }]);
 
-    qwait.controller('removeUserModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+    qwait.controller('RemoveUserModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
 
         $scope.open = function (position) {
 
             var modalInstance = $modal.open({
-                templateUrl: 'removeUserModalContent.html',
-                controller: removeUserModalInstanceCtrl,
+                templateUrl: 'remove-user-modal-content.html',
+                controller: function ($scope, $modalInstance, queue, queues, position) {
+                    $scope.queue = queue;
+                    $scope.queues = queues;
+                    $scope.position = position;
+
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
                 resolve: {
                     queue: function () {
                         return $scope.queue;
@@ -1032,68 +1047,6 @@
             });
         };
     }]);
-
-    var ModalInstanceCtrl = function ($scope, $modalInstance) {
-
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    };
-
-
-    var queueModalInstanceCtrl = function ($scope, $modalInstance, queue, queues) {
-
-        $scope.queue = queue;
-        $scope.queues = queues;
-
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    };
-
-    var deleteQueueModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, location) {
-
-        $scope.queue = queue;
-        $scope.queues = queues;
-        $location = location;
-
-        $scope.deleteQueue = function (queueName) {
-            $scope.queues.deleteQueue(queueName);
-            $location.path('/queues');
-        }
-
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    };
-
-    var removeUserModalInstanceCtrl = function ($scope, $modalInstance, queue, queues, position) {
-
-        $scope.queue = queue;
-        $scope.queues = queues;
-        $scope.position = position;
-
-
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    };
 
     qwait.filter('duration', function () {
         return function (milliseconds) {
@@ -1180,7 +1133,7 @@
                 var queue = queues[i];
                 if (queue && !queue.hidden) {
                     result.push(queue);
-                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
                     result.push(queue);
                 }
             }
@@ -1193,8 +1146,9 @@
             for (var i = 0; i < positions.length; i++) {
                 var pos = positions[i];
 
-                if (pos.account.principalName == name)
+                if (pos.account.principalName == name) {
                     return pos;
+                }
             }
 
             return null;
