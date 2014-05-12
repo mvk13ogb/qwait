@@ -39,6 +39,7 @@
             messagebus.subscribe('/topic/user/*', function (data) {
                 var i;
                 var user;
+                console.log(data.body['@type']);
                 switch (data.body['@type']) {
                     case 'UserAdminStatusChanged':
                         user = cache.get(data.body.name);
@@ -234,6 +235,9 @@
                         break;
                     case 'QueueCleared':
                         queue = result.all[data.body.name];
+                        for(position in queue.positions) {
+                            
+                        }
                         if (queue) {
                             queue.positions = [];
                         }

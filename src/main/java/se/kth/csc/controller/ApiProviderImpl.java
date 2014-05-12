@@ -168,11 +168,16 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void clearQueue(Queue queue) {
         for (QueuePosition position : ImmutableSet.copyOf(queue.getPositions())) {
+            //Make sure that every user knows it is removed so that no warning is made when 
+            //joining another queue afterwards
+            messageBus.convertAndSend("/topic/user/" + position.getAccount().getPrincipalName(), 
+                new QueuePositionRemoved(position.getQueue().getName(), 
+                  position.getAccount().getPrincipalName()));
             queuePositionStore.removeQueuePosition(position);
         }
         queue.getPositions().clear();
 
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueCleared(queue.getName()));
+        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueCleared(queue.getName(), queue.getPositions()));
     }
 
     @Override
