@@ -10,16 +10,11 @@ public class QueueCleared {
     private final String name;
     private Set<QueuePosition> positions;
 
-    public QueueCleared(String name, Set<QueuePosition> positions) {
+    public QueueCleared(String name) {
         this.name = name;
-        this.positions = positions;
     }
 
     public String getName() {
         return name;
-    }
-
-    public Set<QueuePosition> getPositions() {
-      return positions;
     }
 }

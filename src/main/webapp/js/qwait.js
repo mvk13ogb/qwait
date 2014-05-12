@@ -39,7 +39,6 @@
             messagebus.subscribe('/topic/user/*', function (data) {
                 var i;
                 var user;
-                console.log(data.body['@type']);
                 switch (data.body['@type']) {
                     case 'UserAdminStatusChanged':
                         user = cache.get(data.body.name);
