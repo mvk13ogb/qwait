@@ -170,9 +170,6 @@ public class ApiProviderImpl implements ApiProvider {
         for (QueuePosition position : ImmutableSet.copyOf(queue.getPositions())) {
             deleteQueuePosition(position);
         }
-        queue.getPositions().clear();
-
-        messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueCleared(queue.getName(), queue.getPositions()));
     }
 
     @Override
