@@ -234,9 +234,6 @@
                         break;
                     case 'QueueCleared':
                         queue = result.all[data.body.name];
-                        for(position in queue.positions) {
-                            
-                        }
                         if (queue) {
                             queue.positions = [];
                         }
