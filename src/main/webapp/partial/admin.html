@@ -41,10 +41,10 @@
           <tr ng-repeat="admin in users.admins">
             <td>{{admin.readableName}}</td>
             <td>{{admin.name}}</td>
-            <td ng-if="users.admins.length > 1" ng-controller="removeAdminModalCtrl">
-              <script type="text/ng-template" id="removeAdminModalContent.html">
+            <td ng-if="users.admins.length > 1" ng-controller="RemoveAdminModalCtrl">
+              <script type="text/ng-template" id="remove-admin-modal-content.html">
                 <h3>Remove admin {{position.readableName}}</h3>
-                <p>This will remove the user as an admin from QWait.</p>
+                <p>This will remove the user as an admin for QWait.</p>
                 <button class="alert" ng-click="users.setAdmin(position.name, false, users.current.name); ok()">
                   <i class="fi-x"></i>
                   Remove
@@ -131,8 +131,8 @@
           <tr ng-repeat="moderator in selectedModerators">
             <td>{{moderator.readableName}}</td>
             <td>{{moderator.name}}</td>
-            <td ng-controller="removeModeratorModalCtrl">
-              <script type="text/ng-template" id="removeModeratorModalContent.html">
+            <td ng-controller="RemoveModeratorModalCtrl">
+              <script type="text/ng-template" id="remove-moderator-modal-content.html">
                 <h3>Remove moderator {{position.readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as a moderator from the queue.</p>
                 <button class="alert" ng-click="queues.removeModerator(queue.name, position.name); ok()">
@@ -184,8 +184,8 @@
           <tr ng-repeat="owner in selectedOwners">
             <td>{{owner.readableName}}</td>
             <td>{{owner.name}}</td>
-            <td ng-controller="removeOwnerModalCtrl">
-              <script type="text/ng-template" id="removeOwnerModalContent.html">
+            <td ng-controller="RemoveOwnerModalCtrl">
+              <script type="text/ng-template" id="remove-owner-modal-content.html">
                 <h3>Remove owner {{position.readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as an owner from the queue.</p>
                 <button class="alert" ng-click="queues.removeOwner(queue.name, position.name); ok()">
