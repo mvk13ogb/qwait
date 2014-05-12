@@ -101,7 +101,7 @@
                 Join queue
             </button>
           </div>
-          <button ng-show="userQueuePos(users.current, queue.positions)" class="button expand"
+          <button ng-show="userQueuePos(users.current, queue.positions)" class="alert expand"
                   ng-click="queues.leaveQueue(queue.name, users.current.name)">
             <i class="fi-x"></i>
             Leave queue
@@ -128,7 +128,7 @@
                 <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                      <span class="size-14">Lock&nbsp;</span>
+                      <span class="size-14">Lock</span>
                     </button>
                   </li>
                   <li>
