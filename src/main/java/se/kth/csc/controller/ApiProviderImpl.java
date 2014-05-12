@@ -182,9 +182,9 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void setHidden(Queue queue, boolean hidden) {
         queue.setHidden(hidden);
+        setLocked(queue, hidden);
         if (hidden) {
             clearQueue(queue);
-            setLocked(queue, true);
         }
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), new QueueHiddenStatusChanged(queue.getName(), hidden));
     }
