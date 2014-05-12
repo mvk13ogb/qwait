@@ -125,29 +125,19 @@
                   <button class="secondary" ng-click="cancel()">Back</button>
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
-                  <li>
-                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                      <span class="size-14">Lock&nbsp;</span>
-                    </button>
-                  </li>
+                <ul ng-click="open()" class="button-group" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button small alert" style="margin-bottom: 0;">
-                      <i class="fi-lock size-14"></i>
+                      <i class="fi-lock size-14"></i> Lock
                     </button>
                   </li>
                 </ul>
               </div>
 
-              <ul ng-show="queue.locked" ng-click="queues.setLocked(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
-                <li>
-                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                    <span class="size-14">Unlock</span>
-                  </button>
-                </li>
+              <ul ng-show="queue.locked" ng-click="queues.setLocked(queue.name, false)" class="button-group" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button small success" style="margin-bottom: 0;">
-                    <i class="fi-unlock size-14"></i>
+                    <i class="fi-unlock size-14"></i> Unlock
                   </button>
                 </li>
               </ul>
@@ -165,29 +155,19 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
-                  <li>
-                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                      <span class="size-14">Hide&nbsp;</span>
-                    </button>
-                  </li>
+                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button small alert" style="margin-bottom: 0;">
-                      <i class="fi-eye size-14"></i>
+                      <i class="fi-eye size-14"></i> Hide
                     </button>
                   </li>
                 </ul>
               </div>
 
-              <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group radius" style="margin-top: 0.5rem">
-                <li>
-                  <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                    <span class="size-14">Unhide</span>
-                  </button>
-                </li>
+              <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button small success" style="margin-bottom: 0;">
-                    <i class="fi-eye size-14"></i>
+                    <i class="fi-eye size-14"></i> Unhide
                   </button>
                 </li>
               </ul>
@@ -205,15 +185,10 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
-                  <li>
-                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                      <span class="size-14">Clear</span>
-                    </button>
-                  </li>
+                <ul ng-click="open()" class="button-group" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button small alert" style="margin-bottom: 0;">
-                      <i class="fi-x size-14"></i>
+                      <i class="fi-x size-14"></i> Clear
                     </button>
                   </li>
                 </ul>
@@ -233,15 +208,10 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group radius" style="margin-top: 0.5rem">
-                  <li>
-                    <button type="button" class="button secondary small" style="margin-bottom: 0;">
-                      <span class="size-14">Delete</span>
-                    </button>
-                  </li>
+                <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button small alert" style="margin-bottom: 0;">
-                      <i class="fi-trash size-14"></i>
+                      <i class="fi-trash size-14"></i> Delete
                     </button>
                   </li>
                 </ul>
@@ -285,17 +255,10 @@
                   <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18" style="vertical-align: middle">
                     <i class="fi-x"></i>
                   </a>
-                  <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group radius f-dropdown content tiny" style="margin-top: 0.5rem">
-                    <li>
-                      <button type="button" class="button secondary tiny" style="margin-bottom: 0;">
-                        <span class="size-14">
-                          Remove
-                        </span>
-                      </button>
-                    </li>
+                  <ul id="remove-user-{{position.userName}}" ng-click="open(position)" class="button-group f-dropdown content" style="margin-top: 0.5rem">
                     <li>
                       <button type="button" class="button tiny alert" ng-click="" style="margin-bottom: 0;">
-                        <i class="fi-x size-14"></i>
+                        <i class="fi-x size-14"></i> Remove
                       </button>
                     </li>
                   </ul>
