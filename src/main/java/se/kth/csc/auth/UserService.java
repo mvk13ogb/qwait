@@ -33,6 +33,12 @@ public class UserService implements AuthenticationUserDetailsService<Authenticat
     @Transactional
     @Override
     public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
+        if (!token.getName().startsWith("u1")) {
+            // See http://intra.kth.se/it/driftsinformation-webbtjanster/anstallda/inloggning-maste-ske-med-sma-bokstaver-1.475521
+            // which allows an exploit. Counter-measured by only allowing usernames starting with "u1"
+            throw new UsernameNotFoundException("This username is not in the u1 realm and was probably forged");
+        }
+
         Account account = accountStore.fetchAccountWithPrincipalName(token.getName());
 
         if (account == null) {
