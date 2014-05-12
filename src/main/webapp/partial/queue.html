@@ -160,7 +160,7 @@
               <div ng-show="!queue.hidden" ng-controller="hideQueueModalCtrl">
                 <script type="text/ng-template" id="hideQueueModalContent.html">
                   <h2>Hibernate queue {{queue.title}}</h2>
-                  <p>This will lock the queue, remove all users from it and hide it from the queue list.</p>
+                  <p>This will lock the queue, hide it from the queue list and remove all users inside.</p>
 
                   <button class="alert" ng-click="queues.setHidden(queue.name, true); ok()">
                     <i class="fi-prohibited"></i>
