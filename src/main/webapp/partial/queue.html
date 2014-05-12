@@ -268,36 +268,8 @@
               <td>
                 <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
               </td>
-              <td ng-hide="editingLocation">
-                {{position.location}}
-                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingLocation = true">
-                  <i class="fi-pencil"></i>
-                </button>
-              </td>
-              <td ng-show="editingLocation">
-                <form
-                    ng-submit="queues.changeLocation(queue.name, users.current.name, position.location); editingLocation = false">
-                  <input type="text" maxlength="20" style="margin-bottom: 0;"
-                         ng-model="position.location"
-                         ng-change="queues.changeLocation(queue.name, users.current.name, position.location)"/>
-                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-                </form>
-              </td>
-              <td ng-hide="editingComment">
-                {{position.comment}}
-                <button ng-show="getUser(position.userName).name == users.current.name" type="button" class="button itsy" style="margin-bottom: 0;" ng-click="editingComment = true">
-                  <i class="fi-pencil"></i>
-                </button>
-              </td>
-              <td ng-show="editingComment">
-                <form
-                    ng-submit="queues.changeComment(queue.name, users.current.name, position.comment); editingComment = false">
-                  <input type="text" maxlength="20" style="margin-bottom: 0;"
-                         ng-model="position.comment"
-                         ng-change="queues.changeComment(queue.name, users.current.name, position.comment)"/>
-                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-                </form>
-              </td>
+              <td>{{position.location}}</td>
+              <td>{{position.comment}}</td>
             </tr>
           </tbody>
         </table>
