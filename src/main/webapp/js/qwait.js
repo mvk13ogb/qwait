@@ -23,6 +23,10 @@
                 templateUrl: 'partial/admin.html',
                 controller: 'AdminCtrl'
             }).
+            when('/error/:errorMsg', {
+                templateUrl: 'partial/error.html',
+                controller: 'ErrorCtrl',
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -339,9 +343,9 @@
 
             if (!cached) {
                 cached = {};
-                result.all[name] = cached;
                 result.doGet(name).success(function (queue) {
                     angular.extend(cached, queue);
+                    result.all[name] = cached;
                 });
             }
             return cached;
@@ -723,6 +727,13 @@
             $scope.queues = queues;
             $scope.users = users;
 
+            $timeout(function () {
+            if ($scope.queue.name == null)
+                {
+                    $location.path('/error/404')
+                }
+            }, 300);
+
             $scope.isQueueOwner = security.isQueueOwner;
             $scope.canModerateQueue = security.canModerateQueue;
             $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
@@ -879,6 +890,16 @@
             }
         } else {
             console.log("Current user was not loaded");
+        }
+    }]);
+
+    qwait.controller('ErrorCtrl', ['$scope', '$timeout', '$routeParams', 'page', function ($scope, $timeout, $routeParams, page) {
+        page.title = 'Error ' + $routeParams.errorMsg;
+        //TODO maybe encode the url to hide the numbers?
+        if ($routeParams.errorMsg == 404) {
+            $scope.error = "Error 404: Queue was not found";
+        } else {
+        $scope.error = "Unknown error";
         }
     }]);
 
