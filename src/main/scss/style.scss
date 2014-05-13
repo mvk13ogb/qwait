@@ -92,6 +92,18 @@ button.itsy, .button.itsy {
   @include opacity(0.5);
 }
 
+.connection-icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  background-color: #0C0;
+}
+
+.connection-icon-error {
+  background-color: #F00;
+}
+
 @keyframes fade-out {
   from {
     opacity: 1;
