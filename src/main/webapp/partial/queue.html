@@ -231,9 +231,9 @@
         <table class="small-12 columns">
           <thead>
             <tr>
-              <th width="1">#</th>
+              <th width="1" class="show-for-medium-up">#</th>
               <th>User</th>
-              <th>Time</th>
+              <th class="show-for-medium-up">Time</th>
               <th width="1"></th>
               <th>Location</th>
               <th>Comment</th>
@@ -241,7 +241,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
-              <td width="1">{{$index + 1}}</td>
+              <td width="1" class="show-for-medium-up">{{$index + 1}}</td>
               <td>
                 {{getUser(position.userName).readableName}}
                 <span ng-show="users.current.admin" ng-controller="RemoveUserModalCtrl">
@@ -268,12 +268,12 @@
                   </ul>
                 </span>
               </td>
-              <td>{{timeDiff(position.startTime)}}</td>
+              <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
               <td>
                 <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
               </td>
-              <td>{{position.location}}</td>
-              <td>{{position.comment}}</td>
+              <td style="word-break: break-all">{{position.location}}</td>
+              <td style="word-break: break-all">{{position.comment}}</td>
             </tr>
           </tbody>
         </table>
