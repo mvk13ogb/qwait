@@ -6,7 +6,7 @@
 <div ng-if="users.current.moderatedQueues.length && !(users.current.admin || users.current.ownedQueues.length)">
   <h2>Your moderated queues</h2>
   <div class="radius queue-row"
-       ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']"
        ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
       <div class="small-8 columns">
