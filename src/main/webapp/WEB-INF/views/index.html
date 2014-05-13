@@ -51,7 +51,9 @@
 
         <ul class="show-for-large-up title-area center-logo">
           <li class="name">
-            <a href="#/" class="top-logo"></a>
+            <a href="#/" class="top-logo" ng-mouseenter="logohover = true" ng-mouseleave="logohover = false">
+              <div class="top-logo-pin" ng-class="{'moving-pin': logohover}"></div>
+            </a>
           </li>
         </ul>
 
