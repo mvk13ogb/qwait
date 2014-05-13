@@ -169,6 +169,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         MockHttpSession session = signInAs("u1testUser", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
@@ -218,6 +220,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
                 .andExpect(jsonPath("name", is("abc123")));
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/u1testUser").session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -239,6 +243,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         MockHttpSession session1 = signInAs("u1testUser", "admin");
         MockHttpSession session2 = signInAs("u1testUser2");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session1))
                 .andExpect(status().isOk())
@@ -296,6 +302,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         MockHttpSession session1 = signInAs("u1testUser", "admin");
         MockHttpSession session2 = signInAs("u1testUser2");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session1))
                 .andExpect(status().isOk())
@@ -375,6 +383,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
                 .andExpect(jsonPath("name", is("abc123")));
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/u1testUser").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -425,6 +435,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
                 .andExpect(jsonPath("name", is("abc123")));
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/u1testUser").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("queuePositions", hasSize(0)))
@@ -493,6 +505,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         MockHttpSession session2 = signInAs("u1testUser2", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is("Test queue")))
@@ -543,6 +557,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         MockHttpSession session1 = signInAs("u1testUser", "admin");
         MockHttpSession session2 = signInAs("u1testUser2", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session1).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session1))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/queue/abc123").session(session1))
                 .andExpect(status().isOk())
@@ -663,6 +679,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         // Need two admins to be able to remove one admin later
         MockHttpSession session3 = signInAs("u1testUser3", "admin");
         mockMvc.perform(put("/api/queue/abc123").contentType(MediaType.APPLICATION_JSON).session(session).content("{\"title\":\"Test queue\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser").session(session))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/u1testUser3").session(session3))
                 .andExpect(status().isOk())
@@ -841,6 +859,8 @@ public class ApiControllerIT extends WebSecurityConfigurationAware {
         mockMvc.perform(get("/api/user/u1testUser1").session(session1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("admin", is(true)));
+        mockMvc.perform(put("/api/queue/abc123/owner/u1testUser1").session(session1))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/api/user/u1testUser2").session(session2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("admin", is(true)));
