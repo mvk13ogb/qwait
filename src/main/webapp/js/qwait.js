@@ -343,9 +343,10 @@
 
             if (!cached) {
                 cached = {};
-                result.all[name] = cached;
                 result.doGet(name).success(function (queue) {
                     angular.extend(cached, queue);
+                    result.all[name] = cached;
+
                 });
             }
             return cached;
@@ -852,6 +853,7 @@
         $scope.selectedQueue = undefined;
         $scope.dropdown = undefined;
 
+
         $scope.find = function (user) {
             return users.find(user).then(function (res) {
                 return res.data;
@@ -862,14 +864,32 @@
             var i;
             $scope.selectedQueue = queue;
 
-        $scope.selectedModerators = [];
-        for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
-            $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-        }
+            $scope.selectedModerators = [];
+            for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
+                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
+            }
 
-        $scope.selectedOwners = [];
-        for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
-            $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+            $scope.selectedOwners = [];
+            for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
+                $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
+            }
+        }
+    }
+
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$timeout', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $timeout, $route, clock, queues, users, page, queuePositions) {
+        page.title = 'View queue';
+
+        $scope.queues = queues;
+        $scope.users = users;
+        $scope.queue = queues.get($route.current.params.queueName);
+
+        $timeout(function () {
+            if ($scope.queue.name == null)
+            {
+                $location.path('/error/404')
+            }
+        }, 300);
+
 
         $scope.getUser = function (userName) {
             return users.get(userName);
