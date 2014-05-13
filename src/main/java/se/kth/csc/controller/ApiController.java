@@ -101,7 +101,7 @@ public class ApiController {
         if (principal == null) {
             throw new ForbiddenException();
         }
-        apiProvider.createQueue(queueName, fetchAccountOr404(principal.getName()), queueParameters.getTitle());
+        apiProvider.createQueue(queueName, queueParameters.getTitle());
     }
 
     @RequestMapping(value = "/queue/{queueName}", method = RequestMethod.DELETE)

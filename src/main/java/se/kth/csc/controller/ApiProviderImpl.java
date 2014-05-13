@@ -65,18 +65,15 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin')")
-    public void createQueue(String queueName, Account owner, String title) {
+    public void createQueue(String queueName, String title) {
         Queue queue = new Queue();
         queue.setName(queueName);
         queue.setTitle(title);
         queue.setHidden(false);
         queue.setLocked(false);
-        queue.getOwners().add(owner);
         queueStore.storeQueue(queue);
 
         messageBus.convertAndSend("/topic/queue", new QueueCreated(queueName));
-        messageBus.convertAndSend("/topic/user/" + owner.getPrincipalName(),
-                new QueueOwnerAdded(queueName, owner.getPrincipalName()));
     }
 
     @Override
