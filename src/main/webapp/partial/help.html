@@ -2,7 +2,7 @@
 
 <!-- Not logged in user -->
 <div class="panel" ng-if="users.current.anonymous">
-  <h2>Not logged in user</h2>
+  <h2>Guests</h2>
   <p>You are not logged in. If you only want to view a queue, that's cool, but to
   be able to join a queue, you will need to <a href="#/login">log in</a>.</p>
 
@@ -17,57 +17,61 @@
 
 <!-- Admin -->
 <div class="panel" ng-if="users.current.admin">
-  <h2>Admin functions</h2>
+  <h2>Admins</h2>
 
-  <h3>Add an administrator</h3>
+  <p>Admins are the supreme rulers of QWait, with privileges to perform anything.</p>
+
+  <h3>Add an admin</h3>
   <p>
-    To add an administrator, go to the <a href="#/admin">Admin</a> page. Then enter the name of the
-    user you wish add as administrator in the field under <em>Admin administration</em> and click <em>Add</em>.
-    The user should now show up in the admin list. If not, please refresh the page.
+    To add an admin, go to the <a href="#/admin">Admin</a> page. Then enter the name of the
+    user you wish add as admin in the field under <em>Admins</em> and click <em>Add</em>.
+    The user should now show up in the admin list. If not, please refresh the page. In order to add an user, they must first log in to QWait at least once.
   </p>
 
-  <h3>Remove an administrator</h3>
+  <h3>Remove an admin</h3>
   <p>
-    To remove an administrator, go to the <a href="#/admin">Admin</a> page. Then, under
-    <em>Admin administration</em>, click the remove button beside the name of the administrator you wish to remove.
+    To remove an admin, go to the <a href="#/admin">Admin</a> page. Then, under
+    <em>Admins</em>, click the remove button beside the name of the admin you wish to remove.
     The user should now disappear from the admin list. If not, please refresh the page.
   </p>
   <p>
-    <em>Note: There must always be at least one administrator. It is therefor not possible to remove an administrator
-      if it is the last administrator.</em>
+    <em>Note: There must always be at least one admin. It is therefore not possible to remove an admin
+      if he/she is the last admin.</em>
   </p>
 
   <h3>Add a queue owner</h3>
-  <p>See <a href="#/help/#add-a-queue-owner">Adding a queue owner</a> under <em>Queue owner functions</em>.</p>
+  <p>See <a href="#/help/#add-a-queue-owner">Adding a queue owner</a> under <em>Queue owners</em>.</p>
 </div>
 <!-- Queue owner or admin -->
 <div class="panel" ng-if="users.current.ownedQueues.length || users.current.admin">
-  <h2>Queue owner functions</h2>
+  <h2>Queue owners</h2>
+
+  <p>Queue owners are in charge of specific queues. In addition to the privileges of a moderator, they can also add and remove moderators for their queues and hibernate them.</p>
 
   <h3 id="add-a-queue-owner">Add a queue owner or moderator</h3>
   <p>
     To add a queue owner or moderator for a queue, first go to the <a href="#/admin">Admin</a> page. Then
-    choose the queue you wish to add a queue owner or moderator for in the dropdown as below
+    choose the queue you wish to add a queue owner or moderator for in the dropdown as below:
   </p>
   <img src="/images/help/select-queue-dropdown.png" alt="Select queue dropdown">
   <p>
     After you have selected a queue, you enter the name of the user you wish to add either in the <em>Owners</em>
-    or the <em>Moderators</em> input fileds, and then press the <em>Add</em> button. When that is done, the user
+    or the <em>Moderators</em> input fields, and then press the <em>Add</em> button. When that is done, the user
     has been added as either queue owner or moderator. If the list doesn't update automatically, please refresh
-    the page and verify that the user has been added.
+    the page and confirm that the user has been added. In order to add an user, they must first log in to QWait at least once.
   </p>
 
   <h3 id="remove-a-queue-owner">Remove a queue owner or moderator</h3>
   <p>
     To remove a queue owner or moderator from a queue, first go to the <a href="#/admin">Admin</a> page. Then
-    choose the queue you wish to remove a queue owner or moderator for in the dropdown as when
+    choose the queue you wish to remove a queue owner or moderator from in the dropdown as when
     <a href="#/help/#add-a-queue-owner">adding a queue owner</a>. Click the red cross beside the user you
     want to remove, as in the picture below, and then confirm the removal in the popup that appears.
   </p>
   <img src="/images/help/remove-queue-owner.png" alt="Remove queue owner">
   <p>
-    The priveleges of the user has now been removed. If the user doesn't update automatically, please refresh
-    the page and verify that the user has been removed.
+    The privileges of the user have now been removed. If the list doesn't update automatically, please refresh
+    the page and confirm that the user has been removed.
   </p>
 
   <h3>Hibernate a queue</h3>
@@ -76,52 +80,54 @@
     will not be labs in a queue for a longer time.
   </p>
   <p>
-    To hibernate a queue, first go to that queues main page via the <a href="#/queues">Queues</a> page. Then go into
-    the <em>Manage queue</em> dropdown, and select <em>Hibernate</em>. Verify in the popup that appears.
+    To hibernate a queue, first go to the main page of that queue via the <a href="#/queues">Queues</a> page. Then go into
+    the <em>Manage queue</em> dropdown, and select <em>Hibernate</em>. Confirm in the popup that appears.
   </p>
   <p>When you want to open the queue again, go into the same menu and select <em>Unhibernate</em>.</p>
 </div>
 
 <!-- Moderator or admin -->
 <div class="panel" ng-if="users.current.moderatedQueues.length || users.current.admin">
-  <h2>Queue moderator functions</h2>
+  <h2>Queue moderators</h2>
+
+  <p>Queue moderators help with moderating specific queues. In addition to removing specific users, they are also able to lock and clear queues.</p>
 
   <h3>Remove a queue position</h3>
   <p>
     To remove a queue position, click the red cross beside the name of the position you wish to remove.
   </p>
   <img src="/images/help/remove-queue-position.png" alt="Removing a queue position">
-  <p>Then select <em>Remove</em> twice to completely remove the queue position.</p>
-  <p><em>Note: Be careful. Once a position have been removed, it can note be restored.</em></p>
+  <p>Then confirm to remove the user from the queue.</p>
+  <p><em>Note: Be careful with removing users from the queue, those actions can not be reverted.</em></p>
 
   <h3>Lock a queue</h3>
   <p>
-    When a queue is locked, people can see the queue but can't join it. When locking a queue, people already
+    When a queue is locked, users can see the queue but not join it. When locking a queue, users already
     in the queue will <em>not</em> be removed.
   </p>
   <p>
-    To lock a queue, first go to that queues main page via the <a href="#/queues">Queues</a> page. Then
-    go into the <em>Manage queue</em> dropdown, and select <em>Lock</em>. Verify in the popup that appears.
+    To lock a queue, first go to the main page of the queue via the <a href="#/queues">Queues</a> page. Then
+    go into the <em>Manage queue</em> dropdown, and select <em>Lock</em>. Confirm in the popup that appears.
   </p>
   <p>To unlock a queue, do the same as above, but instead of choosing <em>Lock</em>, you choose <em>Unlock</em>.</p>
 
   <h3>Clear a queue</h3>
   <p>
-    When a queue is cleared, all people in the queue will be removed. This can't be restored.
+    When a queue is cleared, all people in the queue will be removed. This can't be reverted.
   </p>
   <p>
     To clear a queue, first go to that queues main page via the <a href="#/queues">Queues</a> page. Then
-    go into the <em>Manage queue</em> dropdown, and select <em>Clear</em>. Verify in the popup that appears.
+    go into the <em>Manage queue</em> dropdown, and select <em>Clear</em>. Confirm in the popup that appears.
   </p>
 </div>
 
 <!-- Logged in regular user without any moderator/admin/queue owner privileges -->
 <div class="panel" ng-if="!users.current.anonymous">
-  <h2>Regular users</h2>
+  <h2>Users</h2>
 
   <h3>Queue status</h3>
   <p>
-    The queues in QWait can have different status, which can be good to know. The status is indicated by the
+    The queues in QWait can have different statuses, which can be good to know. The statuses are indicated by the
     color and style of the queue name.
   </p>
   <table>
@@ -143,7 +149,7 @@
     <tr>
       <td><strong class="red strike">Hibernated queue</strong></td>
       <td><i class="fi-prohibited size-16 red"></i></td>
-      <td>This queue is locked and hidden from the queue list, and can't be joined</td>
+      <td>This queue is hidden from the queue list, locked, and can't be joined</td>
     </tr>
   </table>
 
@@ -172,7 +178,7 @@
     If your location is not automatically obtained, please type your location in the location field.
   </p>
   <p>Now click the <em>Join queue</em> button, and you are done!</p>
-  <p><em>Note: In the queue list page, the boxes of the queues you are currently queueing in become blue.</em></p>
+  <p><em>Note: In the queue list page, the queues you are currently queueing in become blue.</em></p>
 
   <h3>Leave a queue</h3>
   <p>
