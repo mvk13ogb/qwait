@@ -1259,6 +1259,20 @@
         };
     });
 
+    qwait.filter('queuesModeratedBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (user.moderatedQueues.indexOf(queue.name) != -1) {
+                    result.push(queue);
+                }
+            }
+            return result;
+        };
+    });
+
     qwait.factory('getQueuePos', function () {
         return function (name, positions) {
             for (var i = 0; i < positions.length; i++) {
