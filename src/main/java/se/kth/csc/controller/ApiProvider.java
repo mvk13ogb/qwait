@@ -15,7 +15,7 @@ public interface ApiProvider {
 
     QueuePosition fetchQueuePosition(String queueName, String userName);
 
-    void createQueue(String queueName, Account owner, String title);
+    void createQueue(String queueName, String title);
 
     void setAdmin(Account account, boolean admin) throws ForbiddenException;
 
