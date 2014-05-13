@@ -457,7 +457,7 @@
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', github: 'dflemstr', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
-                { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', twitter: 'hlilje' },
+                { name: 'Hampus Liljekvist', gravatar: '9f977d80508af50fe1fcc53f6db7b1a1', github: 'hlilje', twitter: 'hlilje' },
                 { name: 'Jacob Sievers', gravatar: '00c2d95911a8ccf7e5200257f03ffb34' },
                 { name: 'Michael Håkansson', gravatar: 'e12d2965870d5054f901b088ab692d3d', github: 'michaelhakansson', twitter: 'michaelhak' },
                 { name: 'Robin Engström', gravatar: 'd3389ec4c8f9a0d7d0500ec982a35099' }
