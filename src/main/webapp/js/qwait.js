@@ -1207,7 +1207,7 @@
                 return string.split(".", 1)[0];
             }
 
-            var exclude = /share|kthopen|eduroam/;
+            var exclude = /share|kthopen|eduroam|dyna/;
             var include = /(csc|ug)\.kth\.se/;
 
             //Filters out the most common non-school computers
