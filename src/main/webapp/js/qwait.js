@@ -303,9 +303,10 @@
 
             if (!cached) {
                 cached = {};
-                result.all[name] = cached;
                 result.doGet(name).success(function (queue) {
                     angular.extend(cached, queue);
+                    result.all[name] = cached;
+
                 });
             }
             return cached;
@@ -672,28 +673,19 @@
         };
     }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $route, clock, queues, users, page, queuePositions) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$timeout', '$route', 'clock', 'queues', 'users', 'page', 'queuePositions', function ($scope, $location, $timeout, $route, clock, queues, users, page, queuePositions) {
         page.title = 'View queue';
 
         $scope.queues = queues;
         $scope.users = users;
+        $scope.queue = queues.get($route.current.params.queueName);
 
-        //redirect if we visit an invalid queue
-        var currentQueues = angular.copy(queues);
-        var queueList = [];
-        for (var key in currentQueues.all) {
-            if (currentQueues.all.hasOwnProperty(key)) {
-                queueList.push(currentQueues.all[key]);
+        $timeout(function () {
+            if ($scope.queue.name == null)
+            {
+                $location.path('/error/404')
             }
-        }
-
-        if (queues.contains($route.current.params.queueName, currentQueues)){
-            $scope.queue = queues.get($route.current.params.queueName);
-        } else if (queueList.length != 0) {
-            $location.path('/error/404')
-        } else {
-            $scope.queue = queues.get($route.current.params.queueName);
-        }
+        }, 300);
 
         $scope.getUser = function (userName) {
             return users.get(userName);

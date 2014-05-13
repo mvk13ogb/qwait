@@ -434,7 +434,7 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <jrubyVersion>1.7.2</jrubyVersion>
+                            <jrubyVersion>1.6.8</jrubyVersion>
                             <execArgs>
                                 ${project.build.directory}/rubygems/bin/scss
                                 --compass
