@@ -5,9 +5,9 @@
     </span>
   </h2>
   <h5 ng-show="userQueuePos(users.current, queue.positions)">
-    Your position: {{queuePosNr()}}
+    Position: {{queuePosNr()}} / {{queue.positions.length}}
   </h5>
-  <p ng-hide="queue.positions.length > 0">This queue is empty</p>
+  <p ng-hide="queue.positions.length > 0">This queue is empty.</p>
 
   <div ng-show="queue.positions.length > 0" class="row collapse">
     <div class="large-3 large-offset-9 columns">
@@ -28,13 +28,18 @@
         </a>
       </div>
 
-      <div class="grey-panel text-center" ng-show="!users.current.anonymous && queue.locked">
-        <i class="fi-lock size-48"></i>
-        <p>This queue is locked, and can't be entered</p>
+      <div class="grey-panel text-center" ng-show="!users.current.anonymous && queue.hidden">
+        <i class="fi-prohibited red size-48"></i>
+        <p>This queue is in hibernation, and can't be entered.</p>
+      </div>
+
+      <div class="grey-panel text-center" ng-show="!users.current.anonymous && queue.locked && !queue.hidden">
+        <i class="fi-lock red size-48"></i>
+        <p>This queue is locked, and can't be entered.</p>
       </div>
 
       <div ng-show="!users.current.anonymous">
-        <label>
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
           Location
           <div class="row collapse">
             <div class="small-12 columns">
@@ -64,7 +69,7 @@
             </div>
           </div>
         </label>
-        <label>
+        <label ng-show="!queue.locked || userQueuePos(users.current, queue.positions)">
           Comment
           <div class="row collapse">
             <div class="small-12 columns">
@@ -94,7 +99,7 @@
               Join queue
             </button>
 
-            <button ng-show="!locationplaceholder" class="expand disabled"
+            <button ng-show="!locationplaceholder && !queue.hidden && !queue.locked" class="expand disabled"
                     tooltip="In order to queue, you need to enter your location."
                     tooltip-placement="bottom" tooltip-trigger="focus">
               <i class="fi-plus"></i>
@@ -133,8 +138,7 @@
                   </li>
                 </ul>
               </div>
-
-              <ul ng-show="queue.locked" ng-click="queues.setLocked(queue.name, false)" class="button-group" style="margin-top: 0.5rem">
+              <ul ng-show="queue.locked && !queue.hidden" ng-click="queues.setLocked(queue.name, false)" class="button-group" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button small success" style="margin-bottom: 0;">
                     <i class="fi-unlock size-14"></i> Unlock
@@ -144,12 +148,12 @@
 
               <div ng-show="!queue.hidden" ng-controller="HideQueueModalCtrl">
                 <script type="text/ng-template" id="hide-queue-modal-content.html">
-                  <h2>Hide queue {{queue.title}}</h2>
-                  <p>This will clear, lock and hide the queue, making it invisible in the queue list.</p>
+                  <h2>Hibernate queue {{queue.title}}</h2>
+                  <p>This will lock the queue, hide it from the queue list and remove all users inside.</p>
 
                   <button class="alert" ng-click="queues.setHidden(queue.name, true); ok()">
-                    <i class="fi-eye"></i>
-                    Hide
+                    <i class="fi-prohibited"></i>
+                    Hibernate
                   </button>
                   <button class="secondary" ng-click="cancel()">Back</button>
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
@@ -158,7 +162,7 @@
                 <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" class="button-group" style="margin-top: 0.5rem">
                   <li>
                     <button type="button" class="button small alert" style="margin-bottom: 0;">
-                      <i class="fi-eye size-14"></i> Hide
+                      <i class="fi-eye size-14"></i> Hibernate
                     </button>
                   </li>
                 </ul>
@@ -167,7 +171,7 @@
               <ul ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" class="button-group" style="margin-top: 0.5rem">
                 <li>
                   <button type="button" class="button small success" style="margin-bottom: 0;">
-                    <i class="fi-eye size-14"></i> Unhide
+                    <i class="fi-eye size-14"></i> Unhibernate
                   </button>
                 </li>
               </ul>
