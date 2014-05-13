@@ -73,12 +73,12 @@
           <ul class="right">
             <li>
               <a>
-                <span ng-if="messagebus.ready" class="" title="Connected with {{messagebus.describeProtocol(messagebus.protocol)}}">
+                <span ng-if="messagebus.ready" title="Connected with {{messagebus.describeProtocol(messagebus.protocol)}}">
                   <span class="connection-icon"></span>
                   <span class="green hide-for-large-up">Connected</span>
                 </span>
 
-                <span ng-if="!messagebus.ready" class="red" title="Disconnected">
+                <span ng-if="!messagebus.ready" title="Disconnected">
                   <span class="connection-icon connection-icon-error"></span>
                   <span class="red hide-for-large-up">Disconnected</span>
                 </span>
