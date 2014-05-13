@@ -1,4 +1,44 @@
-<div>
+<div ng-if="!(users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length)">
+  <h1>Hey, you don't have access to this page!</h1>
+</div>
+
+<!-- Shows the queues the current user is moderator for (only shown for users that's ONLY moderator) -->
+<div ng-if="users.current.moderatedQueues.length && !(users.current.admin || users.current.ownedQueues.length)">
+  <h2>Your moderated queues</h2>
+  <div class="radius queue-row"
+       ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
+       ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
+    <div class="row">
+      <div class="small-8 columns">
+        <h3><a href="#/queue/{{queue.name}}">
+          <span ng-class="{'strike': queue.hidden, 'red': queue.locked}" style="word-wrap: break-word">
+            {{queue.title}}
+          </span>
+        </a></h3>
+      </div>
+      <div class="small-4 columns">
+        <div class="right">
+          <span class="size-36" style="vertical-align: middle">
+            <i class="fi-prohibited red" ng-show="queue.hidden" title="This queue is in hibernation."></i>
+            <i class="fi-lock red" ng-show="queue.locked && !queue.hidden" title="This queue is locked."></i>
+          </span>
+          <span ng-if="userQueuePos(users.current, queue.positions)">
+            <i class="fi-torso size-36" style="vertical-align: middle"></i>
+            <span class="size-24" style="vertical-align: middle">
+              {{queuePos(users.current.name, queue.positions)}}/{{queue.positions.length}}
+            </span>
+          </span>
+          <span ng-if="!userQueuePos(users.current, queue.positions)">
+            <i class="fi-torsos size-36" style="vertical-align: middle"></i>
+            <span class="size-24" style="vertical-align: middle">{{queue.positions.length}}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-if="users.current.admin || users.current.ownedQueues.length">
   <h1>Administration</h1>
 
   <p>
@@ -63,7 +103,7 @@
     </div>
   </div>
 
-  <div class="row collapse">
+  <div ng-if="users.current.admin || users.current.ownedQueues.length" class="row collapse">
     <div class="medium-6 columns">
       <h2>Queues</h2>
       <div ng-show="selectedQueue">
