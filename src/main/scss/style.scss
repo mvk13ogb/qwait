@@ -82,14 +82,19 @@ button.itsy, .button.itsy {
   background: url(../../images/qwait-topbar-logo.png);
   background-size: 115px 30px;
 
+  position: absolute;
   width: 115px;
   height: 30px;
-  margin: 8px;
-  display: inline-block;
+  margin: 8px 8px;
 }
 
 .top-logo:hover {
   @include opacity(0.5);
+}
+
+.center-logo {
+  position: absolute;
+  left: calc(50% - 64px);
 }
 
 @keyframes fade-out {

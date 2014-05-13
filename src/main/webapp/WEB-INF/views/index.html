@@ -48,13 +48,21 @@
   <body>
     <div ng-controller="TopbarCtrl">
       <top-bar>
-        <ul class="title-area">
+
+        <ul class="show-for-large-up title-area center-logo">
           <li class="name">
-            <a href="#/" class="top-logo logo-small"></a>
+            <a href="#/" class="top-logo"></a>
+          </li>
+        </ul>
+
+        <ul class="hide-for-large-up title-area">
+          <li class="name">
+            <a href="#/" class="top-logo"></a>
           </li>
           <!--/* Must have empty ="" here to avoid Thymeleaf exception */-->
           <li toggle-top-bar="" class="menu-icon"><a>Menu</a></li>
         </ul>
+
         <top-bar-section>
           <ul class="left">
             <li ng-class="{active: location.path() == '/'}">
