@@ -28,7 +28,7 @@
        ng-repeat="queue in queues.all|arrayify|queuesSeenBy:users.current|filter:search|orderBy:['locked','-positions.length','title']"
        ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
-      <div class="small-6 columns">
+      <div class="small-8 columns">
         <h3><a href="#/queue/{{queue.name}}">
           <span ng-class="{'strike': queue.hidden, 'red': queue.locked}" style="word-wrap: break-word">
             {{queue.title}}
