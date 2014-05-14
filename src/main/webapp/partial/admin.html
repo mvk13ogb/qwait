@@ -74,18 +74,16 @@
     <accordion close-others="true">
       <accordion-group ng-if="users.current.ownedQueues.length" is-open="ownerIsOpen">
         <accordion-heading>
-          Owner <i class="right" ng-class="{'fi-minus': ownerIsOpen, 'fi-plus': !ownerIsOpen}"></i>
+          Owned queues <i class="right" ng-class="{'fi-minus': ownerIsOpen, 'fi-plus': !ownerIsOpen}"></i>
         </accordion-heading>
-        <p>These are the queues you own</p>
         <div ng-repeat="queue in queues.all|arrayify|queuesOwnedBy:users.current|orderBy:['locked','-positions.length','title']">
           <li><a href="#/queue/{{queue.name}}">{{queue.title}}</a></li>
         </div>
       </accordion-group>
       <accordion-group ng-if="users.current.moderatedQueues.length" is-open="moderatorIsOpen">
         <accordion-heading>
-          Moderator <i class="right" ng-class="{'fi-minus': moderatorIsOpen, 'fi-plus': !moderatorIsOpen}"></i>
+          Moderated queues <i class="right" ng-class="{'fi-minus': moderatorIsOpen, 'fi-plus': !moderatorIsOpen}"></i>
         </accordion-heading>
-        <p>These are the queues you are moderator in</p>
         <div ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']">
           <li><a href="#/queue/{{queue.name}}">{{queue.title}}</a></li>
         </div>
