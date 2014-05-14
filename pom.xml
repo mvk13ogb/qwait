@@ -497,60 +497,6 @@
                     </deployables>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.2</version>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.3.1.4</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <preloadSources>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-animate.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-route.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/mm-foundation-tpls.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/sockjs.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/stomp.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/moment-with-langs.js</source>
-
-                                <source>${project.basedir}/src/test/webapp/vendor/js/angular-mocks.js</source>
-                                <source>${project.basedir}/src/test/webapp/js/mock-request.js</source>
-                            </preloadSources>
-                            <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
-                            <jsTestSrcDir>${project.basedir}/src/test/webapp/js</jsTestSrcDir>
-                            <specIncludes>
-                                <include>*.spec.js</include>
-                            </specIncludes>
-                            <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-                            <webDriverCapabilities>
-                                <capability>
-                                    <name>phantomjs.binary.path</name>
-                                    <value>${phantomjs.binary}</value>
-                                </capability>
-                            </webDriverCapabilities>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>
