@@ -424,42 +424,37 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>de.saumya.mojo</groupId>
-                <artifactId>gem-maven-plugin</artifactId>
-                <version>1.0.0-rc4</version>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>sass-maven-plugin</artifactId>
+                <version>1.1.1</version>
                 <executions>
                     <execution>
+                        <phase>process-sources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>update-stylesheets</goal>
                         </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <jrubyVersion>1.7.2</jrubyVersion>
-                            <execArgs>
-                                ${project.build.directory}/rubygems/bin/scss
-                                --compass
-                                --cache-location
-                                ${project.build.directory}/scss-cache
-                                --update
-                                ${basedir}/src/main/scss:${project.build.directory}/webapp/css
-                            </execArgs>
-                        </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>rubygems</groupId>
-                        <artifactId>sass</artifactId>
-                        <version>3.3.4</version>
-                        <type>gem</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>rubygems</groupId>
-                        <artifactId>compass</artifactId>
-                        <version>0.12.4</version>
-                        <type>gem</type>
-                    </dependency>
-                </dependencies>
+                <configuration>
+                    <sassOptions>
+                        <always_update>true</always_update>
+                        <style>:expanded</style>
+                        <debug_info>true</debug_info>
+                    </sassOptions>
+                    <useCompass>true</useCompass>
+                    <resources>
+                        <resource>
+                            <source>
+                                <directory>src/main/scss</directory>
+                                <includes>
+                                    <include>*.scss</include>
+                                </includes>
+                                <excludes />
+                            </source>
+                            <destination>${project.build.directory}/webapp/css</destination>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
@@ -496,60 +491,6 @@
                         </deployable>
                     </deployables>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.2</version>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.3.1.4</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <preloadSources>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-animate.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/angular-route.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/mm-foundation-tpls-0.2.0-SNAPSHOT.min.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/sockjs.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/stomp.js</source>
-                                <source>${project.basedir}/src/main/webapp/vendor/js/moment-with-langs.js</source>
-
-                                <source>${project.basedir}/src/test/webapp/vendor/js/angular-mocks.js</source>
-                                <source>${project.basedir}/src/test/webapp/js/mock-request.js</source>
-                            </preloadSources>
-                            <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
-                            <jsTestSrcDir>${project.basedir}/src/test/webapp/js</jsTestSrcDir>
-                            <specIncludes>
-                                <include>*.spec.js</include>
-                            </specIncludes>
-                            <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-                            <webDriverCapabilities>
-                                <capability>
-                                    <name>phantomjs.binary.path</name>
-                                    <value>${phantomjs.binary}</value>
-                                </capability>
-                            </webDriverCapabilities>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

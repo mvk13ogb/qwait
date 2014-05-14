@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @ControllerAdvice
 class ExceptionHandlerAdvice {
-    private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
-
     /**
      * Handle exceptions thrown by handlers.
      */
