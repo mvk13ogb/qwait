@@ -2,70 +2,36 @@
   <h1>Hey, you don't have access to this page!</h1>
 </div>
 
-<!-- Shows the queues the current user is moderator for (only shown for users that's ONLY moderator) -->
-<div ng-if="users.current.moderatedQueues.length && !(users.current.admin || users.current.ownedQueues.length)">
-  <h2>Your moderated queues</h2>
-  <div class="radius queue-row"
-       ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']"
-       ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
-    <div class="row">
-      <div class="small-8 columns">
-        <h3><a href="#/queue/{{queue.name}}">
-          <span ng-class="{'strike': queue.hidden, 'red': queue.locked}" style="word-wrap: break-word">
-            {{queue.title}}
-          </span>
-        </a></h3>
-      </div>
-      <div class="small-4 columns">
-        <div class="right">
-          <span class="size-36" style="vertical-align: middle">
-            <i class="fi-prohibited red" ng-show="queue.hidden" title="This queue is in hibernation."></i>
-            <i class="fi-lock red" ng-show="queue.locked && !queue.hidden" title="This queue is locked."></i>
-          </span>
-          <span ng-if="userQueuePos(users.current, queue.positions)">
-            <i class="fi-torso size-36" style="vertical-align: middle"></i>
-            <span class="size-24" style="vertical-align: middle">
-              {{queuePos(users.current.name, queue.positions)}}/{{queue.positions.length}}
-            </span>
-          </span>
-          <span ng-if="!userQueuePos(users.current, queue.positions)">
-            <i class="fi-torsos size-36" style="vertical-align: middle"></i>
-            <span class="size-24" style="vertical-align: middle">{{queue.positions.length}}</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div ng-if="users.current.admin || users.current.ownedQueues.length">
   <h1>Administration</h1>
 
   <p>
-    Please be careful on this page; here, you have the power to change anything.
+    Please be careful on this page. Here, you have the power to change a lot of stuff.
   </p>
 
-  <h2>Admins</h2>
+  <span ng-if="ng-if="users.current.admin">
+    <h2>Admins</h2>
 
-  <div class="row collapse" ng-if="users.current.admin">
-    <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
-      <div class="row collapse">
-        <div class="small-10 columns">
-          <input type="text" ng-model="admin" required="required"
-                 placeholder="Add admin"
-                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-                 class="form-control"/>
+    <div class="row collapse">
+      <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
+        <div class="row collapse">
+          <div class="small-10 columns">
+            <input type="text" ng-model="admin" required="required"
+                   placeholder="Add admin"
+                   typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                   class="form-control"/>
+          </div>
+          <div class="small-2 columns">
+            <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                    style="margin-bottom: 0;">
+              <i class="fi-plus white-icon size-16"></i>
+              Add
+            </button>
+          </div>
         </div>
-        <div class="small-2 columns">
-          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-                  style="margin-bottom: 0;">
-            <i class="fi-plus white-icon size-16"></i>
-            Add
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
+  </span>
 
   <div ng-if="users.current.admin" class="row collapse">
     <div class="small-6 columns">
@@ -101,6 +67,28 @@
         <p>(No admins)</p>
       </div>
     </div>
+  </div>
+
+  <!-- Shows the queues the current user is moderator for -->
+  <div ng-if="(users.current.moderatedQueues.length || users.current.moderatedQueues.length) && !users.current.admin">
+    <h2>Your queue roles</h2>
+    <table>
+      <thead>
+      <tr>
+        <th align="left">Queue name</th>
+        <th>Role</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']">
+        <td><a href="#/queue/{{queue.name}}">{{queue.title}}</a></td>
+        <td>
+          <span ng-if="queue.moderators.indexOf(users.current.name) != -1">Moderator</span>
+          <span ng-if="queue.owners.indexOf(users.current.name) != -1">Owner</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
   <div ng-if="users.current.admin || users.current.ownedQueues.length" class="row collapse">

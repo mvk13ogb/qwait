@@ -1259,6 +1259,7 @@
         };
     });
 
+    // Returns the queues that the user are moderator or owner for
     qwait.filter('queuesModeratedBy', function () {
         return function (queues, user) {
             var result = [];
@@ -1266,6 +1267,8 @@
             for (var i = 0; i < queues.length; i++) {
                 var queue = queues[i];
                 if (user.moderatedQueues.indexOf(queue.name) != -1) {
+                    result.push(queue);
+                } else if (user.ownedQueues.indexOf(queue.name) != -1) {
                     result.push(queue);
                 }
             }
