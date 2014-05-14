@@ -158,6 +158,21 @@ button.itsy, .button.itsy {
   animation: spin 60s steps(60, end) infinite;
 }
 
+.connection-icon-success, .connection-icon-error {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+}
+
+.connection-icon-success {
+  background-color: #0C0;
+}
+
+.connection-icon-error {
+  background-color: #F00;
+}
+
 @-moz-keyframes spin {
   100% {
     -moz-transform: rotate(360deg);
