@@ -244,7 +244,7 @@
               <td width="1" class="show-for-medium-up">{{$index + 1}}</td>
               <td>
                 {{getUser(position.userName).readableName}}
-                <span ng-show="users.current.admin" ng-controller="RemoveUserModalCtrl">
+                <span ng-show="canModerateQueue(users.current, queue)" ng-controller="RemoveUserModalCtrl">
                   <script type="text/ng-template" id="remove-user-modal-content.html">
                     <h3>Remove {{getUser(position.userName).readableName}} from {{queue.title}}</h3>
                     <p>This will remove the user from the queue.</p>

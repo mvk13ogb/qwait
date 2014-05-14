@@ -5,7 +5,7 @@
     <groupId>se.kth.csc</groupId>
     <artifactId>qwait</artifactId>
     <packaging>war</packaging>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <name>QWait</name>
     <description>A queuing system for assistance management</description>
     <properties>
