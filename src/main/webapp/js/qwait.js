@@ -1,7 +1,10 @@
 (function () {
     var qwait = angular.module('qwait', ['mm.foundation', 'ngRoute', 'ngAnimate', 'request']);
 
-    qwait.config(['$routeProvider', function ($routeProvider) {
+    qwait.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+        $locationProvider.html5Mode(true);
+
+        // Don't forget to update the white list for index() in HomeController with the entries in this routing table
         $routeProvider.
             when('/about', {
                 templateUrl: 'partial/about.html',
@@ -716,8 +719,8 @@
             };
         }]);
 
-    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', '$modal', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr',
-        function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr) {
+    qwait.controller('QueueCtrl', ['$scope', '$location', '$route', '$timeout', '$filter', '$modal', 'clock', 'queues', 'users', 'security', 'page', 'queuePositions', 'debounce', 'getQueuePosNr', 'requestInfo',
+        function ($scope, $location, $route, $timeout, $filter, $modal, clock, queues, users, security, page, queuePositions, debounce, getQueuePosNr, requestInfo) {
 
             $scope.queue = queues.get($route.current.params.queueName);
             $scope.queues = queues;
@@ -725,7 +728,7 @@
 
             $scope.isQueueOwner = security.isQueueOwner;
             $scope.canModerateQueue = security.canModerateQueue;
-            $scope.locationplaceholder = $filter('getComputerName')(users.current.hostName);
+            $scope.locationplaceholder = $filter('getComputerName')(requestInfo.hostname);
 
             var temp = getQueuePosNr;
             $timeout(function () {

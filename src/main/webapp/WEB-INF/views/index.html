@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" ng-app="qwait">
   <head>
-    <title ng-controller="TitleCtrl" ng-bind="page.title + ' | ' + system.product.name + ' v' + system.product.version">QWait</title>
+    <title ng-controller="TitleCtrl" ng-bind="page.title + ' | ' + system.product.name + ' v' + system.product.version">
+      QWait</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <link rel="shortcut icon" id="favicon" href="../../icons/favicon.ico" th:href="@{/icons/favicon.ico}"/>
+    <link rel="shortcut icon" id="favicon" th:href="@{/icons/favicon.ico}"/>
 
     <link rel="apple-touch-icon" sizes="144x144" th:href="@{/icons/apple-touch-icon-144x144.png}"/>
     <link rel="apple-touch-icon" sizes="114x114" th:href="@{/icons/apple-touch-icon-114x114.png}"/>
     <link rel="apple-touch-icon" sizes="72x72" th:href="@{/icons/apple-touch-icon-72x72.png}"/>
     <link rel="apple-touch-icon" th:href="@{/icons/apple-touch-icon.png}"/>
 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <link rel="stylesheet" th:href="@{/foundation-icons/foundation-icons.css}"/>
 
-    <script th:src="@{/vendor/js/angular.js}"></script>
-    <script th:src="@{/vendor/js/angular-animate.js}"></script>
-    <script th:src="@{/vendor/js/angular-route.js}"></script>
-    <script th:src="@{/vendor/js/sockjs.js}"></script>
-    <script th:src="@{/vendor/js/stomp.js}"></script>
-    <script th:src="@{/vendor/js/moment-with-langs.js}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-animate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-route.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/stomp.min.js"></script>
+    <script th:src="@{/vendor/js/mm-foundation-tpls.js}"></script>
     <script th:src="@{/js/qwait.js}"></script>
     <script type="text/javascript" th:inline="javascript"
             th:with="anonymous = ${#authentication instanceof T(org.springframework.security.authentication.AnonymousAuthenticationToken)}">
@@ -33,9 +35,9 @@
             readableName: /*[[${anonymous} ? null : ${#authentication.userDetails.name}]]*/ null,
             admin: /*[[${#authorization.expression("hasRole('admin')")}]]*/ false,
             roles: /*[[${#authentication.authorities.![authority]}]]*/ [],
-            anonymous: /*[[${anonymous}]]*/ true,
-            hostName: /*[[${hostName}]]*/ null
+            anonymous: /*[[${anonymous}]]*/ true
           },
+          hostname: /*[[${hostname}]]*/ null,
           product: {
             name: /*[[#{product.name}]]*/ 'QWait',
             version: /*[[#{product.version}]]*/ '(snapshot)'
@@ -44,50 +46,65 @@
       }]);
       /* ]]> */
     </script>
+
+    <base th:href="@{/}"/>
   </head>
   <body>
     <div ng-controller="TopbarCtrl">
       <top-bar>
-        <ul class="title-area">
+
+        <!-- This logo is shown on large screens -->
+        <ul class="show-for-large-up title-area center-logo">
           <li class="name">
-            <a href="#/" class="top-logo logo-small"></a>
+            <a href="/" class="top-logo-partial" ng-mouseenter="logohover = true" ng-mouseleave="logohover = false">
+              <div class="top-logo-pin" ng-class="{'moving-pin': logohover}"></div>
+            </a>
+          </li>
+        </ul>
+
+        <!-- This logo is shown on smaller screens -->
+        <ul class="hide-for-large-up title-area">
+          <li class="name">
+            <a href="/" class="top-logo-full"></a>
           </li>
           <!--/* Must have empty ="" here to avoid Thymeleaf exception */-->
           <li toggle-top-bar="" class="menu-icon"><a>Menu</a></li>
         </ul>
+
         <top-bar-section>
           <ul class="left">
             <li ng-class="{active: location.path() == '/'}">
-              <a href="#/queues">Queues</a>
+              <a href="/">Queues</a>
             </li>
             <li ng-class="{active: location.path() == '/about'}">
-              <a href="#/about">About</a>
+              <a href="/about">About</a>
             </li>
             <li ng-class="{active: location.path() == '/help'}">
-              <a href="#/help">Help</a>
+              <a href="/help">Help</a>
             </li>
-            <li ng-if="users.current.admin || users.current.ownedQueues.length" ng-class="{active: location.path() == '/admin'}">
-              <a href="#/admin">Admin</a>
+            <li ng-if="users.current.admin || users.current.ownedQueues.length"
+                ng-class="{active: location.path() == '/admin'}">
+              <a href="/admin">Admin</a>
             </li>
           </ul>
           <ul class="right">
             <li>
               <a>
                 <span ng-if="messagebus.ready" title="Connected with {{messagebus.describeProtocol(messagebus.protocol)}}">
-                  <span class="connection-icon"></span>
+                  <span class="connection-icon-success"></span>
                   <span class="green hide-for-large-up">Connected</span>
                 </span>
 
                 <span ng-if="!messagebus.ready" title="Disconnected">
-                  <span class="connection-icon connection-icon-error"></span>
+                  <span class="connection-icon-error"></span>
                   <span class="red hide-for-large-up">Disconnected</span>
                 </span>
               </a>
             </li>
             <li ng-if="!users.current.anonymous"><a>Logged in as
               <strong>{{users.current.readableName}}</strong></a></li>
-            <li ng-if="!users.current.anonymous"><a th:href="@{/logout}">Log Out</a></li>
-            <li ng-if="users.current.anonymous"><a th:href="@{/login}">Log In</a></li>
+            <li ng-if="!users.current.anonymous"><a th:href="@{/logout}" target="_self">Log Out</a></li>
+            <li ng-if="users.current.anonymous"><a th:href="@{/login}" target="_self">Log In</a></li>
           </ul>
         </top-bar-section>
       </top-bar>
@@ -97,6 +114,5 @@
       <section ng-view="ng-view" class="large-12 columns"></section>
     </div>
 
-    <script th:src="@{/vendor/js/mm-foundation-tpls-0.2.0-SNAPSHOT.min.js}"></script>
   </body>
 </html>
