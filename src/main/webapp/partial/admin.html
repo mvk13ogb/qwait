@@ -162,14 +162,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="moderator in selectedModerators">
-            <td>{{moderator.readableName}}</td>
-            <td>{{moderator.name}}</td>
+          <tr ng-repeat="moderator in selectedQueue.moderators">
+            <td>{{getUser(moderator).readableName}}</td>
+            <td>{{moderator}}</td>
             <td ng-controller="RemoveModeratorModalCtrl">
               <script type="text/ng-template" id="remove-moderator-modal-content.html">
-                <h3>Remove moderator {{position.readableName}} from {{queue.title}}</h3>
+                <h3>Remove moderator {{getUser(position).readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as a moderator from the queue.</p>
-                <button class="alert" ng-click="queues.removeModerator(queue.name, position.name); ok()">
+                <button class="alert" ng-click="queues.removeModerator(queue.name, position); ok()">
                   <i class="fi-x"></i>
                   Remove
                 </button>
@@ -215,14 +215,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="owner in selectedOwners">
-            <td>{{owner.readableName}}</td>
-            <td>{{owner.name}}</td>
+          <tr ng-repeat="owner in selectedQueue.owners">
+            <td>{{getUser(owner).readableName}}</td>
+            <td>{{owner}}</td>
             <td ng-controller="RemoveOwnerModalCtrl">
               <script type="text/ng-template" id="remove-owner-modal-content.html">
-                <h3>Remove owner {{position.readableName}} from {{queue.title}}</h3>
+                <h3>Remove owner {{getUser(position).readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as an owner from the queue.</p>
-                <button class="alert" ng-click="queues.removeOwner(queue.name, position.name); ok()">
+                <button class="alert" ng-click="queues.removeOwner(queue.name, position); ok()">
                   <i class="fi-x"></i>
                   Remove
                 </button>
