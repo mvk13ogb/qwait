@@ -77,7 +77,7 @@
           Owned queues <i class="right" ng-class="{'fi-minus': ownerIsOpen, 'fi-plus': !ownerIsOpen}"></i>
         </accordion-heading>
         <div ng-repeat="queue in queues.all|arrayify|queuesOwnedBy:users.current|orderBy:['locked','-positions.length','title']">
-          <li><a href="#/queue/{{queue.name}}">{{queue.title}}</a></li>
+          <li><a href="/queue/{{queue.name}}">{{queue.title}}</a></li>
         </div>
       </accordion-group>
       <accordion-group ng-if="users.current.moderatedQueues.length" is-open="moderatorIsOpen">
@@ -85,7 +85,7 @@
           Moderated queues <i class="right" ng-class="{'fi-minus': moderatorIsOpen, 'fi-plus': !moderatorIsOpen}"></i>
         </accordion-heading>
         <div ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']">
-          <li><a href="#/queue/{{queue.name}}">{{queue.title}}</a></li>
+          <li><a href="/queue/{{queue.name}}">{{queue.title}}</a></li>
         </div>
       </accordion-group>
     </accordion>
