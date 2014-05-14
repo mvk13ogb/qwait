@@ -48,13 +48,25 @@
   <body>
     <div ng-controller="TopbarCtrl">
       <top-bar>
-        <ul class="title-area">
+
+        <!-- This logo is shown on large screens -->
+        <ul class="show-for-large-up title-area center-logo">
           <li class="name">
-            <a href="#/" class="top-logo logo-small"></a>
+            <a href="#/" class="top-logo-partial" ng-mouseenter="logohover = true" ng-mouseleave="logohover = false">
+              <div class="top-logo-pin" ng-class="{'moving-pin': logohover}"></div>
+            </a>
+          </li>
+        </ul>
+
+        <!-- This logo is shown on smaller screens -->
+        <ul class="hide-for-large-up title-area">
+          <li class="name">
+            <a href="#/" class="top-logo-full"></a>
           </li>
           <!--/* Must have empty ="" here to avoid Thymeleaf exception */-->
           <li toggle-top-bar="" class="menu-icon"><a>Menu</a></li>
         </ul>
+
         <top-bar-section>
           <ul class="left">
             <li ng-class="{active: location.path() == '/'}">

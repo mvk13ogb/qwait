@@ -75,22 +75,52 @@ button.itsy, .button.itsy {
   overflow: hidden;
 }
 
-.top-logo {
+.top-logo-full {
+  background: url(../../images/qwait-topbar-logo.png);
+}
+
+.top-logo-partial {
+  background: url(../../images/qwait-transparent-partial-small.png);
+}
+
+.top-logo-full, .top-logo-partial {
   @include opacity(1);
   @include transition(300ms);
   
-  background: url(../../images/qwait-topbar-logo.png);
   background-size: 115px 30px;
 
+  position: absolute;
   width: 115px;
   height: 30px;
-  margin: 8px;
-  display: inline-block;
+  margin: 8px 8px;
 }
 
-.top-logo:hover {
-  @include opacity(0.5);
+.top-logo-full:hover, .top-logo-partial:hover {
+  @include opacity(0.7);
 }
+
+.center-logo {
+  position: absolute;
+  left: calc(50% - 64px);
+}
+
+.top-logo-pin {
+  background: url(../../images/clock-pin-small.png);
+  background-size: 30px 30px;
+
+  width: 30px;
+  height: 30px;
+}
+
+.moving-pin {
+  -webkit-animation:spin 60s steps(60, end) infinite;
+  -moz-animation:spin 60s steps(60, end) infinite;
+  animation:spin 60s steps(60, end) infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 @keyframes fade-out {
   from {
