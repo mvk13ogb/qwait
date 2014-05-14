@@ -3,15 +3,13 @@ package se.kth.csc.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import se.kth.csc.model.Account;
+import org.springframework.web.servlet.ModelAndView;
 import se.kth.csc.persist.AccountStore;
-import java.security.Principal;
-import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -38,65 +36,19 @@ public class HomeController {
     /**
      * The welcome page of the web application
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(HttpServletRequest request, Model model) {
+    @Order(Ordered.LOWEST_PRECEDENCE - 1000)
+    @RequestMapping(value = {"/", "/about", "/help", "/queue/**", "/admin"}, method = RequestMethod.GET)
+    public ModelAndView index(HttpServletRequest request) {
 
-        String hostName = "";
+        String hostname;
         try {
-            hostName = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
-        } catch (UnknownHostException e){
-            log.info("Hostname error:" + e.getMessage());
+            hostname = InetAddress.getByName(request.getRemoteHost()).getCanonicalHostName();
+        } catch (UnknownHostException e) {
+            log.error("Hostname error", e);
+            hostname = null;
         }
 
-        model.addAttribute("hostName", hostName);
-
-        return "index";
-    }
-
-    /**
-     * The debug page of the web application
-     */
-    @RequestMapping(value = "/debug", method = RequestMethod.GET)
-    public String debug() {
-        return "debug";
-    }
-
-    @Transactional
-    @RequestMapping(value = "/make-me-admin", method = RequestMethod.POST)
-    public String makeMeAdmin(Principal principal) throws ForbiddenException {
-        // Make user into an admin
-        if (principal != null) {
-            Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-            account.setAdmin(true);
-
-            // Log out user to reload auth roles
-            SecurityContextHolder.clearContext();
-
-            log.info("User {} is now an admin and was logged out", account.getName());
-
-            return "redirect:/debug";
-        } else {
-            throw new ForbiddenException();
-        }
-    }
-
-    @Transactional
-    @RequestMapping(value = "/make-me-not-admin", method = RequestMethod.POST)
-    public String makeMeNotAdmin(Principal principal) throws ForbiddenException {
-        // Make user into a non-admin
-        if (principal != null) {
-            Account account = accountStore.fetchAccountWithPrincipalName(principal.getName());
-            account.setAdmin(false);
-
-            // Log out user to reload auth roles
-            SecurityContextHolder.clearContext();
-
-            log.info("User {} is now not an admin and was logged out", account.getName());
-
-            return "redirect:/debug";
-        } else {
-            throw new ForbiddenException();
-        }
+        return new ModelAndView("index", "hostname", hostname);
     }
 
     // Used to enforce authentication when logging in from welcome page
