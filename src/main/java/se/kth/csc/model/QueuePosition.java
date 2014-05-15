@@ -47,6 +47,9 @@ public class QueuePosition {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Column(name = "readable_name")
+    private String readableName;
+
     @Column(name = "location")
     private String location;
 
@@ -81,6 +84,14 @@ public class QueuePosition {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public void setReadableName(String readableName) {
+        this.readableName = readableName;
+    }
+
+    public String getReadableName() {
+        return readableName;
     }
 
     public String getLocation() {
