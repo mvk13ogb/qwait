@@ -130,9 +130,10 @@
                   <button class="secondary" ng-click="cancel()">Back</button>
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
-                  <button ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
-                    <i class="fi-lock size-14"></i> Lock
-                  </button>
+
+                <button ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                  <i class="fi-lock size-14"></i> Lock
+                </button>
               </div>
 
               <button ng-show="queue.locked && !queue.hidden" ng-click="queues.setLocked(queue.name, false)" type="button" class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
@@ -152,9 +153,9 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                  <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
-                    <i class="fi-eye size-14"></i> Hibernate
-                  </button>
+                <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                  <i class="fi-eye size-14"></i> Hibernate
+                </button>
               </div>
 
               <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" type="button" class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
@@ -196,7 +197,6 @@
                 <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
                   <i class="fi-trash size-14"></i> Delete
                 </button>
-
               </div>
             </div>
           </div>
@@ -237,12 +237,12 @@
                   <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18" style="vertical-align: middle">
                     <i class="fi-x red"></i>
                   </a>
+                  
                   <div id="remove-user-{{position.userName}}" class="f-dropdown content">
-                  <button ng-click="open(position)" type="button" class="button alert tiny expand">
-                    <i class="fi-x size-14"></i> Remove
-                  </button>
+                    <button ng-click="open(position)" type="button" class="button alert tiny expand">
+                      <i class="fi-x size-14"></i> Remove
+                    </button>
                   </div>
-
                 </span>
               </td>
               <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
