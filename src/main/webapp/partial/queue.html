@@ -288,7 +288,7 @@
     </ng-pluralize></p>
     <ul>
       <li ng-repeat="queuePosition in queuePositions">
-        {{queuePosition.queueName}}
+        {{getQueue(queuePosition.queueName).title}}
       </li>
     </ul>
     <p>Queue anyway?</p>
