@@ -73,6 +73,10 @@
   text-decoration: line-through;
 }
 
+.single-line {
+  white-space: nowrap;
+}
+
 .plain-panel {
   @include panel(#FAFAFA);
 }
