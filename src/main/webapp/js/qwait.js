@@ -744,10 +744,6 @@
 
             $scope.userQueuePos = queuePositions.getUserQueuePos;
 
-            $scope.getUser = function (userName) {
-                return users.get(userName);
-            };
-
             $scope.removeQueue = function (queueName) {
                 queues.deleteQueue(queueName);
                 $location.path('/queues');
