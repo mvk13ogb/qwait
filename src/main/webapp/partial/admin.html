@@ -44,14 +44,14 @@
               <tr>
                 <th>Name</th>
                 <th>KTH-id</th>
-                <th ng-if="users.admins.length > 1">&nbsp;</th>
+                <th ng-if="users.admins.length">&nbsp;</th>
               </tr>
               </thead>
               <tbody>
               <tr ng-repeat="admin in users.admins">
                 <td>{{admin.readableName}}</td>
                 <td>{{admin.name}}</td>
-                <td ng-if="users.admins.length > 1" ng-controller="RemoveAdminModalCtrl">
+                <td ng-if="users.admins.length" ng-controller="RemoveAdminModalCtrl">
                   <script type="text/ng-template" id="remove-admin-modal-content.html">
                     <h3>Remove admin {{position.readableName}}</h3>
                     <p>This will remove the user as an admin for QWait.</p>
