@@ -778,6 +778,10 @@
                                 controller: function ($scope, $modalInstance, queuePositions, queueName, userName, location, locationform, comment, commentform) {
                                     $scope.queuePositions = queuePositions;
 
+                                    $scope.getQueue = function (queueName) {
+                                        return queues.get(queueName);
+                                    };
+
                                     $scope.ok = function () {
                                         queues.joinQueue(queueName, userName);
 
