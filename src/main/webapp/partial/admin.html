@@ -12,6 +12,7 @@
     <h2>Admins of QWait</h2>
 
     <div ng-if="users.current.admin" class="row collapse">
+      <p>New admins will have to log out and in again in order to get all of their new privileges.</p>
       <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
         <div class="row collapse">
           <div class="small-10 columns">
