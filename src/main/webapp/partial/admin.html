@@ -1,71 +1,105 @@
-<div>
+<div ng-if="!(users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length)">
+  <h1>Hey, you don't have access to this page!</h1>
+</div>
+
+<div ng-if="users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length">
   <h1>Administration</h1>
 
-  <p>
-    Please be careful on this page; here, you have the power to change anything.
-  </p>
+  <span ng-if="users.current.admin || users.current.ownedQueues.length">
+    <p>
+      Please be careful on this page. Here, you have the power to change a lot of stuff.
+    </p>
+    <h2>Admins of QWait</h2>
 
-  <h2>Admins</h2>
-
-  <div class="row collapse" ng-if="users.current.admin">
-    <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
-      <div class="row collapse">
-        <div class="small-10 columns">
-          <input type="text" ng-model="admin" required="required"
-                 placeholder="Add admin"
-                 typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
-                 class="form-control"/>
+    <div ng-if="users.current.admin" class="row collapse">
+      <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
+        <div class="row collapse">
+          <div class="small-10 columns">
+            <input type="text" ng-model="admin" required="required"
+                   placeholder="Add admin"
+                   typeahead="user as user.readableName + ' (' + user.name + ')' for user in find($viewValue) | limitTo:8"
+                   class="form-control"/>
+          </div>
+          <div class="small-2 columns">
+            <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
+                    style="margin-bottom: 0;">
+              <i class="fi-plus white-icon size-16"></i>
+              Add
+            </button>
+          </div>
         </div>
-        <div class="small-2 columns">
-          <button type="submit" ng-disabled="form.$invalid" class="button button-success postfix radius"
-                  style="margin-bottom: 0;">
-            <i class="fi-plus white-icon size-16"></i>
-            Add
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div ng-if="users.current.admin" class="row collapse">
-    <div class="small-6 columns">
-      <table ng-show="users.admins.length">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>KTH-id</th>
-            <th ng-if="users.admins.length > 1">&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="admin in users.admins">
-            <td>{{admin.readableName}}</td>
-            <td>{{admin.name}}</td>
-            <td ng-if="users.admins.length > 1" ng-controller="RemoveAdminModalCtrl">
-              <script type="text/ng-template" id="remove-admin-modal-content.html">
-                <h3>Remove admin {{position.readableName}}</h3>
-                <p>This will remove the user as an admin for QWait.</p>
-                <button class="alert" ng-click="users.setAdmin(position.name, false, users.current.name); ok()">
-                  <i class="fi-x"></i>
-                  Remove
-                </button>
-                <button class="secondary" ng-click="cancel()">Back</button>
-                <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
-              </script>
-              <a><i ng-click="open(admin)" class="fi-x red"></i></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div ng-hide="users.admins.length">
-        <p>(No admins)</p>
-      </div>
+      </form>
     </div>
+  </span>
+
+  <div ng-if="users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length" class="row collapse">
+    <div class="medium-6" ng-if="users.current.admin || users.current.ownedQueues.length">
+      <accordion close-others="true">
+        <accordion-group is-open="ownerIsOpen">
+          <accordion-heading>
+            Admins <i class="right" ng-class="{'fi-minus': ownerIsOpen, 'fi-plus': !ownerIsOpen}"></i>
+          </accordion-heading>
+            <table ng-show="users.admins.length">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>KTH-id</th>
+                <th ng-if="users.admins.length">&nbsp;</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="admin in users.admins">
+                <td>{{admin.readableName}}</td>
+                <td>{{admin.name}}</td>
+                <td ng-if="users.admins.length" ng-controller="RemoveAdminModalCtrl">
+                  <script type="text/ng-template" id="remove-admin-modal-content.html">
+                    <h3>Remove admin {{position.readableName}}</h3>
+                    <p>This will remove the user as an admin for QWait.</p>
+                    <button class="alert" ng-click="users.setAdmin(position.name, false, users.current.name); ok()">
+                      <i class="fi-x"></i>
+                      Remove
+                    </button>
+                    <button class="secondary" ng-click="cancel()">Back</button>
+                    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+                  </script>
+                  <a><i ng-click="open(admin)" class="fi-x red"></i></a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div ng-hide="users.admins.length">
+              <p>(No admins)</p>
+            </div>
+        </accordion-group>
+      </accordion>
+    </div>
+
+  <!-- Shows the queues the current user is moderator or owner for -->
+  <div class="medium-6" ng-if="(users.current.ownedQueues.length || users.current.moderatedQueues.length) && !users.current.admin">
+    <h2>Your queue roles</h2>
+    <accordion close-others="true">
+      <accordion-group ng-if="users.current.ownedQueues.length" is-open="ownerIsOpen">
+        <accordion-heading>
+          Owned queues <i class="right" ng-class="{'fi-minus': ownerIsOpen, 'fi-plus': !ownerIsOpen}"></i>
+        </accordion-heading>
+        <div ng-repeat="queue in queues.all|arrayify|queuesOwnedBy:users.current|orderBy:['locked','-positions.length','title']">
+          <li><a href="/queue/{{queue.name}}">{{queue.title}}</a></li>
+        </div>
+      </accordion-group>
+      <accordion-group ng-if="users.current.moderatedQueues.length" is-open="moderatorIsOpen">
+        <accordion-heading>
+          Moderated queues <i class="right" ng-class="{'fi-minus': moderatorIsOpen, 'fi-plus': !moderatorIsOpen}"></i>
+        </accordion-heading>
+        <div ng-repeat="queue in queues.all|arrayify|queuesModeratedBy:users.current|orderBy:['locked','-positions.length','title']">
+          <li><a href="/queue/{{queue.name}}">{{queue.title}}</a></li>
+        </div>
+      </accordion-group>
+    </accordion>
   </div>
 
-  <div class="row collapse">
+  <div ng-if="users.current.admin || users.current.ownedQueues.length" class="row collapse">
     <div class="medium-6 columns">
-      <h2>Queues</h2>
+      <h2>Edit queue roles</h2>
       <div ng-show="selectedQueue">
         <p>
           Selected Queue: <strong>{{selectedQueue.title}}</strong>
@@ -128,14 +162,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="moderator in selectedModerators">
-            <td>{{moderator.readableName}}</td>
-            <td>{{moderator.name}}</td>
+          <tr ng-repeat="moderator in selectedQueue.moderators">
+            <td>{{getUser(moderator).readableName}}</td>
+            <td>{{moderator}}</td>
             <td ng-controller="RemoveModeratorModalCtrl">
               <script type="text/ng-template" id="remove-moderator-modal-content.html">
-                <h3>Remove moderator {{position.readableName}} from {{queue.title}}</h3>
+                <h3>Remove moderator {{getUser(position).readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as a moderator from the queue.</p>
-                <button class="alert" ng-click="queues.removeModerator(queue.name, position.name); ok()">
+                <button class="alert" ng-click="queues.removeModerator(queue.name, position); ok()">
                   <i class="fi-x"></i>
                   Remove
                 </button>
@@ -181,14 +215,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="owner in selectedOwners">
-            <td>{{owner.readableName}}</td>
-            <td>{{owner.name}}</td>
+          <tr ng-repeat="owner in selectedQueue.owners">
+            <td>{{getUser(owner).readableName}}</td>
+            <td>{{owner}}</td>
             <td ng-controller="RemoveOwnerModalCtrl">
               <script type="text/ng-template" id="remove-owner-modal-content.html">
-                <h3>Remove owner {{position.readableName}} from {{queue.title}}</h3>
+                <h3>Remove owner {{getUser(position).readableName}} from {{queue.title}}</h3>
                 <p>This will remove the user as an owner from the queue.</p>
-                <button class="alert" ng-click="queues.removeOwner(queue.name, position.name); ok()">
+                <button class="alert" ng-click="queues.removeOwner(queue.name, position); ok()">
                   <i class="fi-x"></i>
                   Remove
                 </button>

@@ -858,18 +858,12 @@
             });
         };
 
-        $scope.selectQueue = function (queue) {
-            var i;
-            $scope.selectedQueue = queue;
+        $scope.getUser = function (userName) {
+            return users.get(userName);
+        };
 
-            $scope.selectedModerators = [];
-            for (i = 0; i < $scope.selectedQueue.moderators.length; i++) {
-                $scope.selectedModerators.push(users.get($scope.selectedQueue.moderators[i]));
-            }
-            $scope.selectedOwners = [];
-            for (i = 0; i < $scope.selectedQueue.owners.length; i++) {
-                $scope.selectedOwners.push(users.get($scope.selectedQueue.owners[i]));
-            }
+        $scope.selectQueue = function (queue) {
+            $scope.selectedQueue = queue;
         };
 
         var ownedQueues = users.current.ownedQueues;
@@ -1066,10 +1060,14 @@
 
             var modalInstance = $modal.open({
                 templateUrl: 'remove-moderator-modal-content.html',
-                controller: function ($scope, $modalInstance, queue, queues, position) {
+                controller: function ($scope, $modalInstance, queue, queues, position, users) {
                     $scope.queue = queue;
                     $scope.queues = queues;
                     $scope.position = position;
+
+                    $scope.getUser = function (userName) {
+                        return users.get(userName);
+                    }
 
                     $scope.ok = function () {
                         $modalInstance.close();
@@ -1100,10 +1098,14 @@
 
             var modalInstance = $modal.open({
                 templateUrl: 'remove-owner-modal-content.html',
-                controller: function ($scope, $modalInstance, queue, queues, position) {
+                controller: function ($scope, $modalInstance, queue, queues, position, users) {
                     $scope.queue = queue;
                     $scope.queues = queues;
                     $scope.position = position;
+
+                    $scope.getUser = function (userName) {
+                        return users.get(userName);
+                    }
 
                     $scope.ok = function () {
                         $modalInstance.close();
@@ -1252,6 +1254,36 @@
                 if (queue && !queue.hidden) {
                     result.push(queue);
                 } else if (queue && queue.hidden && (user.admin || queue.owners.indexOf(user.name) != -1)) {
+                    result.push(queue);
+                }
+            }
+            return result;
+        };
+    });
+
+    // Returns the queues that the user are moderator for
+    qwait.filter('queuesModeratedBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (user.moderatedQueues.indexOf(queue.name) != -1) {
+                    result.push(queue);
+                }
+            }
+            return result;
+        };
+    });
+
+    // Returns the queues that the user are owner for
+    qwait.filter('queuesOwnedBy', function () {
+        return function (queues, user) {
+            var result = [];
+
+            for (var i = 0; i < queues.length; i++) {
+                var queue = queues[i];
+                if (user.ownedQueues.indexOf(queue.name) != -1) {
                     result.push(queue);
                 }
             }
