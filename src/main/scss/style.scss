@@ -73,7 +73,7 @@
 }
 
 .plain-panel {
-  @include panel(#FAFAFA);
+  @include panel(#FAFAFA, 0.8rem);
 }
 
 .grey-panel {
@@ -82,7 +82,7 @@
 }
 
 .active-panel {
-  @include panel(scale-color($primary-color, $lightness: 80%));
+  @include panel(scale-color($primary-color, $lightness: 80%), 0.8rem);
 }
 
 tr.active > td {

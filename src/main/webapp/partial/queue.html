@@ -154,12 +154,12 @@
                 </script>
 
                 <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
-                  <i class="fi-eye size-14"></i> Hibernate
+                  <i class="fi-prohibited size-14"></i> Hibernate
                 </button>
               </div>
 
               <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" type="button" class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
-                <i class="fi-eye size-14"></i> Unhibernate
+                <i class="fi-prohibited size-14"></i> Unhibernate
               </button>
 
               <div ng-controller="ClearQueueModalCtrl">
