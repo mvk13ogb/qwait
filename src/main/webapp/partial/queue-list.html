@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="medium-3 columns pull-right">
-      <input type="text" class="search" ng-model="search.title" placeholder="Find queues"/>
+      <input type="text" class="search" ng-model="search.title" placeholder="Filter queues"/>
     </div>
   </div>
   <div class="radius queue-row"
@@ -29,7 +29,11 @@
        ng-class="{'plain-panel': !userQueuePos(users.current, queue.positions), 'active-panel': userQueuePos(users.current, queue.positions)}">
     <div class="row">
       <div class="small-8 columns">
-        <h3><a href="/queue/{{queue.name}}">
+        <h3><a href="/queue/{{queue.name}}" style="vertical-align: middle">
+          <span>
+            <i class="fi-prohibited red" ng-show="queue.hidden" title="This queue is in hibernation."></i>
+            <i class="fi-lock red" ng-show="queue.locked && !queue.hidden" title="This queue is locked."></i>
+          </span>
           <span ng-class="{'strike': queue.hidden, 'red': queue.locked}" style="word-wrap: break-word">
             {{queue.title}}
           </span>
@@ -37,10 +41,6 @@
       </div>
       <div class="small-4 columns">
         <div class="right">
-          <span class="size-36" style="vertical-align: middle">
-            <i class="fi-prohibited red" ng-show="queue.hidden" title="This queue is in hibernation."></i>
-            <i class="fi-lock red" ng-show="queue.locked && !queue.hidden" title="This queue is locked."></i>
-          </span>
           <span ng-if="userQueuePos(users.current, queue.positions)">
             <i class="fi-torso size-36" style="vertical-align: middle"></i>
             <span class="size-24" style="vertical-align: middle">
