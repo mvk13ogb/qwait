@@ -32,8 +32,8 @@
     </div>
   </span>
 
-  <div ng-if="users.current.admin || users.current.ownedQueues.length" class="row collapse">
-    <div class="medium-6">
+  <div ng-if="users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length" class="row collapse">
+    <div class="medium-6" ng-if="users.current.admin || users.current.ownedQueues.length">
       <accordion close-others="true">
         <accordion-group is-open="ownerIsOpen">
           <accordion-heading>

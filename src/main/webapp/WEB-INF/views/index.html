@@ -82,7 +82,7 @@
             <li ng-class="{active: location.path() == '/help'}">
               <a href="/help">Help</a>
             </li>
-            <li ng-if="users.current.admin || users.current.ownedQueues.length"
+            <li ng-if="users.current.admin || users.current.ownedQueues.length || users.current.moderatedQueues.length"
                 ng-class="{active: location.path() == '/admin'}">
               <a href="/admin">Admin</a>
             </li>
