@@ -215,6 +215,7 @@
               <th width="1"></th>
               <th>Location</th>
               <th>Comment</th>
+              <th width="1" ng-show="canModerateQueue(users.current, queue)"></th>
             </tr>
           </thead>
           <tbody>
@@ -222,7 +223,15 @@
               <td width="1" class="show-for-medium-up">{{$index + 1}}</td>
               <td>
                 {{getUser(position.userName).readableName}}
-                <span ng-show="canModerateQueue(users.current, queue)" ng-controller="RemoveUserModalCtrl">
+              </td>
+              <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
+              <td>
+                <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
+              </td>
+              <td style="word-break: break-all">{{position.location}}</td>
+              <td style="word-break: break-all">{{position.comment}}</td>
+              <td ng-show="canModerateQueue(users.current, queue)">
+                <span ng-controller="RemoveUserModalCtrl">
                   <script type="text/ng-template" id="remove-user-modal-content.html">
                     <h3>Remove {{getUser(position.userName).readableName}} from {{queue.title}}</h3>
                     <p>This will remove the user from the queue.</p>
@@ -234,23 +243,11 @@
                     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                   </script>
 
-                  <a dropdown-toggle="#remove-user-{{position.userName}}" class="size-18" style="vertical-align: middle">
+                  <a ng-click="open(position)" class="size-18" style="vertical-align: middle">
                     <i class="fi-x red"></i>
                   </a>
-                  
-                  <div id="remove-user-{{position.userName}}" class="f-dropdown content">
-                    <button ng-click="open(position)" type="button" class="button alert tiny expand">
-                      <i class="fi-x size-14"></i> Remove
-                    </button>
-                  </div>
                 </span>
               </td>
-              <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
-              <td>
-                <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
-              </td>
-              <td style="word-break: break-all">{{position.location}}</td>
-              <td style="word-break: break-all">{{position.comment}}</td>
             </tr>
           </tbody>
         </table>

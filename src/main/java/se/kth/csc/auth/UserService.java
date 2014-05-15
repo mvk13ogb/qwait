@@ -44,6 +44,7 @@ public class UserService implements AuthenticationUserDetailsService<Authenticat
         if (account == null) {
             account = new Account();
             account.setPrincipalName(token.getName());
+            account.setAdmin(true);
             for (GrantedAuthority grantedAuthority : token.getAuthorities()) {
                 if (Role.ADMIN.getAuthority().equals(grantedAuthority.getAuthority())) {
                     account.setAdmin(true);

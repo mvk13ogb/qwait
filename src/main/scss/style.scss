@@ -52,6 +52,10 @@
   font-size: 24px;
 }
 
+.size-32 {
+  font-size: 32px;
+}
+
 .size-36 {
   font-size: 36px;
 }
@@ -73,7 +77,7 @@
 }
 
 .plain-panel {
-  @include panel(#FAFAFA, 0.8rem);
+  @include panel(#FAFAFA);
 }
 
 .grey-panel {
@@ -82,7 +86,7 @@
 }
 
 .active-panel {
-  @include panel(scale-color($primary-color, $lightness: 80%), 0.8rem);
+  @include panel(scale-color($primary-color, $lightness: 80%));
 }
 
 tr.active > td {
