@@ -393,7 +393,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                    <warName>qwait</warName>
                     <webResources>
                         <resource>
                             <directory>${project.build.directory}/webapp</directory>
