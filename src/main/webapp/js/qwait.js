@@ -456,7 +456,7 @@
             all: [
                 { name: 'Adrian Blanco', gravatar: '5e24f37bda5a846cdaa822e72627fe63', github: 'adrianblp'},
                 { name: 'Casper Winsnes', gravatar: '0cb03d273d7ab05bcdd39b317a3bb401' },
-                { name: 'Christoffer Pettersson', gravatar: '5ba6cca11f93ea6d22f458700ac8a506' },
+                { name: 'Christoffer Pettersson', gravatar: '5ba6cca11f93ea6d22f458700ac8a506', github: 'krillmeister', twitter: 'csieuwerts' },
                 { name: 'David Flemström', gravatar: '202ecb437d8bbd442d093a3a35c67a04', github: 'dflemstr', twitter: 'dflemstr' },
                 { name: 'Eric Schmidt', gravatar: '62c78ae979bece6aeb0a153641a46fbd' },
                 { name: 'Gustav Zander', gravatar: '354a77646cf4a560ea5d5357a5a4aa84' },
