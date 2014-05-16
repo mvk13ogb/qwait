@@ -21,6 +21,7 @@ package se.kth.csc.persist;
  * #L%
  */
 
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -66,18 +67,10 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueue(Queue queue) {
-        for (Account owner : queue.getOwners()) {
-            owner.getOwnedQueues().remove(queue);
-        }
-        for (Account moderator : queue.getModerators()) {
-            moderator.getModeratedQueues().remove(queue);
-        }
-        for (QueuePosition position : queue.getPositions()) {
-            removeQueuePosition(position);
-        }
-        queue.getOwners().clear();
-        queue.getModerators().clear();
-        queue.getPositions().clear();
+        Preconditions.checkArgument(queue.getOwners().isEmpty(), "Queue still has owners");
+        Preconditions.checkArgument(queue.getModerators().isEmpty(), "Queue still has moderators");
+        Preconditions.checkArgument(queue.getPositions().isEmpty(), "Queue still has positions");
+
         entityManager.remove(queue);
         log.info("Removed queue with id {}", queue.getId());
     }
@@ -188,8 +181,11 @@ public class JPAStore implements QueuePositionStore, QueueStore, AccountStore {
 
     @Override
     public void removeQueuePosition(QueuePosition queuePosition) {
-        queuePosition.getAccount().getPositions().remove(queuePosition);
-        queuePosition.getQueue().getPositions().remove(queuePosition);
+        Preconditions.checkArgument(!queuePosition.getAccount().getPositions().contains(queuePosition),
+                "Queue position still stored in account");
+        Preconditions.checkArgument(!queuePosition.getQueue().getPositions().contains(queuePosition),
+                "Queue position still stored in queue");
+
         queuePosition.setQueue(null);
         queuePosition.setAccount(null);
         entityManager.remove(queuePosition);
