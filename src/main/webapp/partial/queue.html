@@ -9,7 +9,7 @@
   </h5>
   <p ng-hide="queue.positions.length > 0">This queue is empty.</p>
 
-  <div ng-show="queue.positions.length > 0" class="row collapse">
+  <div ng-show="queue.positions.length > 0" class="row collapse show-for-large-up">
     <div class="large-3 large-offset-9 columns">
       <input type="text" class="search" ng-model="search" placeholder="Search"/>
     </div>
@@ -201,6 +201,11 @@
             </div>
           </div>
         </div>
+        <div ng-show="queue.positions.length > 0" class="row collapse hide-for-large-up">
+          <div class="large-12 columns">
+            <input type="text" class="search" ng-model="search" placeholder="Search"/>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -211,10 +216,10 @@
             <tr>
               <th width="1" class="show-for-medium-up">#</th>
               <th>User</th>
-              <th class="show-for-medium-up">Time</th>
               <th width="1"></th>
               <th>Location</th>
               <th>Comment</th>
+              <th class="show-for-medium-up">Time</th>
               <th width="1" ng-show="canModerateQueue(users.current, queue)"></th>
             </tr>
           </thead>
@@ -224,12 +229,12 @@
               <td>
                 {{getUser(position.userName).readableName}}
               </td>
-              <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
               <td>
                 <i class="fi-stop size-12" style="color: {{(position.location || '') | getComputerColor}}"></i>
               </td>
               <td style="word-break: break-all">{{position.location}}</td>
               <td style="word-break: break-all">{{position.comment}}</td>
+              <td class="show-for-medium-up">{{timeDiff(position.startTime)}}</td>
               <td ng-show="canModerateQueue(users.current, queue)">
                 <span ng-controller="RemoveUserModalCtrl">
                   <script type="text/ng-template" id="remove-user-modal-content.html">
