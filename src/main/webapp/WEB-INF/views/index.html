@@ -63,7 +63,7 @@
         </ul>
 
         <!-- This logo is shown on smaller screens -->
-        <ul class="hide-for-large-up title-area">
+        <ul class="hide-for-medium-up title-area">
           <li class="name">
             <a href="/" class="top-logo-full"></a>
           </li>
@@ -92,17 +92,18 @@
               <a>
                 <span ng-if="messagebus.ready" title="Connected with {{messagebus.describeProtocol(messagebus.protocol)}}">
                   <span class="connection-icon-success"></span>
-                  <span class="green hide-for-large-up">Connected</span>
+                  <span class="green hide-for-medium-up">Connected</span>
                 </span>
 
                 <span ng-if="!messagebus.ready" title="Disconnected">
                   <span class="connection-icon-error"></span>
-                  <span class="red hide-for-large-up">Disconnected</span>
+                  <span class="red hide-for-medium-up">Disconnected</span>
                 </span>
               </a>
             </li>
-            <li ng-if="!users.current.anonymous"><a>Logged in as
-              <strong>{{users.current.readableName}}</strong></a></li>
+            <li ng-if="!users.current.anonymous">
+              <a class="ellipse-200"><strong>{{users.current.readableName}}</strong></a>
+            </li>
             <li ng-if="!users.current.anonymous"><a href="/logout" target="_self">Log Out</a></li>
             <li ng-if="users.current.anonymous"><a href="/login?target={{location.absUrl()}}" target="_self">Log In</a></li>
           </ul>
