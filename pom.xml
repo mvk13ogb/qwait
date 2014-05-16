@@ -5,7 +5,7 @@
     <groupId>se.kth.csc</groupId>
     <artifactId>qwait</artifactId>
     <packaging>war</packaging>
-    <version>1.1.10</version>
+    <version>1.1.11</version>
     <name>QWait</name>
     <description>A queuing system for assistance management</description>
     <properties>
@@ -437,8 +437,8 @@
                 <configuration>
                     <sassOptions>
                         <always_update>true</always_update>
-                        <style>:expanded</style>
-                        <debug_info>true</debug_info>
+                        <style>:compressed</style>
+                        <debug_info>false</debug_info>
                     </sassOptions>
                     <useCompass>true</useCompass>
                     <resources>
