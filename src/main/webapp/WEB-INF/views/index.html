@@ -104,7 +104,7 @@
             <li ng-if="!users.current.anonymous"><a>Logged in as
               <strong>{{users.current.readableName}}</strong></a></li>
             <li ng-if="!users.current.anonymous"><a href="/logout" target="_self">Log Out</a></li>
-            <li ng-if="users.current.anonymous"><a href="/login" target="_self">Log In</a></li>
+            <li ng-if="users.current.anonymous"><a href="/login?target={{location.absUrl()}}" target="_self">Log In</a></li>
           </ul>
         </top-bar-section>
       </top-bar>

@@ -4,7 +4,7 @@
 <div class="panel" ng-if="users.current.anonymous">
   <h2>Guests</h2>
   <p>You are not logged in. If you only want to view a queue, that's cool, but to
-  be able to join a queue, you will need to <a href="/login" target="_self">log in</a>.</p>
+  be able to join a queue, you will need to <a href="/login?target={{location.absUrl()}}" target="_self">log in</a>.</p>
 
   <h4>Viewing a queue</h4>
   <p>
