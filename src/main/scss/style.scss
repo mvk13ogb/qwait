@@ -72,6 +72,12 @@
   text-decoration: line-through;
 }
 
+.ellipse-200 {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .plain-panel {
   @include panel(#FAFAFA);
 }
