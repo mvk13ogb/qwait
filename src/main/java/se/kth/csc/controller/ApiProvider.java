@@ -40,11 +40,11 @@ public interface ApiProvider {
 
     void setAdmin(Account account, boolean admin) throws ForbiddenException;
 
-    void deleteQueue(Queue queue);
+    void removeQueue(Queue queue);
 
     void addQueuePosition(Queue queue, Account account);
 
-    void deleteQueuePosition(QueuePosition queuePosition);
+    void removeQueuePosition(QueuePosition queuePosition);
 
     void setComment(QueuePosition queuePosition, String comment) throws BadRequestException;
 

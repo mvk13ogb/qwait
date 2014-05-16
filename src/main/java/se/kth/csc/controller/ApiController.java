@@ -129,7 +129,7 @@ public class ApiController {
     @Transactional
     @ResponseBody
     public void deleteQueue(@PathVariable("queueName") String queueName) throws NotFoundException {
-        apiProvider.deleteQueue(fetchQueueOr404(queueName));
+        apiProvider.removeQueue(fetchQueueOr404(queueName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}", method = RequestMethod.GET)
@@ -153,7 +153,7 @@ public class ApiController {
     @Transactional
     @ResponseBody
     public void deleteQueuePosition(@PathVariable("queueName") String queueName, @PathVariable("userName") String userName) throws NotFoundException {
-        apiProvider.deleteQueuePosition(fetchQueuePositionOr404(queueName, userName));
+        apiProvider.removeQueuePosition(fetchQueuePositionOr404(queueName, userName));
     }
 
     @RequestMapping(value = "/queue/{queueName}/position/{userName}/location", method = RequestMethod.GET)

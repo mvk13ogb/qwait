@@ -22,6 +22,7 @@ package se.kth.csc.controller;
  */
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -100,16 +101,7 @@ public class ApiProviderImpl implements ApiProvider {
     @Override
     @PreAuthorize("hasRole('admin')")
     public void setAdmin(Account account, boolean admin) throws ForbiddenException {
-        // Make sure there is not only one admin left
-        int adminCount = 0;
-        if (!admin) { // Only run if trying to remove an admin
-            Iterator adminIterator = findAccounts(true, "").iterator();
-            while (adminIterator.hasNext() && adminCount < 2) {
-                adminIterator.next();
-                adminCount++;
-            }
-        }
-        if (!admin && adminCount < 2) { // Trying to remove an admin and less than two admins left
+        if (!admin && Iterables.size(findAccounts(true, null)) < 2) { // Trying to remove an admin and less than two admins left
             throw new ForbiddenException("Can not remove the last admin");
         } else {
             account.setAdmin(admin);
@@ -121,8 +113,21 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
-    public void deleteQueue(Queue queue) {
+    public void removeQueue(Queue queue) {
         QueueRemoved message = new QueueRemoved(queue.getName());
+
+        for (Account owner : ImmutableSet.copyOf(queue.getOwners())) {
+            removeOwner(queue, owner);
+        }
+
+        for (Account moderator : ImmutableSet.copyOf(queue.getModerators())) {
+            removeModerator(queue, moderator);
+        }
+
+        for (QueuePosition queuePosition : queue.getPositions()) {
+            removeQueuePosition(queuePosition);
+        }
+
         queueStore.removeQueue(queue);
 
         messageBus.convertAndSend("/topic/queue", message);
@@ -148,12 +153,15 @@ public class ApiProviderImpl implements ApiProvider {
 
     @Override
     @PreAuthorize("hasRole('admin') or #queuePosition.queue.ownerNames.contains(authentication.name) or #queuePosition.queue.moderatorNames.contains(authentication.name) or #queuePosition.account.principalName == authentication.name")
-    public void deleteQueuePosition(QueuePosition queuePosition) {
+    public void removeQueuePosition(QueuePosition queuePosition) {
         QueuePositionRemoved message = new QueuePositionRemoved(queuePosition.getQueue().getName(),
                 queuePosition.getAccount().getPrincipalName());
 
         messageBus.convertAndSend("/topic/queue/" + queuePosition.getQueue().getName(), message);
+        queuePosition.getQueue().getPositions().remove(queuePosition);
         messageBus.convertAndSend("/topic/user/" + queuePosition.getAccount().getPrincipalName(), message);
+        queuePosition.getAccount().getPositions().remove(queuePosition);
+
         queuePositionStore.removeQueuePosition(queuePosition);
     }
 
@@ -189,7 +197,7 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name) or #queue.moderatorNames.contains(authentication.name)")
     public void clearQueue(Queue queue) {
         for (QueuePosition position : ImmutableSet.copyOf(queue.getPositions())) {
-            deleteQueuePosition(position);
+            removeQueuePosition(position);
         }
     }
 
@@ -216,6 +224,7 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void addOwner(Queue queue, Account owner) {
         queue.getOwners().add(owner);
+        owner.getOwnedQueues().add(queue);
 
         QueueOwnerAdded message = new QueueOwnerAdded(queue.getName(), owner.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
@@ -226,6 +235,7 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void removeOwner(Queue queue, Account owner) {
         queue.getOwners().remove(owner);
+        owner.getOwnedQueues().remove(queue);
 
         QueueOwnerRemoved message = new QueueOwnerRemoved(queue.getName(), owner.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
@@ -236,6 +246,7 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void addModerator(Queue queue, Account moderator) {
         queue.getModerators().add(moderator);
+        moderator.getModeratedQueues().add(queue);
 
         QueueModeratorAdded message = new QueueModeratorAdded(queue.getName(), moderator.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
@@ -246,6 +257,7 @@ public class ApiProviderImpl implements ApiProvider {
     @PreAuthorize("hasRole('admin') or #queue.ownerNames.contains(authentication.name)")
     public void removeModerator(Queue queue, Account moderator) {
         queue.getModerators().remove(moderator);
+        moderator.getModeratedQueues().remove(queue);
 
         QueueModeratorRemoved message = new QueueModeratorRemoved(queue.getName(), moderator.getPrincipalName());
         messageBus.convertAndSend("/topic/queue/" + queue.getName(), message);
