@@ -688,9 +688,10 @@
         $scope.page = page;
     }]);
 
-    qwait.controller('HelpCtrl', ['$scope', 'page', 'users', function ($scope, page, users) {
+    qwait.controller('HelpCtrl', ['$scope', '$location', 'page', 'users', function ($scope, $location, page, users) {
         page.title = 'Help';
         $scope.users = users;
+        $scope.location = $location;
     }]);
 
     qwait.controller('AboutCtrl', ['$scope', 'system', 'page', 'contributors', function ($scope, system, page, contributors) {
@@ -725,6 +726,7 @@
             $scope.queue = queues.get($route.current.params.queueName);
             $scope.queues = queues;
             $scope.users = users;
+            $scope.location = $location;
 
             $scope.isQueueOwner = security.isQueueOwner;
             $scope.canModerateQueue = security.canModerateQueue;

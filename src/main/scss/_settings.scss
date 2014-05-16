@@ -38,9 +38,11 @@ $experimental: true;
 // We use these to control various global styles
 // $body-bg: #fff;
 // $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: normal;
 // $body-font-style: normal;
+
+$header-font-family: "Arvo", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 
 // We use this to control font-smoothing
 // $font-smoothing: antialiased;
@@ -985,7 +987,7 @@ $topbar-menu-link-font-size: rem-calc(16);
 // $topbar-transition-speed: 300ms;
 // Using rem-calc for the below breakpoint causes issues with top bar
 // $topbar-breakpoint: #{upper-bound($medium-range)}; // Change to 9999px for always mobile layout
-$topbar-media-query: $large-up;
+// $topbar-media-query: $medium-up;
 
 // Divider Styles
 // $topbar-divider-border-bottom: solid 1px lighten($topbar-bg-color, 10%);
