@@ -9,9 +9,11 @@
   </h5>
   <p ng-hide="queue.positions.length > 0">This queue is empty.</p>
 
-  <div ng-show="queue.positions.length > 0" class="row collapse show-for-large-up">
-    <div class="large-3 large-offset-9 columns">
-      <input type="text" class="search" ng-model="search" placeholder="Search"/>
+  <div ng-show="queue.positions.length > 0">
+    <div class="row collapse show-for-large-up">
+      <div class="large-3 large-offset-9 columns">
+        <input type="text" class="search" ng-model="search" placeholder="Search"/>
+      </div>
     </div>
   </div>
 
@@ -201,7 +203,9 @@
             </div>
           </div>
         </div>
-        <div ng-show="queue.positions.length > 0" class="row collapse hide-for-large-up">
+      </div>
+      <div ng-show="queue.positions.length > 0">
+        <div class="row collapse hide-for-large-up">
           <div class="large-12 columns">
             <input type="text" class="search" ng-model="search" placeholder="Search"/>
           </div>
