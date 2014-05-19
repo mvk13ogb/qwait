@@ -1333,7 +1333,6 @@
     qwait.filter('getComputerColor', function () {
         return function (location) {
 
-            //#ComeAtMeBro
             if (/(cerise)/i.test(location)) {
                 return "pink";
             }
