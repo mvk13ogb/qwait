@@ -13,8 +13,11 @@
     <div ng-if="users.current.admin">
       <h2>
         Admins of QWait
-        <a href="/help#admins" class="size-16" title="More information about admins">?</a>
+        <small>
+          <a href="/help#admins" title="More information about admins">?</a>
+        </small>
       </h2>
+
       <div class="row collapse">
         <p>New admins will have to log out and in again in order to get all of their new privileges.</p>
         <form class="large-6 columns left" name="addAdminForm" ng-submit="users.setAdmin(admin.name, true); admin = ''">
@@ -142,7 +145,9 @@
     <div class="large-6 columns">
       <h4>
         Moderators
-        <a href="/help#queue-moderators" class="size-16" title="More information about moderators">?</a>
+        <small>
+          <a href="/help#queue-moderators" class="small" title="More information about moderators">?</a>
+        </small>
       </h4>
 
       <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
@@ -198,7 +203,9 @@
     <div class="large-6 columns">
       <h4>
         Owners
-        <a href="/help#queue-owners" class="size-16" title="More information about owners">?</a>
+        <small>
+          <a href="/help#queue-owners" class="small" title="More information about owners">?</a>
+        </small>
       </h4>
 
       <form class="row collapse" name="addModeratorForm" ng-if="users.current.admin || ownedQueues.length"
