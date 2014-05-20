@@ -140,7 +140,6 @@ public class ApiProviderImpl implements ApiProvider {
         queuePosition.setQueue(queue);
         queuePosition.setAccount(account);
         queuePosition.setReadableName(account.getName());
-        System.out.println(queuePosition.getReadableName());
         queuePosition.setStartTime(DateTime.now());
 
         queuePositionStore.storeQueuePosition(queuePosition);
