@@ -29,11 +29,13 @@ import se.kth.csc.payload.api.NormalizedQueueSnapshot;
 public class QueuePositionSnapshot extends NormalizedQueuePositionSnapshot {
     private final String queueName;
     private final String userName;
+    private final String readableName;
 
-    public QueuePositionSnapshot(DateTime startTime, String location, String comment, String queueName, String userName) {
+    public QueuePositionSnapshot(DateTime startTime, String location, String comment, String queueName, String userName, String readableName) {
         super(startTime, location, comment);
         this.queueName = queueName;
         this.userName = userName;
+        this.readableName = readableName;
     }
 
     public String getQueueName() {
@@ -42,5 +44,9 @@ public class QueuePositionSnapshot extends NormalizedQueuePositionSnapshot {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getReadableName() {
+        return readableName;
     }
 }

@@ -25,13 +25,19 @@ import org.joda.time.DateTime;
 
 public class QueuePositionInQueueSnapshot extends NormalizedQueuePositionSnapshot {
     private final String userName;
+    private final String readableName;
 
-    public QueuePositionInQueueSnapshot(DateTime startTime, String location, String comment, String userName) {
+    public QueuePositionInQueueSnapshot(DateTime startTime, String location, String comment, String userName, String readableName) {
         super(startTime, location, comment);
         this.userName = userName;
+        this.readableName = readableName;
     }
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getReadableName() {
+        return readableName;
     }
 }
