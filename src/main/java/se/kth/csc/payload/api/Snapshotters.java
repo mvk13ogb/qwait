@@ -97,7 +97,8 @@ public final class Snapshotters {
             return queuePosition == null ? null : new QueuePositionSnapshot(queuePosition.getStartTime(), queuePosition.getLocation(),
                     queuePosition.getComment(),
                     QueueNamer.INSTANCE.apply(queuePosition.getQueue()),
-                    AccountNamer.INSTANCE.apply(queuePosition.getAccount()));
+                    AccountNamer.INSTANCE.apply(queuePosition.getAccount()),
+                    queuePosition.getReadableName());
         }
     }
 
@@ -108,7 +109,8 @@ public final class Snapshotters {
         public QueuePositionInQueueSnapshot apply(QueuePosition queuePosition) {
             return queuePosition == null ? null : new QueuePositionInQueueSnapshot(
                     queuePosition.getStartTime(), queuePosition.getLocation(),
-                    queuePosition.getComment(), AccountNamer.INSTANCE.apply(queuePosition.getAccount()));
+                    queuePosition.getComment(), AccountNamer.INSTANCE.apply(queuePosition.getAccount()),
+                    queuePosition.getReadableName());
         }
     }
 
