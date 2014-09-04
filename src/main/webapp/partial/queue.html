@@ -224,7 +224,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': getUser(position.userName).name == users.current.name}">
+            <tr ng-repeat="position in queue.positions | orderBy:'startTime' | filter:search" ng-class="{'active': position.userName == users.current.name}">
               <td width="1" class="show-for-medium-up">{{$index + 1}}</td>
               <td>
                 {{position.readableName}}
