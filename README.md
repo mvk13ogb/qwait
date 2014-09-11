@@ -6,6 +6,17 @@ This is QWait, the next generation queuing system for KTH CSC.
 
 # Trying out the application
 
+## Docker
+
+The application is available in the public Docker registry.  Simply
+run:
+
+    docker run -p 8080:8080 dflemstr/qwait
+
+This is all you have to do, provided that you have Docker installed.
+
+## Manually
+
 If you want to try out QWait, simply do this:
 
   - Install Java JDK version 7 or later.
