@@ -9,9 +9,11 @@
   </h5>
   <p ng-hide="queue.positions.length > 0">This queue is empty.</p>
 
-  <div ng-show="queue.positions.length > 0" class="row collapse show-for-large-up">
-    <div class="large-3 large-offset-9 columns">
-      <input type="text" class="search" ng-model="search" placeholder="Search"/>
+  <div ng-show="queue.positions.length > 0">
+    <div class="row collapse show-for-large-up">
+      <div class="large-3 large-offset-9 columns">
+        <input type="text" class="search" ng-model="search" placeholder="Search"/>
+      </div>
     </div>
   </div>
 
@@ -131,12 +133,16 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <button ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                <button ng-click="open()" type="button" class="button small alert expand"
+                        title="Locking will make users unable to join the queue."
+                        style="margin-bottom: 0; margin-top: 0.5rem">
                   <i class="fi-lock size-14"></i> Lock
                 </button>
               </div>
 
-              <button ng-show="queue.locked && !queue.hidden" ng-click="queues.setLocked(queue.name, false)" type="button" class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
+              <button ng-show="queue.locked && !queue.hidden" ng-click="queues.setLocked(queue.name, false)" type="button"
+                      title="Unlocking will make users able to join the queue again."
+                      class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
                 <i class="fi-unlock size-14"></i> Unlock
               </button>
 
@@ -153,12 +159,17 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button"
+                        title="Hibernating will lock the queue, hide it from the queue list and remove all users inside."
+                        class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
                   <i class="fi-prohibited size-14"></i> Hibernate
                 </button>
               </div>
 
-              <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden" ng-click="queues.setHidden(queue.name, false)" type="button" class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
+              <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-show="queue.hidden"
+                      ng-click="queues.setHidden(queue.name, false)" type="button"
+                      title="Unhibernating will unlock the queue, and unhide it from the queue list."
+                      class="button small success expand" style="margin-bottom: 0; margin-top: 0.5rem">
                 <i class="fi-prohibited size-14"></i> Unhibernate
               </button>
 
@@ -175,7 +186,9 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <button ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                <button ng-click="open()" type="button"
+                        title="Clearing will remove all users inside the queue."
+                        class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
                   <i class="fi-x size-14"></i> Clear
                 </button>
               </div>
@@ -194,14 +207,18 @@
                   <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
                 </script>
 
-                <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()" type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
+                <button ng-if="users.current.admin || isQueueOwner(users.current, queue)" ng-click="open()"
+                        title="Deleting will permanently remove the queue. That is bad."
+                        type="button" class="button small alert expand" style="margin-bottom: 0; margin-top: 0.5rem">
                   <i class="fi-trash size-14"></i> Delete
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div ng-show="queue.positions.length > 0" class="row collapse hide-for-large-up">
+      </div>
+      <div ng-show="queue.positions.length > 0">
+        <div class="row collapse hide-for-large-up">
           <div class="large-12 columns">
             <input type="text" class="search" ng-model="search" placeholder="Search"/>
           </div>

@@ -1333,6 +1333,10 @@
                 return "pink";
             }
 
+            else if (/(rosa|pink)/i.test(location)) {
+                return "#E2007F";
+            }
+
             else if (/(blå|blue)/i.test(location)) {
                 return "blue";
             }
