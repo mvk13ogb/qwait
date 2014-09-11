@@ -790,7 +790,9 @@
                                             }
 
                                             if (commentform.$valid) {
-                                                queues.changeComment(queueName, userName, comment);
+                                                setTimeout(function () {
+                                                    queues.changeComment(queueName, userName, comment);
+                                                }, 500);
                                             }
                                         }, 500);
 
