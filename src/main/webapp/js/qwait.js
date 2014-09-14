@@ -783,7 +783,7 @@
                                     $scope.ok = function () {
                                         queues.joinQueue(queueName, userName);
 
-                                        // HACK: Places a timeout so there is time to join the queue
+                                        //FIXME HACK: Places a timeout so there is time to join the queue
                                         setTimeout(function () {
                                             if (locationform.$valid) {
                                                 queues.changeLocation(queueName, userName, location);
@@ -794,7 +794,7 @@
                                                     queues.changeComment(queueName, userName, comment);
                                                 }, 500);
                                             }
-                                        }, 500);
+                                        }, 800);
 
                                         $modalInstance.close();
                                     };
@@ -832,16 +832,18 @@
                     } else {
                         queues.joinQueue(name, user);
 
-                        //HACK, places a timeout so we have time to join the queue
+                        //FIXME HACK, places a timeout so we have time to join the queue
                         setTimeout(function () {
                             if (locationform.$valid) {
                                 queues.changeLocation(name, user, location);
                             }
 
                             if (commentform.$valid) {
-                                queues.changeComment(name, user, comment);
+                                setTimeout(function () {
+                                    queues.changeComment(name, user, comment);
+                                }, 500);
                             }
-                        }, 500);
+                        }, 800);
                     }
                 }
             }, 200, true);
