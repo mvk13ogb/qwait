@@ -792,9 +792,9 @@
                                             if (commentform.$valid) {
                                                 setTimeout(function () {
                                                     queues.changeComment(queueName, userName, comment);
-                                                }, 500);
+                                                }, 1000);
                                             }
-                                        }, 800);
+                                        }, 1000);
 
                                         $modalInstance.close();
                                     };
@@ -841,9 +841,9 @@
                             if (commentform.$valid) {
                                 setTimeout(function () {
                                     queues.changeComment(name, user, comment);
-                                }, 500);
+                                }, 1000);
                             }
-                        }, 800);
+                        }, 1000);
                     }
                 }
             }, 200, true);

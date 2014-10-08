@@ -134,7 +134,7 @@ public class ApiProviderImpl implements ApiProvider {
     }
 
     @Override
-    @PreAuthorize("!#queue.locked and !#queue.hidden")
+    @PreAuthorize("!#queue.locked and !#queue.hidden and #account.principalName == authentication.name")
     public void addQueuePosition(Queue queue, Account account) {
         QueuePosition queuePosition = new QueuePosition();
         queuePosition.setQueue(queue);
